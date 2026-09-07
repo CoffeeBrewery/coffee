@@ -134,6 +134,18 @@ module Test
         end
       end
 
+      # A copy, not a symlink: `bin/brew` resolves a symlinked entry point back
+      # to the real repository.
+      sig { returns(String) }
+      def sandboxed_brew_sh
+        sandbox_library = HOMEBREW_PREFIX/"Library"
+        sandbox_library.mkpath
+        FileUtils.ln_sf HOMEBREW_LIBRARY_PATH, sandbox_library/"Homebrew"
+        # `cp` would keep the touched file's non-executable mode.
+        FileUtils.install HOMEBREW_ORIGINAL_BREW_FILE, HOMEBREW_PREFIX/"bin/brew", mode: 0755
+        (HOMEBREW_PREFIX/"bin/brew").to_s
+      end
+
       sig { params(args: T.untyped).returns(Process::Status) }
       def brew_sh(*args)
         env = args.last.is_a?(Hash) ? args.pop : {}
@@ -143,7 +155,13 @@ module Test
           "HOMEBREW_INTEGRATION_TEST"   => command_id,
         }.merge(env)
         Bundler.with_unbundled_env do
-          brew_sh_path = env.delete("HOMEBREW_BREW_SH") || "#{ENV.fetch("HOMEBREW_PREFIX")}/bin/brew"
+          brew_sh_path = env.delete("HOMEBREW_BREW_SH")
+          # Other specs assert the real prefix, which the sandbox is not.
+          brew_sh_path ||= if RSpec.current_example.metadata[:sandboxed_taps]
+            sandboxed_brew_sh
+          else
+            "#{ENV.fetch("HOMEBREW_PREFIX")}/bin/brew"
+          end
           stdout, stderr, status = Open3.capture3(
             env,
             brew_sh_path,
@@ -298,7 +316,7 @@ RSpec.shared_context "integration test" do # rubocop:disable RSpec/ContextWordin
 
     example.run
   ensure
-    FileUtils.rm_rf HOMEBREW_PREFIX/"bin"
+    FileUtils.rm_rf [HOMEBREW_PREFIX/"bin", HOMEBREW_PREFIX/"Library/Homebrew"]
     ENV.delete("HOMEBREW_INTEGRATION_TEST")
   end
 end
