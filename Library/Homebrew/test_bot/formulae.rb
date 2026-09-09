@@ -776,6 +776,14 @@ module Homebrew
             return
           end
 
+          # Report prebuilt npm binaries in existing formulae as a warning. Hide
+          # GitHub Actions from `brew audit` so its own error annotations do not
+          # fire when the ignored output is printed.
+          if !new_formula && formula.deps.any? { |dep| dep.name.match?(/\Anode(@\d+)?\z/) }
+            test "brew", "audit", "--formula", "--only=installed", "--strict", "--skip-style",
+                 named_args: formula_name, ignore_failures: true, env: { "GITHUB_ACTIONS" => nil }
+          end
+
           if formula_installed_from_bottle
             moved_artifacts = bottle_glob(formula_name, artifact_cache, ".{json,tar.gz}").map(&:realpath)
             Pathname.pwd.install moved_artifacts

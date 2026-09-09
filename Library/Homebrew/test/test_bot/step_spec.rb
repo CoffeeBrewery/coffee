@@ -18,4 +18,11 @@ RSpec.describe Homebrew::TestBot::Step do
       step.run
     end
   end
+
+  describe "#truncate_output" do
+    it "keeps the context before a coloured error line" do
+      output = "one\ntwo\n\e[31mError:\e[0m 1 problem detected.\n"
+      expect(step.truncate_output(output, max_kb: 4, context_lines: 5)).to eq(output)
+    end
+  end
 end
