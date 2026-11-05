@@ -16,8 +16,8 @@
 				"sbin",
 				"share",
 				"var",
-				"Library/Homebrew/LinkedKegs",
-				"Library/Homebrew/Aliases"
+				"Library/CoffeeBrewery/LinkedKegs",
+				"Library/CoffeeBrewery/Aliases"
 			],
 			"follow_symlinks": true
 		}

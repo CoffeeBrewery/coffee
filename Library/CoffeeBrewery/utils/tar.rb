@@ -1,0 +1,46 @@
+# typed: strict
+# frozen_string_literal: true
+
+require "system_command"
+require "utils/output"
+
+module Utils
+  # Helper functions for interacting with tar files.
+  module Tar
+    class << self
+      include SystemCommand::Mixin
+      include Utils::Output::Mixin
+
+      TAR_FILE_EXTENSIONS = %w[
+        .tar .tb2 .tbz .tbz2 .tgz .tlz .txz .tZ
+        .tar.bz2 .tar.gz .tar.lz .tar.xz .tar.Z
+      ].freeze
+
+      sig { returns(T::Boolean) }
+      def available?
+        !!executable
+      end
+
+      sig { returns(T.nilable(Pathname)) }
+      def executable
+        return @executable if defined?(@executable)
+
+        gnu_tar_gtar_path = COFFEEBREWER_PREFIX/"opt/gnu-tar/bin/gtar"
+        gnu_tar_gtar = gnu_tar_gtar_path if gnu_tar_gtar_path.executable?
+        @executable = T.let(which("gtar") || gnu_tar_gtar || which("tar"), T.nilable(Pathname))
+      end
+
+      sig { params(path: T.any(Pathname, String)).void }
+      def validate_file(path)
+        return unless (tar = executable)
+
+        path = Pathname.new(path)
+        return unless TAR_FILE_EXTENSIONS.include? path.extname
+
+        stdout, _, status = system_command(tar, args:         ["--list", "--file", path],
+                                                print_stderr: false).to_a
+        odie "#{path} is not a valid tar file!" if !status.success? || stdout.blank?
+      end
+    end
+  end
+end

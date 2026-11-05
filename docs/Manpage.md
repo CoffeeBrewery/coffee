@@ -1,13 +1,13 @@
-# brew(1) -- The Package Manager for Everywhere
+# coffee(1) -- The Package Manager for Everywhere
 
 ## SYNOPSIS
 
-`brew` `--version`  
-`brew` *`command`* \[`--verbose`\|`-v`\] \[*`options`*\] \[*`formula`*\] ...
+`coffee` `--version`  
+`coffee` *`command`* \[`--verbose`\|`-v`\] \[*`options`*\] \[*`formula`*\] ...
 
 ## DESCRIPTION
 
-Homebrew is the easiest and most flexible way to install the UNIX tools Apple
+CoffeeBrewery is the easiest and most flexible way to install the UNIX tools Apple
 didn't include with macOS. It can also install software not packaged for your
 Linux distribution without requiring `sudo`.
 
@@ -15,16 +15,16 @@ Linux distribution without requiring `sudo`.
 
 **formula**
 
-: Homebrew package definition that builds from upstream sources
+: CoffeeBrewery package definition that builds from upstream sources
 
 **cask**
 
-: Homebrew package definition that installs pre-compiled binaries built and
+: CoffeeBrewery package definition that installs pre-compiled binaries built and
   signed by upstream
 
 **prefix**
 
-: path in which Homebrew is installed, e.g. `/opt/homebrew` or
+: path in which CoffeeBrewery is installed, e.g. `/opt/homebrew` or
   `/home/linuxbrew/.linuxbrew`
 
 **keg**
@@ -39,7 +39,7 @@ Linux distribution without requiring `sudo`.
 
 **keg-only**
 
-: a **formula** is *keg-only* if it is not symlinked into Homebrew's prefix
+: a **formula** is *keg-only* if it is not symlinked into CoffeeBrewery's prefix
 
 **opt prefix**
 
@@ -56,7 +56,7 @@ Linux distribution without requiring `sudo`.
 
 **external command**
 
-: `brew` subcommand defined outside of the Homebrew/brew GitHub repository
+: `coffee` subcommand defined outside of the CoffeeBrewery/coffee GitHub repository
 
 **tap**
 
@@ -114,49 +114,49 @@ Show an alias's command. If no alias is given, print the whole list.
 
 ### `analytics` \[*`subcommand`*\]
 
-Control Homebrew's anonymous aggregate user behaviour analytics. Read more at
-<https://docs.brew.sh/Analytics>.
+Control CoffeeBrewery's anonymous aggregate user behaviour analytics. Read more at
+<https://docs.coffee.sh/Analytics>.
 
-`brew analytics` \[`state`\]
+`coffee analytics` \[`state`\]
 
-: Display the current state of Homebrew's analytics.
+: Display the current state of CoffeeBrewery's analytics.
 
-`brew analytics on`
+`coffee analytics on`
 
-: Turn Homebrew's analytics on.
+: Turn CoffeeBrewery's analytics on.
 
-`brew analytics off`
+`coffee analytics off`
 
-: Turn Homebrew's analytics off.
+: Turn CoffeeBrewery's analytics off.
 
-### `as-brew-user` *`command`* \[*`args`* ...\]
+### `as-coffee-user` *`command`* \[*`args`* ...\]
 
-Run a Homebrew command as the owner of `HOMEBREW_PREFIX` on macOS or Linux.
+Run a CoffeeBrewery command as the owner of `COFFEEBREWER_PREFIX` on macOS or Linux.
 
 Use this in administrative scripts and scheduled jobs to manage an existing
 installation, including when no user is logged in.
 
-Uses the owner's home and a clean environment, then loads `brew.env` for that
+Uses the owner's home and a clean environment, then loads `coffee.env` for that
 account. Changing users requires permission to use `sudo` or an already-root
 process; running as the owner does not. When `sudo` is disabled or unavailable,
 root can switch users directly.
 
-Use `brew as-brew-user install --yes` *`formula`* for unattended installation.
+Use `coffee as-coffee-user install --yes` *`formula`* for unattended installation.
 On macOS, use `as-console-user` to select the active desktop user instead.
 
 ### `as-console-user` *`command`* \[*`args`* ...\]
 
-Run a Homebrew command as the user logged in to the macOS desktop.
+Run a CoffeeBrewery command as the user logged in to the macOS desktop.
 
-Use this from administrative scripts when the desktop user manages Homebrew, for
-example `brew as-console-user install --yes` *`formula`*. Fails if no supported
+Use this from administrative scripts when the desktop user manages CoffeeBrewery, for
+example `coffee as-console-user install --yes` *`formula`*. Fails if no supported
 desktop user is logged in.
 
-Uses the user's home and a clean environment, then loads `brew.env` for that
+Uses the user's home and a clean environment, then loads `coffee.env` for that
 account. Uses `sudo` when enabled and available; root can also switch users when
 `sudo` is disabled or unavailable.
 
-Use `as-brew-user` to select the installation's owner on macOS or Linux,
+Use `as-coffee-user` to select the installation's owner on macOS or Linux,
 including when no user is logged in.
 
 ### `autoremove` \[`--dry-run`\]
@@ -170,7 +170,7 @@ and are now no longer needed.
 
 ### `bundle` \[*`subcommand`*\]
 
-Bundler for non-Ruby dependencies from Homebrew formulae, Homebrew casks, Mac
+Bundler for non-Ruby dependencies from CoffeeBrewery formulae, CoffeeBrewery casks, Mac
 App Store dependencies, VSCode (and forks/variants) extensions, Go packages,
 Cargo packages, uv tools, Flatpak packages, WinGet packages, Krew plugins and
 npm packages.
@@ -184,13 +184,13 @@ Note: Flatpak support is only available on Linux.
 
 `-g`, `--global`
 
-: Read from or write to the `Brewfile` from `$HOMEBREW_BUNDLE_FILE_GLOBAL` (if
+: Read from or write to the `Brewfile` from `$COFFEEBREWER_BUNDLE_FILE_GLOBAL` (if
   set), `${XDG_CONFIG_HOME}/homebrew/Brewfile` (if `$XDG_CONFIG_HOME` is set),
   `~/.homebrew/Brewfile` or `~/.Brewfile` otherwise.
 
-`brew bundle sh` \[`--check`\] \[`--no-secrets`\]
+`coffee bundle sh` \[`--check`\] \[`--no-secrets`\]
 
-: Run your shell in a `brew bundle exec` environment.
+: Run your shell in a `coffee bundle exec` environment.
 
 `--install`
 
@@ -199,18 +199,18 @@ Note: Flatpak support is only available on Linux.
 `--services`
 
 : Temporarily start services while running the shell. Enabled by default if
-  `$HOMEBREW_BUNDLE_SERVICES` is set.
+  `$COFFEEBREWER_BUNDLE_SERVICES` is set.
 
 `--check`
 
 : Check that all dependencies in the Brewfile are installed before starting the
-  shell. Enabled by default if `$HOMEBREW_BUNDLE_CHECK` is set.
+  shell. Enabled by default if `$COFFEEBREWER_BUNDLE_CHECK` is set.
 
 `--no-secrets`
 
 : Attempt to remove secrets from the environment before starting the shell.
 
-`brew bundle remove` *`name`* \[...\]
+`coffee bundle remove` *`name`* \[...\]
 
 : Remove entries that match `name` from your `Brewfile`. Use `--formula`,
   `--cask`, `--tap`, `--mas`, `--vscode`, `--go`, `--cargo`, `--uv`,
@@ -224,16 +224,16 @@ Note: Flatpak support is only available on Linux.
 
 `--formula`
 
-: Remove Homebrew formula entries, including matches against formula aliases and
+: Remove CoffeeBrewery formula entries, including matches against formula aliases and
   old names.
 
 `--cask`
 
-: Remove Homebrew cask entries.
+: Remove CoffeeBrewery cask entries.
 
 `--tap`
 
-: Remove Homebrew tap entries.
+: Remove CoffeeBrewery tap entries.
 
 `--mas`
 
@@ -271,11 +271,11 @@ Note: Flatpak support is only available on Linux.
 
 : Remove entries for npm packages.
 
-`brew bundle list`
+`coffee bundle list`
 
 : List all dependencies present in the `Brewfile`.
 
-By default, only Homebrew formula dependencies are listed.
+By default, only CoffeeBrewery formula dependencies are listed.
 
 `--install`
 
@@ -287,15 +287,15 @@ By default, only Homebrew formula dependencies are listed.
 
 `--formula`
 
-: List Homebrew formula dependencies.
+: List CoffeeBrewery formula dependencies.
 
 `--cask`
 
-: List Homebrew cask dependencies.
+: List CoffeeBrewery cask dependencies.
 
 `--tap`
 
-: List Homebrew tap dependencies.
+: List CoffeeBrewery tap dependencies.
 
 `--mas`
 
@@ -333,21 +333,21 @@ By default, only Homebrew formula dependencies are listed.
 
 : List npm packages.
 
-`brew bundle` \[`install`\|`upgrade`\]
+`coffee bundle` \[`install`\|`upgrade`\]
 
 : Install and upgrade (by default) all dependencies from the `Brewfile`.
 
 Use this to restore a recorded installed state from a `Brewfile`.
 
-`brew bundle upgrade` is shorthand for `brew bundle install --upgrade`.
+`coffee bundle upgrade` is shorthand for `coffee bundle install --upgrade`.
 
 You can specify the `Brewfile` location using `--file` or by setting the
-`$HOMEBREW_BUNDLE_FILE` environment variable.
+`$COFFEEBREWER_BUNDLE_FILE` environment variable.
 
 You can skip the installation of dependencies by adding space-separated values
 to one or more of the following environment variables:
-`$HOMEBREW_BUNDLE_BREW_SKIP`, `$HOMEBREW_BUNDLE_CASK_SKIP`,
-`$HOMEBREW_BUNDLE_MAS_SKIP`, `$HOMEBREW_BUNDLE_TAP_SKIP`.
+`$COFFEEBREWER_BUNDLE_BREW_SKIP`, `$COFFEEBREWER_BUNDLE_CASK_SKIP`,
+`$COFFEEBREWER_BUNDLE_MAS_SKIP`, `$COFFEEBREWER_BUNDLE_TAP_SKIP`.
 
 `-v`, `--verbose`
 
@@ -355,19 +355,19 @@ to one or more of the following environment variables:
 
 `--no-upgrade`
 
-: Do not run `brew upgrade` on outdated dependencies. Note they may still be
-  upgraded by `brew install` if needed. Enabled by default if
-  `$HOMEBREW_BUNDLE_NO_UPGRADE` is set.
+: Do not run `coffee upgrade` on outdated dependencies. Note they may still be
+  upgraded by `coffee install` if needed. Enabled by default if
+  `$COFFEEBREWER_BUNDLE_NO_UPGRADE` is set.
 
 `--upgrade`
 
-: Run `brew upgrade` on outdated dependencies, even if
-  `$HOMEBREW_BUNDLE_NO_UPGRADE` is set.
+: Run `coffee upgrade` on outdated dependencies, even if
+  `$COFFEEBREWER_BUNDLE_NO_UPGRADE` is set.
 
 `--upgrade-formulae`
 
-: Run `brew upgrade` on any of these comma-separated formulae, even if
-  `$HOMEBREW_BUNDLE_NO_UPGRADE` is set.
+: Run `coffee upgrade` on any of these comma-separated formulae, even if
+  `$COFFEEBREWER_BUNDLE_NO_UPGRADE` is set.
 
 `-f`, `--force`
 
@@ -382,7 +382,7 @@ to one or more of the following environment variables:
 : Use `zap` instead of `uninstall` when cleaning up casks after installing
   dependencies.
 
-`brew bundle exec` \[`--check`\] \[`--no-secrets`\] \[`--sandbox=`*`path`*\] \[`--deny-network`\] *`command`*
+`coffee bundle exec` \[`--check`\] \[`--no-secrets`\] \[`--sandbox=`*`path`*\] \[`--deny-network`\] *`command`*
 
 : Run an external command in an isolated build environment based on the
   `Brewfile` dependencies.
@@ -400,12 +400,12 @@ flags which will help with finding keg-only dependencies like `openssl`,
 `--services`
 
 : Temporarily start services while executing the command. Enabled by default if
-  `$HOMEBREW_BUNDLE_SERVICES` is set.
+  `$COFFEEBREWER_BUNDLE_SERVICES` is set.
 
 `--check`
 
 : Check that all dependencies in the Brewfile are installed before executing the
-  command. Enabled by default if `$HOMEBREW_BUNDLE_CHECK` is set.
+  command. Enabled by default if `$COFFEEBREWER_BUNDLE_CHECK` is set.
 
 `--no-secrets`
 
@@ -413,16 +413,16 @@ flags which will help with finding keg-only dependencies like `openssl`,
 
 `--sandbox`
 
-: Run *`command`* in Homebrew's sandbox, allowing writes to *`path`* and
-  Homebrew's temporary and cache directories.
+: Run *`command`* in CoffeeBrewery's sandbox, allowing writes to *`path`* and
+  CoffeeBrewery's temporary and cache directories.
 
 `--deny-network`
 
 : Deny network access from inside the sandbox.
 
-`brew bundle env` \[`--check`\] \[`--no-secrets`\]
+`coffee bundle env` \[`--check`\] \[`--no-secrets`\]
 
-: Print the environment variables that would be set in a `brew bundle exec`
+: Print the environment variables that would be set in a `coffee bundle exec`
   environment.
 
 `--install`
@@ -432,13 +432,13 @@ flags which will help with finding keg-only dependencies like `openssl`,
 `--check`
 
 : Check that all dependencies in the Brewfile are installed before printing the
-  environment. Enabled by default if `$HOMEBREW_BUNDLE_CHECK` is set.
+  environment. Enabled by default if `$COFFEEBREWER_BUNDLE_CHECK` is set.
 
 `--no-secrets`
 
 : Attempt to remove secrets from the environment before printing it.
 
-`brew bundle edit`
+`coffee bundle edit`
 
 : Edit the `Brewfile` in your editor.
 
@@ -446,7 +446,7 @@ flags which will help with finding keg-only dependencies like `openssl`,
 
 : Run `install` before editing the `Brewfile`.
 
-`brew bundle dump`
+`coffee bundle dump`
 
 : Write all installed casks/formulae/images/taps into a `Brewfile` in the
   current directory or to a custom file specified with the `--file` option. This
@@ -463,45 +463,45 @@ flags which will help with finding keg-only dependencies like `openssl`,
 
 `--formula`
 
-: Dump Homebrew formula dependencies.
+: Dump CoffeeBrewery formula dependencies.
 
 `--no-formula`
 
-: Dump without Homebrew formula dependencies. Enabled by default if
-  `$HOMEBREW_BUNDLE_DUMP_NO_BREW` is set.
+: Dump without CoffeeBrewery formula dependencies. Enabled by default if
+  `$COFFEEBREWER_BUNDLE_DUMP_NO_BREW` is set.
 
-`--no-dump-brew`
+`--no-dump-coffee`
 
-: Dump without Homebrew formula dependencies. Enabled by default if
-  `$HOMEBREW_BUNDLE_DUMP_NO_BREW` is set.
+: Dump without CoffeeBrewery formula dependencies. Enabled by default if
+  `$COFFEEBREWER_BUNDLE_DUMP_NO_BREW` is set.
 
 `--cask`
 
-: Dump Homebrew cask dependencies.
+: Dump CoffeeBrewery cask dependencies.
 
 `--no-cask`
 
-: Dump without Homebrew cask dependencies. Enabled by default if
-  `$HOMEBREW_BUNDLE_DUMP_NO_CASK` is set.
+: Dump without CoffeeBrewery cask dependencies. Enabled by default if
+  `$COFFEEBREWER_BUNDLE_DUMP_NO_CASK` is set.
 
 `--no-dump-cask`
 
-: Dump without Homebrew cask dependencies. Enabled by default if
-  `$HOMEBREW_BUNDLE_DUMP_NO_CASK` is set.
+: Dump without CoffeeBrewery cask dependencies. Enabled by default if
+  `$COFFEEBREWER_BUNDLE_DUMP_NO_CASK` is set.
 
 `--tap`
 
-: Dump Homebrew tap dependencies.
+: Dump CoffeeBrewery tap dependencies.
 
 `--no-tap`
 
-: Dump without Homebrew tap dependencies. Enabled by default if
-  `$HOMEBREW_BUNDLE_DUMP_NO_TAP` is set.
+: Dump without CoffeeBrewery tap dependencies. Enabled by default if
+  `$COFFEEBREWER_BUNDLE_DUMP_NO_TAP` is set.
 
 `--no-dump-tap`
 
-: Dump without Homebrew tap dependencies. Enabled by default if
-  `$HOMEBREW_BUNDLE_DUMP_NO_TAP` is set.
+: Dump without CoffeeBrewery tap dependencies. Enabled by default if
+  `$COFFEEBREWER_BUNDLE_DUMP_NO_TAP` is set.
 
 `--mas`
 
@@ -542,110 +542,110 @@ flags which will help with finding keg-only dependencies like `openssl`,
 `--no-mas`
 
 : `dump` without Mac App Store dependencies. Enabled by default if
-  `$HOMEBREW_BUNDLE_DUMP_NO_MAS` is set.
+  `$COFFEEBREWER_BUNDLE_DUMP_NO_MAS` is set.
 
 `--no-dump-mas`
 
 : `dump` without Mac App Store dependencies. Enabled by default if
-  `$HOMEBREW_BUNDLE_DUMP_NO_MAS` is set.
+  `$COFFEEBREWER_BUNDLE_DUMP_NO_MAS` is set.
 
 `--no-vscode`
 
 : `dump` without VSCode (and forks/variants) extensions. Enabled by default if
-  `$HOMEBREW_BUNDLE_DUMP_NO_VSCODE` is set.
+  `$COFFEEBREWER_BUNDLE_DUMP_NO_VSCODE` is set.
 
 `--no-dump-vscode`
 
 : `dump` without VSCode (and forks/variants) extensions. Enabled by default if
-  `$HOMEBREW_BUNDLE_DUMP_NO_VSCODE` is set.
+  `$COFFEEBREWER_BUNDLE_DUMP_NO_VSCODE` is set.
 
 `--no-go`
 
 : `dump` without Go packages. Enabled by default if
-  `$HOMEBREW_BUNDLE_DUMP_NO_GO` is set.
+  `$COFFEEBREWER_BUNDLE_DUMP_NO_GO` is set.
 
 `--no-dump-go`
 
 : `dump` without Go packages. Enabled by default if
-  `$HOMEBREW_BUNDLE_DUMP_NO_GO` is set.
+  `$COFFEEBREWER_BUNDLE_DUMP_NO_GO` is set.
 
 `--no-cargo`
 
 : `dump` without Cargo packages. Enabled by default if
-  `$HOMEBREW_BUNDLE_DUMP_NO_CARGO` is set.
+  `$COFFEEBREWER_BUNDLE_DUMP_NO_CARGO` is set.
 
 `--no-dump-cargo`
 
 : `dump` without Cargo packages. Enabled by default if
-  `$HOMEBREW_BUNDLE_DUMP_NO_CARGO` is set.
+  `$COFFEEBREWER_BUNDLE_DUMP_NO_CARGO` is set.
 
 `--no-uv`
 
-: `dump` without uv tools. Enabled by default if `$HOMEBREW_BUNDLE_DUMP_NO_UV`
+: `dump` without uv tools. Enabled by default if `$COFFEEBREWER_BUNDLE_DUMP_NO_UV`
   is set.
 
 `--no-dump-uv`
 
-: `dump` without uv tools. Enabled by default if `$HOMEBREW_BUNDLE_DUMP_NO_UV`
+: `dump` without uv tools. Enabled by default if `$COFFEEBREWER_BUNDLE_DUMP_NO_UV`
   is set.
 
 `--no-flatpak`
 
 : `dump` without Flatpak packages. Enabled by default if
-  `$HOMEBREW_BUNDLE_DUMP_NO_FLATPAK` is set.
+  `$COFFEEBREWER_BUNDLE_DUMP_NO_FLATPAK` is set.
 
 `--no-dump-flatpak`
 
 : `dump` without Flatpak packages. Enabled by default if
-  `$HOMEBREW_BUNDLE_DUMP_NO_FLATPAK` is set.
+  `$COFFEEBREWER_BUNDLE_DUMP_NO_FLATPAK` is set.
 
 `--no-winget`
 
 : `dump` without WinGet packages. Enabled by default if
-  `$HOMEBREW_BUNDLE_DUMP_NO_WINGET` is set.
+  `$COFFEEBREWER_BUNDLE_DUMP_NO_WINGET` is set.
 
 `--no-dump-winget`
 
 : `dump` without WinGet packages. Enabled by default if
-  `$HOMEBREW_BUNDLE_DUMP_NO_WINGET` is set.
+  `$COFFEEBREWER_BUNDLE_DUMP_NO_WINGET` is set.
 
 `--no-krew`
 
 : `dump` without Krew plugins. Enabled by default if
-  `$HOMEBREW_BUNDLE_DUMP_NO_KREW` is set.
+  `$COFFEEBREWER_BUNDLE_DUMP_NO_KREW` is set.
 
 `--no-dump-krew`
 
 : `dump` without Krew plugins. Enabled by default if
-  `$HOMEBREW_BUNDLE_DUMP_NO_KREW` is set.
+  `$COFFEEBREWER_BUNDLE_DUMP_NO_KREW` is set.
 
 `--no-npm`
 
 : `dump` without npm packages. Enabled by default if
-  `$HOMEBREW_BUNDLE_DUMP_NO_NPM` is set.
+  `$COFFEEBREWER_BUNDLE_DUMP_NO_NPM` is set.
 
 `--no-dump-npm`
 
 : `dump` without npm packages. Enabled by default if
-  `$HOMEBREW_BUNDLE_DUMP_NO_NPM` is set.
+  `$COFFEEBREWER_BUNDLE_DUMP_NO_NPM` is set.
 
 `--no-describe`
 
 : Do not add description comments above each line. Description comments are the
-  default. Enabled by default if `$HOMEBREW_BUNDLE_NO_DESCRIBE` is set.
+  default. Enabled by default if `$COFFEEBREWER_BUNDLE_NO_DESCRIBE` is set.
 
 `--no-restart`
 
 : Do not add `restart_service` to formula lines.
 
-`brew bundle cleanup`
+`coffee bundle cleanup`
 
 : Uninstall all dependencies not present in the `Brewfile`.
 
 This workflow is useful for maintainers or testers who regularly install lots of
 formulae.
 
-When cleanup is performed, Homebrew's global trust store is reset to the trust
+When cleanup is performed, CoffeeBrewery's global trust store is reset to the trust
 values declared by the `Brewfile`, removing trust entries not declared there.
 
 Unless `--force` is passed, this prompts before removing anything and returns a
@@ -657,7 +657,7 @@ Unless `--force` is passed, this prompts before removing anything and returns a
 
 `-f`, `--force`
 
-: Actually perform cleanup operations and reset Homebrew's global trust store to
+: Actually perform cleanup operations and reset CoffeeBrewery's global trust store to
   the `Brewfile` values.
 
 `--all`
@@ -666,45 +666,45 @@ Unless `--force` is passed, this prompts before removing anything and returns a
 
 `--formula`
 
-: Clean up Homebrew formula dependencies.
+: Clean up CoffeeBrewery formula dependencies.
 
 `--no-formula`
 
-: Clean up without Homebrew formula dependencies. Enabled by default if
-  `$HOMEBREW_BUNDLE_CLEANUP_NO_BREW` is set.
+: Clean up without CoffeeBrewery formula dependencies. Enabled by default if
+  `$COFFEEBREWER_BUNDLE_CLEANUP_NO_BREW` is set.
 
-`--no-cleanup-brew`
+`--no-cleanup-coffee`
 
-: Clean up without Homebrew formula dependencies. Enabled by default if
-  `$HOMEBREW_BUNDLE_CLEANUP_NO_BREW` is set.
+: Clean up without CoffeeBrewery formula dependencies. Enabled by default if
+  `$COFFEEBREWER_BUNDLE_CLEANUP_NO_BREW` is set.
 
 `--cask`
 
-: Clean up Homebrew cask dependencies.
+: Clean up CoffeeBrewery cask dependencies.
 
 `--no-cask`
 
-: Clean up without Homebrew cask dependencies. Enabled by default if
-  `$HOMEBREW_BUNDLE_CLEANUP_NO_CASK` is set.
+: Clean up without CoffeeBrewery cask dependencies. Enabled by default if
+  `$COFFEEBREWER_BUNDLE_CLEANUP_NO_CASK` is set.
 
 `--no-cleanup-cask`
 
-: Clean up without Homebrew cask dependencies. Enabled by default if
-  `$HOMEBREW_BUNDLE_CLEANUP_NO_CASK` is set.
+: Clean up without CoffeeBrewery cask dependencies. Enabled by default if
+  `$COFFEEBREWER_BUNDLE_CLEANUP_NO_CASK` is set.
 
 `--tap`
 
-: Clean up Homebrew tap dependencies.
+: Clean up CoffeeBrewery tap dependencies.
 
 `--no-tap`
 
-: Clean up without Homebrew tap dependencies. Enabled by default if
-  `$HOMEBREW_BUNDLE_CLEANUP_NO_TAP` is set.
+: Clean up without CoffeeBrewery tap dependencies. Enabled by default if
+  `$COFFEEBREWER_BUNDLE_CLEANUP_NO_TAP` is set.
 
 `--no-cleanup-tap`
 
-: Clean up without Homebrew tap dependencies. Enabled by default if
-  `$HOMEBREW_BUNDLE_CLEANUP_NO_TAP` is set.
+: Clean up without CoffeeBrewery tap dependencies. Enabled by default if
+  `$COFFEEBREWER_BUNDLE_CLEANUP_NO_TAP` is set.
 
 `--mas`
 
@@ -713,12 +713,12 @@ Unless `--force` is passed, this prompts before removing anything and returns a
 `--no-mas`
 
 : `cleanup` without Mac App Store dependencies. Enabled by default if
-  `$HOMEBREW_BUNDLE_CLEANUP_NO_MAS` is set.
+  `$COFFEEBREWER_BUNDLE_CLEANUP_NO_MAS` is set.
 
 `--no-cleanup-mas`
 
 : `cleanup` without Mac App Store dependencies. Enabled by default if
-  `$HOMEBREW_BUNDLE_CLEANUP_NO_MAS` is set.
+  `$COFFEEBREWER_BUNDLE_CLEANUP_NO_MAS` is set.
 
 `--vscode`
 
@@ -727,12 +727,12 @@ Unless `--force` is passed, this prompts before removing anything and returns a
 `--no-vscode`
 
 : `cleanup` without VSCode (and forks/variants) extensions. Enabled by default
-  if `$HOMEBREW_BUNDLE_CLEANUP_NO_VSCODE` is set.
+  if `$COFFEEBREWER_BUNDLE_CLEANUP_NO_VSCODE` is set.
 
 `--no-cleanup-vscode`
 
 : `cleanup` without VSCode (and forks/variants) extensions. Enabled by default
-  if `$HOMEBREW_BUNDLE_CLEANUP_NO_VSCODE` is set.
+  if `$COFFEEBREWER_BUNDLE_CLEANUP_NO_VSCODE` is set.
 
 `--go`
 
@@ -741,12 +741,12 @@ Unless `--force` is passed, this prompts before removing anything and returns a
 `--no-go`
 
 : `cleanup` without Go packages. Enabled by default if
-  `$HOMEBREW_BUNDLE_CLEANUP_NO_GO` is set.
+  `$COFFEEBREWER_BUNDLE_CLEANUP_NO_GO` is set.
 
 `--no-cleanup-go`
 
 : `cleanup` without Go packages. Enabled by default if
-  `$HOMEBREW_BUNDLE_CLEANUP_NO_GO` is set.
+  `$COFFEEBREWER_BUNDLE_CLEANUP_NO_GO` is set.
 
 `--cargo`
 
@@ -755,12 +755,12 @@ Unless `--force` is passed, this prompts before removing anything and returns a
 `--no-cargo`
 
 : `cleanup` without Cargo packages. Enabled by default if
-  `$HOMEBREW_BUNDLE_CLEANUP_NO_CARGO` is set.
+  `$COFFEEBREWER_BUNDLE_CLEANUP_NO_CARGO` is set.
 
 `--no-cleanup-cargo`
 
 : `cleanup` without Cargo packages. Enabled by default if
-  `$HOMEBREW_BUNDLE_CLEANUP_NO_CARGO` is set.
+  `$COFFEEBREWER_BUNDLE_CLEANUP_NO_CARGO` is set.
 
 `--uv`
 
@@ -769,12 +769,12 @@ Unless `--force` is passed, this prompts before removing anything and returns a
 `--no-uv`
 
 : `cleanup` without uv tools. Enabled by default if
-  `$HOMEBREW_BUNDLE_CLEANUP_NO_UV` is set.
+  `$COFFEEBREWER_BUNDLE_CLEANUP_NO_UV` is set.
 
 `--no-cleanup-uv`
 
 : `cleanup` without uv tools. Enabled by default if
-  `$HOMEBREW_BUNDLE_CLEANUP_NO_UV` is set.
+  `$COFFEEBREWER_BUNDLE_CLEANUP_NO_UV` is set.
 
 `--flatpak`
 
@@ -783,12 +783,12 @@ Unless `--force` is passed, this prompts before removing anything and returns a
 `--no-flatpak`
 
 : `cleanup` without Flatpak packages. Enabled by default if
-  `$HOMEBREW_BUNDLE_CLEANUP_NO_FLATPAK` is set.
+  `$COFFEEBREWER_BUNDLE_CLEANUP_NO_FLATPAK` is set.
 
 `--no-cleanup-flatpak`
 
 : `cleanup` without Flatpak packages. Enabled by default if
-  `$HOMEBREW_BUNDLE_CLEANUP_NO_FLATPAK` is set.
+  `$COFFEEBREWER_BUNDLE_CLEANUP_NO_FLATPAK` is set.
 
 `--winget`
 
@@ -797,12 +797,12 @@ Unless `--force` is passed, this prompts before removing anything and returns a
 `--no-winget`
 
 : `cleanup` without WinGet packages. Enabled by default if
-  `$HOMEBREW_BUNDLE_CLEANUP_NO_WINGET` is set.
+  `$COFFEEBREWER_BUNDLE_CLEANUP_NO_WINGET` is set.
 
 `--no-cleanup-winget`
 
 : `cleanup` without WinGet packages. Enabled by default if
-  `$HOMEBREW_BUNDLE_CLEANUP_NO_WINGET` is set.
+  `$COFFEEBREWER_BUNDLE_CLEANUP_NO_WINGET` is set.
 
 `--krew`
 
@@ -811,12 +811,12 @@ Unless `--force` is passed, this prompts before removing anything and returns a
 `--no-krew`
 
 : `cleanup` without Krew plugins. Enabled by default if
-  `$HOMEBREW_BUNDLE_CLEANUP_NO_KREW` is set.
+  `$COFFEEBREWER_BUNDLE_CLEANUP_NO_KREW` is set.
 
 `--no-cleanup-krew`
 
 : `cleanup` without Krew plugins. Enabled by default if
-  `$HOMEBREW_BUNDLE_CLEANUP_NO_KREW` is set.
+  `$COFFEEBREWER_BUNDLE_CLEANUP_NO_KREW` is set.
 
 `--npm`
 
@@ -825,18 +825,18 @@ Unless `--force` is passed, this prompts before removing anything and returns a
 `--no-npm`
 
 : `cleanup` without npm packages. Enabled by default if
-  `$HOMEBREW_BUNDLE_CLEANUP_NO_NPM` is set.
+  `$COFFEEBREWER_BUNDLE_CLEANUP_NO_NPM` is set.
 
 `--no-cleanup-npm`
 
 : `cleanup` without npm packages. Enabled by default if
-  `$HOMEBREW_BUNDLE_CLEANUP_NO_NPM` is set.
+  `$COFFEEBREWER_BUNDLE_CLEANUP_NO_NPM` is set.
 
 `--zap`
 
 : Clean up casks using the `zap` command instead of `uninstall`.
 
-`brew bundle check`
+`coffee bundle check`
 
 : Check if all dependencies present in the `Brewfile` are installed.
 
@@ -850,14 +850,14 @@ useful for scripting. Use `--verbose` to list unmet dependencies.
 `--no-upgrade`
 
 : Do not check for outdated dependencies. Note they may still be upgraded by
-  `brew install` if needed. Enabled by default if `$HOMEBREW_BUNDLE_NO_UPGRADE`
+  `coffee install` if needed. Enabled by default if `$COFFEEBREWER_BUNDLE_NO_UPGRADE`
   is set.
 
 `--install`
 
 : Run `install` before checking dependencies.
 
-`brew bundle add` *`name`* \[...\]
+`coffee bundle add` *`name`* \[...\]
 
 : Add entries to your `Brewfile`. Adds formulae by default. Use `--cask`,
   `--tap`, `--vscode`, `--go`, `--cargo`, `--uv`, `--flatpak`, `--krew` and
@@ -869,15 +869,15 @@ useful for scripting. Use `--verbose` to list unmet dependencies.
 
 `--formula`
 
-: Add Homebrew formula entries.
+: Add CoffeeBrewery formula entries.
 
 `--cask`
 
-: Add Homebrew cask entries.
+: Add CoffeeBrewery cask entries.
 
 `--tap`
 
-: Add Homebrew tap entries.
+: Add CoffeeBrewery tap entries.
 
 `--vscode`
 
@@ -910,7 +910,7 @@ useful for scripting. Use `--verbose` to list unmet dependencies.
 `--no-describe`
 
 : Do not add description comments above each line. Description comments are the
-  default. Enabled by default if `$HOMEBREW_BUNDLE_NO_DESCRIBE` is set.
+  default. Enabled by default if `$COFFEEBREWER_BUNDLE_NO_DESCRIBE` is set.
 
 ### `casks`
 
@@ -921,7 +921,7 @@ List all locally installable casks including short names.
 Remove stale lock files and outdated downloads for all formulae and casks, and
 remove old versions of installed formulae. If arguments are specified, only do
 this for the given formulae and casks. Removes all downloads more than 120 days
-old. This can be adjusted with `$HOMEBREW_CLEANUP_MAX_AGE_DAYS`.
+old. This can be adjusted with `$COFFEEBREWER_CLEANUP_MAX_AGE_DAYS`.
 
 `--prune`
 
@@ -936,7 +936,7 @@ old. This can be adjusted with `$HOMEBREW_CLEANUP_MAX_AGE_DAYS`.
 
 : Scrub the cache, including downloads for even the latest versions. Note that
   downloads for any installed formulae or casks will still not be deleted. If
-  you want to delete those too: `rm -rf "$(brew --cache)"`
+  you want to delete those too: `rm -rf "$(coffee --cache)"`
 
 `--prune-prefix`
 
@@ -945,14 +945,14 @@ old. This can be adjusted with `$HOMEBREW_CLEANUP_MAX_AGE_DAYS`.
 
 ### `command` *`command`* \[...\]
 
-Display the path to the file being used when invoking `brew` *`cmd`*.
+Display the path to the file being used when invoking `coffee` *`cmd`*.
 
 ### `command-not-found-init`
 
 Print instructions for setting up the command-not-found hook for your shell. If
 the output is not to a tty, print the appropriate handler script for your shell.
 
-For more information, see: https://docs.brew.sh/Command-Not-Found
+For more information, see: https://docs.coffee.sh/Command-Not-Found
 
 ### `commands` \[`--quiet`\] \[`--include-aliases`\]
 
@@ -968,24 +968,24 @@ Show lists of built-in and external commands.
 
 ### `completions` \[*`subcommand`*\]
 
-Control whether Homebrew automatically links external tap shell completion
-files. Read more at <https://docs.brew.sh/Shell-Completion>.
+Control whether CoffeeBrewery automatically links external tap shell completion
+files. Read more at <https://docs.coffee.sh/Shell-Completion>.
 
-`brew completions unlink`
+`coffee completions unlink`
 
-: Unlink Homebrew's completions.
+: Unlink CoffeeBrewery's completions.
 
-`brew completions` \[`state`\]
+`coffee completions` \[`state`\]
 
-: Display the current state of Homebrew's completions.
+: Display the current state of CoffeeBrewery's completions.
 
-`brew completions link`
+`coffee completions link`
 
-: Link Homebrew's completions.
+: Link CoffeeBrewery's completions.
 
 ### `config`, `--config`
 
-Show Homebrew and system configuration info useful for debugging. If you file a
+Show CoffeeBrewery and system configuration info useful for debugging. If you file a
 bug report, you will be required to provide this information.
 
 ### `deps` \[*`options`*\] \[*`formula`*\|*`cask`* ...\]
@@ -996,7 +996,7 @@ required and recommended dependencies.
 
 If any version of each formula argument is installed and no other options are
 passed, this command displays their actual runtime dependencies (similar to
-`brew linkage`), which may differ from a formula's declared dependencies.
+`coffee linkage`), which may differ from a formula's declared dependencies.
 
 *Note:* `--missing` and `--skip-recommended` have precedence over `--include-*`.
 
@@ -1133,33 +1133,33 @@ first search, making that search slower than subsequent ones.
 
 ### `developer` \[*`subcommand`*\]
 
-Control Homebrew's developer mode. When developer mode is enabled, `brew update`
-will update Homebrew to the latest commit on the `main` branch instead of the
+Control CoffeeBrewery's developer mode. When developer mode is enabled, `coffee update`
+will update CoffeeBrewery to the latest commit on the `main` branch instead of the
 latest stable version along with some other behaviour changes.
 
-`brew developer` \[`state`\]
+`coffee developer` \[`state`\]
 
-: Display the current state of Homebrew's developer mode.
+: Display the current state of CoffeeBrewery's developer mode.
 
-`brew developer on`
+`coffee developer on`
 
-: Turn Homebrew's developer mode on.
+: Turn CoffeeBrewery's developer mode on.
 
-`brew developer off`
+`coffee developer off`
 
-: Turn Homebrew's developer mode off.
+: Turn CoffeeBrewery's developer mode off.
 
 ### `docs`
 
-Open Homebrew's online documentation at <https://docs.brew.sh> in a browser.
+Open CoffeeBrewery's online documentation at <https://docs.coffee.sh> in a browser.
 
 ### `doctor`, `dr` \[`--list-checks`\] \[`--audit-debug`\] \[*`diagnostic_check`* ...\]
 
 Check your system for potential problems. Will exit with a non-zero status if
 any potential problems are found.
 
-Please note that these warnings are just used to help the Homebrew maintainers
-with debugging if you file an issue. If everything you use Homebrew for is
+Please note that these warnings are just used to help the CoffeeBrewery maintainers
+with debugging if you file an issue. If everything you use CoffeeBrewery for is
 working fine: please don't worry or file an issue; just ignore this.
 
 `--list-checks`
@@ -1173,19 +1173,19 @@ working fine: please don't worry or file an issue; just ignore this.
 
 ### `exec`, `x` \[`--formulae=`*`formulae`*\] \[`--sandbox=`*`path`*\] \[`--deny-network`\] \[`--`\] *`command`* \[*`args`* ...\]
 
-Run *`command`* in an environment populated by Homebrew formulae.
+Run *`command`* in an environment populated by CoffeeBrewery formulae.
 
-If `--formulae` is passed, Homebrew installs those comma-separated formulae if
+If `--formulae` is passed, CoffeeBrewery installs those comma-separated formulae if
 needed, prepends their executable directories and those of their dependencies to
 `PATH` and runs *`command`*. This allows *`command`* to be a script path such as
 `./script.sh`.
 
-If `--formulae` is omitted, Homebrew finds a formula that provides *`command`*,
+If `--formulae` is omitted, CoffeeBrewery finds a formula that provides *`command`*,
 installs it if needed and runs that executable.
 
-Example: `brew exec --formulae=jq,yq -- ./script.sh`
+Example: `coffee exec --formulae=jq,yq -- ./script.sh`
 
-Scripts can also use a shebang on systems with `env -S`: `#!/usr/bin/env -S brew
+Scripts can also use a shebang on systems with `env -S`: `#!/usr/bin/env -S coffee
 exec --formulae=jq,yq --`
 
 `--formulae`
@@ -1195,8 +1195,8 @@ exec --formulae=jq,yq --`
 
 `--sandbox`
 
-: Run *`command`* in Homebrew's sandbox, allowing writes to *`path`* and
-  Homebrew's temporary and cache directories.
+: Run *`command`* in CoffeeBrewery's sandbox, allowing writes to *`path`* and
+  CoffeeBrewery's temporary and cache directories.
 
 `--deny-network`
 
@@ -1295,12 +1295,12 @@ message if no logs are found.
 
 ### `help` \[*`command`* ...\]
 
-Outputs the usage instructions for `brew` *`command`*. Equivalent to `brew
+Outputs the usage instructions for `coffee` *`command`*. Equivalent to `coffee
 --help` *`command`*.
 
 ### `home`, `homepage` \[`--formula`\] \[`--cask`\] \[*`formula`*\|*`cask`* ...\]
 
-Open a *`formula`* or *`cask`*'s homepage in a browser, or open Homebrew's own
+Open a *`formula`* or *`cask`*'s homepage in a browser, or open CoffeeBrewery's own
 homepage if no argument is provided.
 
 `--formula`
@@ -1313,14 +1313,14 @@ homepage if no argument is provided.
 
 ### `info`, `abv` \[*`options`*\] \[*`formula`*\|*`cask`* ...\]
 
-Display brief statistics for your Homebrew installation. If a *`formula`* or
+Display brief statistics for your CoffeeBrewery installation. If a *`formula`* or
 *`cask`* is provided, show summary of information about it.
 
 `--analytics`
 
-: List global Homebrew analytics data or, if specified, installation and build
-  error data for *`formula`* (provided neither `$HOMEBREW_NO_ANALYTICS` nor
-  `$HOMEBREW_NO_GITHUB_API` are set).
+: List global CoffeeBrewery analytics data or, if specified, installation and build
+  error data for *`formula`* (provided neither `$COFFEEBREWER_NO_ANALYTICS` nor
+  `$COFFEEBREWER_NO_GITHUB_API` are set).
 
 `--days`
 
@@ -1336,14 +1336,14 @@ Display brief statistics for your Homebrew installation. If a *`formula`* or
 `--github`
 
 : Open the GitHub source page for *`formula`* and *`cask`* in a browser. To view
-  the history locally: `brew log -p` *`formula`* or *`cask`*
+  the history locally: `coffee log -p` *`formula`* or *`cask`*
 
 `--json`
 
 : Print a JSON representation. Currently the default value for *`version`* is
   `v1`.`v1` is valid for *`formula`* only. `v2` is valid for both *`formula`*
   and *`cask`*.See the docs for examples of using the JSON output:
-  <https://docs.brew.sh/Querying-Brew>
+  <https://docs.coffee.sh/Querying-Brew>
 
 `--installed`
 
@@ -1377,14 +1377,14 @@ Display brief statistics for your Homebrew installation. If a *`formula`* or
 Install a *`formula`* or *`cask`*. Additional options specific to a *`formula`*
 may be appended to the command.
 
-Unless `$HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK` is set, `brew upgrade` or `brew
+Unless `$COFFEEBREWER_NO_INSTALLED_DEPENDENTS_CHECK` is set, `coffee upgrade` or `coffee
 reinstall` will be run for outdated dependents and dependents with broken
 linkage, respectively.
 
-Unless `$HOMEBREW_NO_INSTALL_CLEANUP` is set, `brew cleanup` will then be run
+Unless `$COFFEEBREWER_NO_INSTALL_CLEANUP` is set, `coffee cleanup` will then be run
 for the installed formulae and casks or, every 30 days, for all packages.
 
-Unless `$HOMEBREW_NO_INSTALL_UPGRADE` is set, `brew install` *`formula`* will
+Unless `$COFFEEBREWER_NO_INSTALL_UPGRADE` is set, `coffee install` *`formula`* will
 upgrade *`formula`* if it is already installed but outdated.
 
 `-d`, `--debug`
@@ -1395,7 +1395,7 @@ upgrade *`formula`* if it is already installed but outdated.
 `--display-times`
 
 : Print install times for each package at the end of the run. Enabled by default
-  if `$HOMEBREW_DISPLAY_INSTALL_TIMES` is set.
+  if `$COFFEEBREWER_DISPLAY_INSTALL_TIMES` is set.
 
 `-f`, `--force`
 
@@ -1414,7 +1414,7 @@ upgrade *`formula`* if it is already installed but outdated.
 `-y`, `--no-ask`
 
 : Do not ask for confirmation before downloading and installing. Ask mode is the
-  default. Enabled by default if `$HOMEBREW_NO_ASK` is set.
+  default. Enabled by default if `$COFFEEBREWER_NO_ASK` is set.
 
 `--formula`
 
@@ -1422,9 +1422,9 @@ upgrade *`formula`* if it is already installed but outdated.
 
 `--ignore-dependencies`
 
-: An unsupported Homebrew development option to skip installing any dependencies
+: An unsupported CoffeeBrewery development option to skip installing any dependencies
   of any kind. If the dependencies are not already present, the formula will
-  have issues. If you're not developing Homebrew, consider adjusting your PATH
+  have issues. If you're not developing CoffeeBrewery, consider adjusting your PATH
   rather than using this option.
 
 `--only-dependencies`
@@ -1437,7 +1437,7 @@ upgrade *`formula`* if it is already installed but outdated.
 : Attempt to compile using the specified *`compiler`*, which should be the name
   of the compiler's executable, e.g. `gcc-9` for GCC 9. In order to use LLVM's
   clang, specify `llvm_clang`. To use the Apple-provided clang, specify `clang`.
-  This option will only accept compilers that are provided by Homebrew or
+  This option will only accept compilers that are provided by CoffeeBrewery or
   bundled with macOS. Please do not file issues if you encounter errors while
   using this option.
 
@@ -1453,7 +1453,7 @@ upgrade *`formula`* if it is already installed but outdated.
 
 `--include-test`
 
-: Install testing dependencies required to run `brew test` *`formula`*.
+: Install testing dependencies required to run `coffee test` *`formula`*.
 
 `--HEAD`
 
@@ -1500,7 +1500,7 @@ upgrade *`formula`* if it is already installed but outdated.
 
 : Download and patch *`formula`*, then open a shell. This allows the user to run
   `./configure --help` and otherwise determine how to turn the software package
-  into a Homebrew package. If *`formula`* has a `fetch` block, first open a
+  into a CoffeeBrewery package. If *`formula`* has a `fetch` block, first open a
   shell with network access after it runs.
 
 `-g`, `--git`
@@ -1534,7 +1534,7 @@ upgrade *`formula`* if it is already installed but outdated.
 
 `--zap`
 
-: For use with `brew reinstall --cask`. Remove all files associated with a cask.
+: For use with `coffee reinstall --cask`. Remove all files associated with a cask.
   *May remove files which are shared between applications.*
 
 ### `leaves` \[`--installed-on-request`\] \[`--installed-as-dependency`\]
@@ -1553,7 +1553,7 @@ or cask.
 ### `link`, `ln` \[*`options`*\] *`installed_formula`*\|*`installed_cask`* \[...\]
 
 Symlink all of *`formula`*'s installed files or *`cask`*'s binaries, manpages
-and shell completions into Homebrew's prefix. This is done automatically when
+and shell completions into CoffeeBrewery's prefix. This is done automatically when
 you install formulae and casks but can be useful for manual installations.
 
 `--overwrite`
@@ -1562,7 +1562,7 @@ you install formulae and casks but can be useful for manual installations.
 
 `-n`, `--dry-run`
 
-: List files which would be linked or deleted by `brew link --overwrite` without
+: List files which would be linked or deleted by `coffee link --overwrite` without
   actually linking or deleting any files.
 
 `-f`, `--force`
@@ -1659,7 +1659,7 @@ paths within its current keg. If *`cask`* is provided, list its artifacts.
 
 ### `log` \[*`options`*\] \[*`formula`*\|*`cask`*\]
 
-Show the `git log` for *`formula`* or *`cask`*, or show the log for the Homebrew
+Show the `git log` for *`formula`* or *`cask`*, or show the log for the CoffeeBrewery
 repository if no formula or cask is provided.
 
 `-p`, `--patch`
@@ -1692,7 +1692,7 @@ repository if no formula or cask is provided.
 
 ### `mcp-server` \[`--debug`\]
 
-Starts the Homebrew MCP (Model Context Protocol) server.
+Starts the CoffeeBrewery MCP (Model Context Protocol) server.
 
 `-d`, `--debug`
 
@@ -1734,7 +1734,7 @@ missing dependencies.
 
 ### `nodenv-sync`
 
-Create symlinks for Homebrew's installed NodeJS versions in
+Create symlinks for CoffeeBrewery's installed NodeJS versions in
 `~/.nodenv/versions`.
 
 Note that older version symlinks will also be created so e.g. NodeJS 19.1.0 will
@@ -1804,7 +1804,7 @@ otherwise.
 
 : Also include outdated casks with `version :latest` and `auto_updates true`
   casks that would otherwise be skipped. Enabled by default if
-  `$HOMEBREW_UPGRADE_GREEDY` is set.
+  `$COFFEEBREWER_UPGRADE_GREEDY` is set.
 
 `--greedy-latest`
 
@@ -1818,11 +1818,11 @@ otherwise.
 ### `pin` \[`--formula`\] \[`--cask`\] *`installed_formula`*\|*`installed_cask`* \[...\]
 
 Pin the specified package, preventing it from being upgraded when issuing the
-`brew upgrade` *`formula`* or *`cask`* command. See also `unpin`.
+`coffee upgrade` *`formula`* or *`cask`* command. See also `unpin`.
 
 *Note:* Other packages which depend on newer versions of a pinned formula might
 not install or run correctly. Pinned casks with `auto_updates true` may update
-themselves outside Homebrew.
+themselves outside CoffeeBrewery.
 
 `--formula`
 
@@ -1838,14 +1838,14 @@ Rerun the post-install steps for *`formula`*.
 
 ### `pyenv-sync`
 
-Create symlinks for Homebrew's installed Python versions in `~/.pyenv/versions`.
+Create symlinks for CoffeeBrewery's installed Python versions in `~/.pyenv/versions`.
 
 Note that older patch version symlinks will be created and linked to the minor
 version so e.g. Python 3.11.0 will also be symlinked to 3.11.3.
 
 ### `rbenv-sync`
 
-Create symlinks for Homebrew's installed Ruby versions in `~/.rbenv/versions`.
+Create symlinks for CoffeeBrewery's installed Ruby versions in `~/.rbenv/versions`.
 
 Note that older version symlinks will also be created so e.g. Ruby 3.2.1 will
 also be symlinked to 3.2.0.
@@ -1873,7 +1873,7 @@ all items or checking if any current formulae/casks have Ruby issues.
 
 `--syntax`
 
-: Syntax-check all of Homebrew's Ruby files (if no *`tap`* is passed).
+: Syntax-check all of CoffeeBrewery's Ruby files (if no *`tap`* is passed).
 
 `--no-simulate`
 
@@ -1885,11 +1885,11 @@ Uninstall and then reinstall a *`formula`* or *`cask`* using the same options it
 was originally installed with, plus any appended options specific to a
 *`formula`*.
 
-Unless `$HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK` is set, `brew upgrade` or `brew
+Unless `$COFFEEBREWER_NO_INSTALLED_DEPENDENTS_CHECK` is set, `coffee upgrade` or `coffee
 reinstall` will be run for outdated dependents and dependents with broken
 linkage, respectively.
 
-Unless `$HOMEBREW_NO_INSTALL_CLEANUP` is set, `brew cleanup` will then be run
+Unless `$COFFEEBREWER_NO_INSTALL_CLEANUP` is set, `coffee cleanup` will then be run
 for the reinstalled formulae and casks or, every 30 days, for all packages.
 
 `-d`, `--debug`
@@ -1900,7 +1900,7 @@ for the reinstalled formulae and casks or, every 30 days, for all packages.
 `--display-times`
 
 : Print install times for each package at the end of the run. Enabled by default
-  if `$HOMEBREW_DISPLAY_INSTALL_TIMES` is set.
+  if `$COFFEEBREWER_DISPLAY_INSTALL_TIMES` is set.
 
 `-f`, `--force`
 
@@ -1914,7 +1914,7 @@ for the reinstalled formulae and casks or, every 30 days, for all packages.
 `-y`, `--no-ask`
 
 : Do not ask for confirmation before downloading and reinstalling. Ask mode is
-  the default. Enabled by default if `$HOMEBREW_NO_ASK` is set.
+  the default. Enabled by default if `$COFFEEBREWER_NO_ASK` is set.
 
 `--formula`
 
@@ -1928,7 +1928,7 @@ for the reinstalled formulae and casks or, every 30 days, for all packages.
 
 : Download and patch *`formula`*, then open a shell. This allows the user to run
   `./configure --help` and otherwise determine how to turn the software package
-  into a Homebrew package. If *`formula`* has a `fetch` block, first open a
+  into a CoffeeBrewery package. If *`formula`* has a `fetch` block, first open a
   shell with network access after it runs.
 
 `--force-bottle`
@@ -1971,15 +1971,15 @@ for the reinstalled formulae and casks or, every 30 days, for all packages.
 
 `--zap`
 
-: For use with `brew reinstall --cask`. Remove all files associated with a cask.
+: For use with `coffee reinstall --cask`. Remove all files associated with a cask.
   *May remove files which are shared between applications.*
 
 ### `sandbox-exec` \[`--deny-network`\] *`writable-path`* \[`--`\] *`command`* \[*`args`* ...\]
 
-Run *`command`* in Homebrew's sandbox, allowing writes to *`writable-path`* and
-Homebrew's temporary and cache directories.
+Run *`command`* in CoffeeBrewery's sandbox, allowing writes to *`writable-path`* and
+CoffeeBrewery's temporary and cache directories.
 
-Example: `brew sandbox-exec . -- make test`
+Example: `coffee sandbox-exec . -- make test`
 
 `--deny-network`
 
@@ -2061,16 +2061,16 @@ If `sudo` is passed, operate on `/Library/LaunchDaemons` or
 `~/Library/LaunchAgents` or `~/.config/systemd/user` (started at login).
 
 Environment variables can be added or overridden for a service by creating
-`$HOMEBREW_USER_CONFIG_HOME/services/<formula>.env` (defaults to
+`$COFFEEBREWER_USER_CONFIG_HOME/services/<formula>.env` (defaults to
 `~/.homebrew/services/<formula>.env`). The file uses `KEY=value` format, one per
 line; lines starting with `#` are comments. Changes take effect on the next
-`brew services restart` and persist across upgrades.
+`coffee services restart` and persist across upgrades.
 
 `--sudo-service-user`
 
 : When run as root on macOS, run the service(s) as this user.
 
-\[`sudo`\] `brew services stop` \[`--keep`\] \[`--no-wait`\|`--max-wait=`\] (*`formula`*\|`--all`)
+\[`sudo`\] `coffee services stop` \[`--keep`\] \[`--no-wait`\|`--max-wait=`\] (*`formula`*\|`--all`)
 
 : Stop the service *`formula`* immediately and unregister it from launching at
   login (or boot), unless `--keep` is specified.
@@ -2093,7 +2093,7 @@ line; lines starting with `#` are comments. Changes take effect on the next
 : Stop all services and unregister them from launching at login (or boot),
   unless `--keep` is specified.
 
-\[`sudo`\] `brew services start` (*`formula`*\|`--all`) \[`--file=`\]
+\[`sudo`\] `coffee services start` (*`formula`*\|`--all`) \[`--file=`\]
 
 : Start the service *`formula`* immediately and register it to launch at login
   (or boot).
@@ -2106,7 +2106,7 @@ line; lines starting with `#` are comments. Changes take effect on the next
 
 : Start all services and register them to launch at login (or boot).
 
-\[`sudo`\] `brew services run` (*`formula`*\|`--all`) \[`--file=`\]
+\[`sudo`\] `coffee services run` (*`formula`*\|`--all`) \[`--file=`\]
 
 : Run the service *`formula`* without registering to launch at login (or boot).
 
@@ -2118,7 +2118,7 @@ line; lines starting with `#` are comments. Changes take effect on the next
 
 : Run all services without registering them to launch at login (or boot).
 
-\[`sudo`\] `brew services restart` (*`formula`*\|`--all`) \[`--file=`\]
+\[`sudo`\] `coffee services restart` (*`formula`*\|`--all`) \[`--file=`\]
 
 : Stop (if necessary) and start the service *`formula`* immediately and register
   it to launch at login (or boot).
@@ -2131,17 +2131,17 @@ line; lines starting with `#` are comments. Changes take effect on the next
 
 : Restart all services.
 
-\[`sudo`\] `brew services` \[`list`\] \[`--json`\] \[`--debug`\]
+\[`sudo`\] `coffee services` \[`list`\] \[`--json`\] \[`--debug`\]
 
 : List information about all managed services for the current user (or root).
-  Provides more output from Homebrew and `launchctl`(1) or `systemctl`(1) if run
+  Provides more output from CoffeeBrewery and `launchctl`(1) or `systemctl`(1) if run
   with `--debug`.
 
 `--json`
 
 : Output as JSON.
 
-\[`sudo`\] `brew services kill` (*`formula`*\|`--all`)
+\[`sudo`\] `coffee services kill` (*`formula`*\|`--all`)
 
 : Stop the service *`formula`* immediately but keep it registered to launch at
   login (or boot).
@@ -2151,7 +2151,7 @@ line; lines starting with `#` are comments. Changes take effect on the next
 : Stop all services immediately but keep them registered to launch at login (or
   boot).
 
-\[`sudo`\] `brew services info` (*`formula`*\|`--all`) \[`--json`\]
+\[`sudo`\] `coffee services info` (*`formula`*\|`--all`) \[`--json`\]
 
 : List all managed services for the current user (or root).
 
@@ -2163,29 +2163,29 @@ line; lines starting with `#` are comments. Changes take effect on the next
 
 : Output as JSON.
 
-\[`sudo`\] `brew services cleanup`
+\[`sudo`\] `coffee services cleanup`
 
 : Remove all unused services.
 
 ### `setup-ruby` \[*`command`* ...\]
 
-Installs and configures Homebrew's Ruby. If `command` is passed, it will only
+Installs and configures CoffeeBrewery's Ruby. If `command` is passed, it will only
 run Bundler if necessary for that command.
 
 ### `shellenv` \[*`shell`* ...\]
 
 Valid shells: bash\|csh\|fish\|pwsh\|sh\|tcsh\|zsh
 
-Print export statements. When run in a shell, this installation of Homebrew will
+Print export statements. When run in a shell, this installation of CoffeeBrewery will
 be added to your `$PATH`, `$MANPATH`, and `$INFOPATH`.
 
-The variables `$HOMEBREW_PREFIX`, `$HOMEBREW_CELLAR` and `$HOMEBREW_REPOSITORY`
+The variables `$COFFEEBREWER_PREFIX`, `$COFFEEBREWER_CELLAR` and `$COFFEEBREWER_REPOSITORY`
 are also exported to avoid querying them multiple times. To help guarantee
-idempotence, this command produces no output when Homebrew's `bin` and `sbin`
+idempotence, this command produces no output when CoffeeBrewery's `bin` and `sbin`
 directories are first and second respectively in your `$PATH`. Consider adding
 evaluation of this command's output to your dotfiles (e.g. `~/.bash_profile` or
 `~/.zprofile` on macOS and `~/.bashrc` or `~/.zshrc` on Linux) with e.g.: `eval
-"$(brew shellenv zsh)"` or `eval "$(brew shellenv bash)"`
+"$(coffee shellenv zsh)"` or `eval "$(coffee shellenv bash)"`
 
 The shell should be specified explicitly with a supported shell name parameter
 but will be detected automatically if not provided (but this may not be
@@ -2193,7 +2193,7 @@ correct). Unknown shells will output POSIX exports.
 
 ### `source` \[*`formula`* ...\]
 
-Open a *`formula`*'s source repository in a browser, or open Homebrew's own
+Open a *`formula`*'s source repository in a browser, or open CoffeeBrewery's own
 repository if no argument is provided.
 
 The repository URL is determined from the formula's head URL, stable URL, or
@@ -2205,7 +2205,7 @@ repositories.
 Edit tab information for installed formulae or casks.
 
 This can be useful when you want to control whether an installed formula should
-be removed by `brew autoremove`. To prevent removal, mark the formula as
+be removed by `coffee autoremove`. To prevent removal, mark the formula as
 installed on request; to allow removal, mark the formula as not installed on
 request.
 
@@ -2233,7 +2233,7 @@ arguments are provided, list all installed taps.
 With *`URL`* unspecified, tap a repository from GitHub using HTTPS. Since so
 many taps are hosted on GitHub, this command is a shortcut for:
 
-`brew tap` *`user`*`/`*`repo`* `https://github.com/`*`user`*`/homebrew-`*`repo`*
+`coffee tap` *`user`*`/`*`repo`* `https://github.com/`*`user`*`/homebrew-`*`repo`*
 
 With *`URL`* specified, tap a repository from anywhere, using any transport
 protocol that `git`(1) handles. Unlike the one-argument form of `tap` which
@@ -2267,11 +2267,11 @@ provided, display brief statistics for all installed taps.
 
 : Print a JSON representation of *`tap`*. Currently the default and only
   accepted value for *`version`* is `v1`. See the docs for examples of using the
-  JSON output: <https://docs.brew.sh/Querying-Brew>
+  JSON output: <https://docs.coffee.sh/Querying-Brew>
 
 ### `trust` \[*`options`*\] \[*`target`* ...\]
 
-Trust non-official tap formulae, casks or commands so Homebrew may load them.
+Trust non-official tap formulae, casks or commands so CoffeeBrewery may load them.
 Trusted entries are stored in `${XDG_CONFIG_HOME}/homebrew/trust.json` if
 `$XDG_CONFIG_HOME` is set or `~/.homebrew/trust.json` otherwise.
 
@@ -2329,9 +2329,9 @@ Uninstall a *`formula`* or *`cask`*.
 
 ### `unlink` \[*`options`*\] *`installed_formula`*\|*`installed_cask`* \[...\]
 
-Remove symlinks for *`formula`* or *`cask`* from Homebrew's prefix. This can be
-useful for temporarily disabling a formula: `brew unlink` *`formula`* `&&`
-*`commands`* `&& brew link` *`formula`*
+Remove symlinks for *`formula`* or *`cask`* from CoffeeBrewery's prefix. This can be
+useful for temporarily disabling a formula: `coffee unlink` *`formula`* `&&`
+*`commands`* `&& coffee link` *`formula`*
 
 `-n`, `--dry-run`
 
@@ -2348,7 +2348,7 @@ useful for temporarily disabling a formula: `brew unlink` *`formula`* `&&`
 
 ### `unpin` \[`--formula`\] \[`--cask`\] *`installed_formula`*\|*`installed_cask`* \[...\]
 
-Unpin the specified package, allowing it to be upgraded by `brew upgrade`
+Unpin the specified package, allowing it to be upgraded by `coffee upgrade`
 *`formula`* or *`cask`*. See also `pin`.
 
 `--formula`
@@ -2392,12 +2392,12 @@ or `~/.homebrew/trust.json` otherwise.
 
 ### `update`, `up` \[*`options`*\]
 
-Fetch the newest version of Homebrew and all formulae from GitHub using `git`(1)
+Fetch the newest version of CoffeeBrewery and all formulae from GitHub using `git`(1)
 and perform any necessary migrations.
 
 `--auto-update`
 
-: Run on auto-updates (e.g. before `brew install`). Skips some slower steps.
+: Run on auto-updates (e.g. before `coffee install`). Skips some slower steps.
 
 `-f`, `--force`
 
@@ -2413,13 +2413,13 @@ and perform any necessary migrations.
 
 ### `update-if-needed`
 
-Runs `brew update --auto-update` only if needed. This is a good replacement for
-`brew update` in scripts where you want the no-op case to be both possible and
+Runs `coffee update --auto-update` only if needed. This is a good replacement for
+`coffee update` in scripts where you want the no-op case to be both possible and
 really fast.
 
 ### `update-reset` \[*`repository`* ...\]
 
-Fetch and reset Homebrew and all tap repositories (or any specified
+Fetch and reset CoffeeBrewery and all tap repositories (or any specified
 *`repository`*) using `git`(1) to their latest `origin/HEAD`.
 
 *Note:* this will destroy all your uncommitted or committed changes.
@@ -2427,15 +2427,15 @@ Fetch and reset Homebrew and all tap repositories (or any specified
 ### `upgrade` \[*`options`*\] \[*`installed_formula`*\|*`installed_cask`* ...\]
 
 Upgrade outdated, unpinned packages using the same options they were originally
-installed with, plus any appended brew formula options. If *`cask`* or
+installed with, plus any appended coffee formula options. If *`cask`* or
 *`formula`* are specified, upgrade only the given *`cask`* or *`formula`*
 (unless they are pinned; see `pin`, `unpin`).
 
-Unless `$HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK` is set, `brew upgrade` or `brew
+Unless `$COFFEEBREWER_NO_INSTALLED_DEPENDENTS_CHECK` is set, `coffee upgrade` or `coffee
 reinstall` will be run for outdated dependents and dependents with broken
 linkage, respectively.
 
-Unless `$HOMEBREW_NO_INSTALL_CLEANUP` is set, `brew cleanup` will then be run
+Unless `$COFFEEBREWER_NO_INSTALL_CLEANUP` is set, `coffee cleanup` will then be run
 for the upgraded formulae and casks or, every 30 days, for all packages.
 
 `-d`, `--debug`
@@ -2446,7 +2446,7 @@ for the upgraded formulae and casks or, every 30 days, for all packages.
 `--display-times`
 
 : Print install times for each package at the end of the run. Enabled by default
-  if `$HOMEBREW_DISPLAY_INSTALL_TIMES` is set.
+  if `$COFFEEBREWER_DISPLAY_INSTALL_TIMES` is set.
 
 `-f`, `--force`
 
@@ -2481,7 +2481,7 @@ for the upgraded formulae and casks or, every 30 days, for all packages.
 `-y`, `--no-ask`
 
 : Do not ask for confirmation before downloading and upgrading. Ask mode is the
-  default. Enabled by default if `$HOMEBREW_NO_ASK` is set.
+  default. Enabled by default if `$COFFEEBREWER_NO_ASK` is set.
 
 `--formula`
 
@@ -2496,7 +2496,7 @@ for the upgraded formulae and casks or, every 30 days, for all packages.
 
 : Download and patch *`formula`*, then open a shell. This allows the user to run
   `./configure --help` and otherwise determine how to turn the software package
-  into a Homebrew package. If *`formula`* has a `fetch` block, first open a
+  into a CoffeeBrewery package. If *`formula`* has a `fetch` block, first open a
   shell with network access after it runs.
 
 `--force-bottle`
@@ -2534,12 +2534,12 @@ for the upgraded formulae and casks or, every 30 days, for all packages.
 `--no-quit`
 
 : Prevent running cask applications from being quit during upgrade. Enabled by
-  default if `$HOMEBREW_NO_UPGRADE_QUIT_CASKS` is set.
+  default if `$COFFEEBREWER_NO_UPGRADE_QUIT_CASKS` is set.
 
 `-g`, `--greedy`
 
 : Also include casks with `version :latest` and `auto_updates true` casks that
-  would otherwise be skipped. Enabled by default if `$HOMEBREW_UPGRADE_GREEDY`
+  would otherwise be skipped. Enabled by default if `$COFFEEBREWER_UPGRADE_GREEDY`
   is set.
 
 `--greedy-latest`
@@ -2680,7 +2680,7 @@ Show which formula(e) provides the given command.
 
 ### `--cache` \[*`options`*\] \[*`formula`*\|*`cask`* ...\]
 
-Display Homebrew's download cache. See also `$HOMEBREW_CACHE`.
+Display CoffeeBrewery's download cache. See also `$COFFEEBREWER_CACHE`.
 
 If a *`formula`* or *`cask`* is provided, display the file or directory used to
 cache it.
@@ -2721,22 +2721,22 @@ cache it.
 
 ### `--caskroom` \[*`cask`* ...\]
 
-Display Homebrew's Caskroom path.
+Display CoffeeBrewery's Caskroom path.
 
 If *`cask`* is provided, display the location in the Caskroom where *`cask`*
 would be installed, without any sort of versioned directory as the last path.
 
 ### `--cellar` \[*`formula`* ...\]
 
-Display Homebrew's Cellar path. *Default:* `$(brew --prefix)/Cellar`, or if that
-directory doesn't exist, `$(brew --repository)/Cellar`.
+Display CoffeeBrewery's Cellar path. *Default:* `$(coffee --prefix)/Cellar`, or if that
+directory doesn't exist, `$(coffee --repository)/Cellar`.
 
 If *`formula`* is provided, display the location in the Cellar where *`formula`*
 would be installed, without any sort of versioned directory as the last path.
 
 ### `--env`, `environment` \[`--shell=`\] \[`--plain`\] \[*`formula`* ...\]
 
-Summarise Homebrew's build environment as a plain list.
+Summarise CoffeeBrewery's build environment as a plain list.
 
 If the command's output is sent through a pipe and no shell is specified, the
 list is formatted for export to `bash`(1) unless `--plain` is passed.
@@ -2752,7 +2752,7 @@ list is formatted for export to `bash`(1) unless `--plain` is passed.
 
 ### `--prefix` \[`--unbrewed`\] \[`--installed`\] \[*`formula`* ...\]
 
-Display Homebrew's install path. *Default:*
+Display CoffeeBrewery's install path. *Default:*
 
 * macOS ARM: `/opt/homebrew`
 * macOS Intel: `/usr/local`
@@ -2763,7 +2763,7 @@ be installed.
 
 `--unbrewed`
 
-: List files in Homebrew's prefix not installed by Homebrew.
+: List files in CoffeeBrewery's prefix not installed by CoffeeBrewery.
 
 `--installed`
 
@@ -2772,25 +2772,25 @@ be installed.
 
 ### `--repository`, `--repo` \[*`tap`* ...\]
 
-Display where Homebrew's Git repository is located.
+Display where CoffeeBrewery's Git repository is located.
 
 If *`user`*`/`*`repo`* are provided, display where tap *`user`*`/`*`repo`*'s
 directory is located.
 
 ### `--taps`
 
-Display the path to Homebrew’s Taps directory.
+Display the path to CoffeeBrewery’s Taps directory.
 
 ### `--version`, `-v`
 
-Print the version numbers of Homebrew, Homebrew/homebrew-core and
-Homebrew/homebrew-cask (if tapped) to standard output.
+Print the version numbers of CoffeeBrewery, CoffeeBrewery/homebrew-core and
+CoffeeBrewery/homebrew-cask (if tapped) to standard output.
 
 ## DEVELOPER COMMANDS
 
 ### `audit` \[*`options`*\] \[*`formula`*\|*`cask`* ...\]
 
-Check *`formula`* or *`cask`* for Homebrew coding style violations. This should
+Check *`formula`* or *`cask`* for CoffeeBrewery coding style violations. This should
 be run before submitting a new formula or cask. If no *`formula`* or *`cask`*
 are provided, check all locally available formulae and casks and skip style
 checks. Will exit with a non-zero status if any errors are found.
@@ -2822,7 +2822,7 @@ checks. Will exit with a non-zero status if any errors are found.
 `--new`
 
 : Run various additional style checks to determine if a new formula or cask is
-  eligible for Homebrew. This should be used when creating new formulae or casks
+  eligible for CoffeeBrewery. This should be used when creating new formulae or casks
   and implies `--strict` and `--online`.
 
 `--changed`
@@ -2847,7 +2847,7 @@ checks. Will exit with a non-zero status if any errors are found.
 
 `--skip-style`
 
-: Skip running non-RuboCop style checks. Useful if you plan on running `brew
+: Skip running non-RuboCop style checks. Useful if you plan on running `coffee
   style` separately. Enabled by default unless a formula is specified by name.
 
 `-D`, `--audit-debug`
@@ -2884,23 +2884,23 @@ checks. Will exit with a non-zero status if any errors are found.
 
 ### `benchmark` \[`--exec`\] \[`--runs=`\] *`formula`* \[...\]
 
-Benchmark this `brew` with `hyperfine`, installing `hyperfine` first if it is
+Benchmark this `coffee` with `hyperfine`, installing `hyperfine` first if it is
 missing. Each of the metadata-cold, archive-cold, archive-warm and fully-warm
-`brew install` workloads is measured separately, as are the metadata-cold,
-archive-cold and archive-warm `brew fetch` workloads for each of 1, 10, 50 and
+`coffee install` workloads is measured separately, as are the metadata-cold,
+archive-cold and archive-warm `coffee fetch` workloads for each of 1, 10, 50 and
 100 *`formula`*e that are available: pass 100 *`formula`*e for full coverage and
 fewer for a shorter run.
 
 The first *`formula`* is used for the install workloads: its dependencies are
 installed once up front and left behind. All *`formula`*e must initially be
 uninstalled and the archive-cold workloads re-download every bottle in the
-batch. Mean wall times and `$HOMEBREW_PHASE_TIMINGS` phase totals are printed
+batch. Mean wall times and `$COFFEEBREWER_PHASE_TIMINGS` phase totals are printed
 and written to `benchmark/results.json`.
 
 `--exec`
 
-: Run `hyperfine` with the arguments given after `--` instead of Homebrew's own
-  workloads, e.g. `brew benchmark --exec -- 'brew --version'`.
+: Run `hyperfine` with the arguments given after `--` instead of CoffeeBrewery's own
+  workloads, e.g. `coffee benchmark --exec -- 'coffee --version'`.
 
 `--runs`
 
@@ -2940,7 +2940,7 @@ at its original value, while `--no-rebuild` will remove it.
 
 : Generate an updated bottle block for a formula and optionally merge it into
   the formula file. Instead of a formula name, requires the path to a JSON file
-  generated with `brew bottle --json` *`formula`*.
+  generated with `coffee bottle --json` *`formula`*.
 
 `--write`
 
@@ -2964,12 +2964,12 @@ at its original value, while `--no-rebuild` will remove it.
 `--root-url`
 
 : Use the specified *`URL`* as the root of the bottle's URL instead of
-  Homebrew's default.
+  CoffeeBrewery's default.
 
 `--root-url-using`
 
 : Use the specified download strategy class for downloading the bottle's URL
-  instead of Homebrew's default.
+  instead of CoffeeBrewery's default.
 
 ### `bump` \[*`options`*\] \[*`formula`*\|*`cask`* ...\]
 
@@ -3048,11 +3048,11 @@ supplied by the user.
 
 `--no-audit`
 
-: Don't run `brew audit` before opening the PR.
+: Don't run `coffee audit` before opening the PR.
 
 `--no-style`
 
-: Don't run `brew style --fix` before opening the PR.
+: Don't run `coffee style --fix` before opening the PR.
 
 `--no-browse`
 
@@ -3151,15 +3151,15 @@ uses.
 
 `--no-audit`
 
-: Don't run `brew audit` before opening the PR.
+: Don't run `coffee audit` before opening the PR.
 
 `--strict`
 
-: Run `brew audit --strict` before opening the PR.
+: Run `coffee audit --strict` before opening the PR.
 
 `--online`
 
-: Run `brew audit --online` before opening the PR.
+: Run `coffee audit --online` before opening the PR.
 
 `--no-browse`
 
@@ -3279,13 +3279,13 @@ Display the source of a *`formula`* or *`cask`*.
 
 ### `contributions` \[`--user=`\] \[`--repositories=`\] \[`--quarter=`\] \[`--from=`\] \[`--to=`\] \[`--csv`\] \[`--maintainer-report-csv`\]
 
-Summarise contributions to Homebrew repositories.
+Summarise contributions to CoffeeBrewery repositories.
 
 `--user`
 
 : Specify a comma-separated list of GitHub usernames or email addresses to find
-  contributions from. Omitting this flag searches Homebrew maintainers and
-  requires access to the `Homebrew/maintainers` team. With
+  contributions from. Omitting this flag searches CoffeeBrewery maintainers and
+  requires access to the `CoffeeBrewery/maintainers` team. With
   `--maintainer-report-csv`, only matching period-end Maintainers are included.
 
 `--repositories`
@@ -3293,12 +3293,12 @@ Summarise contributions to Homebrew repositories.
 : Specify a comma-separated list of repositories to search. All repositories
   must be under the same user or organisation. Omitting this flag, or specifying
   `--repositories=primary`, searches only the main repositories:
-  `Homebrew/brew`, `Homebrew/homebrew-core`, `Homebrew/homebrew-cask`.
+  `CoffeeBrewery/coffee`, `CoffeeBrewery/homebrew-core`, `CoffeeBrewery/homebrew-cask`.
 
 `--organisation`
 
 : Specify the organisation to populate sources repositories from. Omitting this
-  flag searches the Homebrew primary repositories.
+  flag searches the CoffeeBrewery primary repositories.
 
 `--team`
 
@@ -3307,7 +3307,7 @@ Summarise contributions to Homebrew repositories.
 
 `--quarter`
 
-: Homebrew contributions quarter to search (1-4). Omitting this flag searches
+: CoffeeBrewery contributions quarter to search (1-4). Omitting this flag searches
   the past year. If `--from` or `--to` are set, they take precedence.
 
 `--from`
@@ -3326,29 +3326,29 @@ Summarise contributions to Homebrew repositories.
 `--maintainer-report-csv`
 
 : Print a CSV of Maintainer and Lead Maintainer activity criteria using fetched
-  Git histories and GitHub's existing approved-review search for the Homebrew
+  Git histories and GitHub's existing approved-review search for the CoffeeBrewery
   governance quarter, for example `--maintainer-report-csv=2026-2`.
   Alternatively, omit the value and set `--from` and `--to` for any reporting
   period. Also write it in the current directory as
-  `brew-contributions-FROM-to-TO.csv`, or
-  `brew-contributions-FROM-to-TO-USER.csv` when filtered with `--user`. Only
+  `coffee-contributions-FROM-to-TO.csv`, or
+  `coffee-contributions-FROM-to-TO-USER.csv` when filtered with `--user`. Only
   Maintainers listed at the end of that period are included. Activity checks use
   the latest completed governance quarter; role recommendations use up to four
   full quarters of reports. Review searches return at most 100 results and other
   counts are capped at 500 per repository and contribution type.
   Repository-scoped follow-up searches ensure role activity checks remain
   accurate when a count is capped. Completed-period GitHub searches are cached
-  in Homebrew's cache and removed by normal cache pruning. `YEAR-1` is December
+  in CoffeeBrewery's cache and removed by normal cache pruning. `YEAR-1` is December
   of the previous year through February, `YEAR-2` is March through May, `YEAR-3`
   is June through August and `YEAR-4` is September through November.
 
 ### `create` \[*`options`*\] *`URL`*
 
 Generate a formula or, with `--cask`, a cask for the downloadable file at
-*`URL`* and open it in the editor. Homebrew will attempt to automatically derive
+*`URL`* and open it in the editor. CoffeeBrewery will attempt to automatically derive
 the formula name and version, but if it fails, you'll have to make your own
 template. The `wget` formula serves as a simple example. For the complete API,
-see: <https://docs.brew.sh/rubydoc/Formula>
+see: <https://docs.coffee.sh/rubydoc/Formula>
 
 `--autotools`
 
@@ -3404,7 +3404,7 @@ see: <https://docs.brew.sh/rubydoc/Formula>
 
 `--no-fetch`
 
-: Homebrew will not download *`URL`* to the cache and will thus not add its
+: CoffeeBrewery will not download *`URL`* to the cache and will thus not add its
   SHA-256 to the formula for you, nor will it check the GitHub API for GitHub
   projects (to fill out its description and homepage).
 
@@ -3435,10 +3435,10 @@ see: <https://docs.brew.sh/rubydoc/Formula>
 
 ### `debugger` \[`--open`\] *`command`* \[...\]
 
-Run the specified Homebrew command in debug mode.
+Run the specified CoffeeBrewery command in debug mode.
 
-To pass flags to the command, use `--` to separate them from the `brew` flags.
-For example: `brew debugger -- list --formula`.
+To pass flags to the command, use `--` to separate them from the `coffee` flags.
+For example: `coffee debugger -- list --formula`.
 
 `-O`, `--open`
 
@@ -3447,7 +3447,7 @@ For example: `brew debugger -- list --formula`.
 ### `edit` \[*`options`*\] \[*`formula`*\|*`cask`*\|*`tap`* ...\]
 
 Open a *`formula`*, *`cask`* or *`tap`* in the editor set by `$EDITOR` or
-`$HOMEBREW_EDITOR`, or open the Homebrew repository for editing if no argument
+`$COFFEEBREWER_EDITOR`, or open the CoffeeBrewery repository for editing if no argument
 is provided.
 
 `--formula`
@@ -3506,7 +3506,7 @@ The argument may be either a path to an application bundle (e.g.
 
 ### `generate-man-completions` \[`--no-exit-code`\]
 
-Generate Homebrew's manpages and shell completions.
+Generate CoffeeBrewery's manpages and shell completions.
 
 `--no-exit-code`
 
@@ -3534,7 +3534,7 @@ cask definition, or `zap :not_required` if nothing is found.
 
 ### `install-bundler-gems` \[`--groups=`\] \[`--add-groups=`\]
 
-Install Homebrew's Bundler gems.
+Install CoffeeBrewery's Bundler gems.
 
 `--groups`
 
@@ -3548,7 +3548,7 @@ Install Homebrew's Bundler gems.
 
 ### `irb` \[`--examples`\]
 
-Enter the interactive Homebrew Ruby shell.
+Enter the interactive CoffeeBrewery Ruby shell.
 
 `--examples`
 
@@ -3556,8 +3556,8 @@ Enter the interactive Homebrew Ruby shell.
 
 ### `lgtm` \[`--online`\]
 
-Run `brew typecheck`, `brew style --changed` and the relevant `brew tests`,
-`brew audit` and `brew test` checks in one go.
+Run `coffee typecheck`, `coffee style --changed` and the relevant `coffee tests`,
+`coffee audit` and `coffee test` checks in one go.
 
 `--online`
 
@@ -3585,14 +3585,14 @@ provided, check all kegs. Raises an error if run on uninstalled formulae.
 
 `--cached`
 
-: Print the cached linkage values stored in `$HOMEBREW_CACHE`, set by a previous
-  `brew linkage` run.
+: Print the cached linkage values stored in `$COFFEEBREWER_CACHE`, set by a previous
+  `coffee linkage` run.
 
 ### `livecheck`, `lc` \[*`options`*\] \[*`formula`*\|*`cask`* ...\]
 
 Check for newer versions of formulae and/or casks from upstream. If no formula
 or cask argument is passed, the list of formulae and casks to check is taken
-from `$HOMEBREW_LIVECHECK_WATCHLIST` or
+from `$COFFEEBREWER_LIVECHECK_WATCHLIST` or
 `${XDG_CONFIG_HOME}/homebrew/livecheck_watchlist.txt` if `$XDG_CONFIG_HOME` is
 set or `~/.homebrew/livecheck_watchlist.txt` otherwise.
 
@@ -3645,7 +3645,7 @@ set or `~/.homebrew/livecheck_watchlist.txt` otherwise.
 
 ### `prof` \[*`options`*\] *`command`* \[...\]
 
-Run Homebrew with a Ruby profiler. For example, `brew prof readall`.
+Run CoffeeBrewery with a Ruby profiler. For example, `coffee prof readall`.
 
 `--stackprof`
 
@@ -3657,18 +3657,18 @@ Run Homebrew with a Ruby profiler. For example, `brew prof readall`.
 
 `--timings`
 
-: Record machine-readable timings for Homebrew command phases.
+: Record machine-readable timings for CoffeeBrewery command phases.
 
 ### `rubocop`
 
-Installs, configures and runs Homebrew's `rubocop`.
+Installs, configures and runs CoffeeBrewery's `rubocop`.
 
 ### `ruby` \[*`options`*\] (`-e` *`text`*\|*`file`*)
 
-Run a Ruby instance with Homebrew's libraries loaded. For example, `brew ruby -e
-"puts :gcc.f.deps"` or `brew ruby script.rb`.
+Run a Ruby instance with CoffeeBrewery's libraries loaded. For example, `coffee ruby -e
+"puts :gcc.f.deps"` or `coffee ruby script.rb`.
 
-Run e.g. `brew ruby -- --version` to pass arbitrary arguments to `ruby`.
+Run e.g. `coffee ruby -- --version` to pass arbitrary arguments to `ruby`.
 
 `-r`
 
@@ -3680,7 +3680,7 @@ Run e.g. `brew ruby -- --version` to pass arbitrary arguments to `ruby`.
 
 ### `rubydoc` \[`--only-public`\] \[`--open`\]
 
-Generate Homebrew's RubyDoc documentation.
+Generate CoffeeBrewery's RubyDoc documentation.
 
 `--only-public`
 
@@ -3692,20 +3692,20 @@ Generate Homebrew's RubyDoc documentation.
 
 ### `sh` \[*`options`*\] \[*`file`*\]
 
-Enter an interactive shell for Homebrew's build environment. Use
+Enter an interactive shell for CoffeeBrewery's build environment. Use
 years-battle-hardened build logic to help your `./configure && make && make
 install` and even your `gem install` succeed. Especially handy if you run
-Homebrew in an Xcode-only configuration since it adds tools like `make` to your
+CoffeeBrewery in an Xcode-only configuration since it adds tools like `make` to your
 `$PATH` which build systems would not find otherwise.
 
-With `--ruby`, enter an interactive shell for Homebrew's Ruby environment. This
+With `--ruby`, enter an interactive shell for CoffeeBrewery's Ruby environment. This
 sets up the correct Ruby paths, `$GEM_HOME` and bundle configuration used by
-Homebrew's development tools. The environment includes gems from the installed
+CoffeeBrewery's development tools. The environment includes gems from the installed
 groups, making tools like RuboCop, Sorbet and RSpec available via `bundle exec`.
 
 `-r`, `--ruby`
 
-: Set up Homebrew's Ruby environment.
+: Set up CoffeeBrewery's Ruby environment.
 
 `--env`
 
@@ -3717,10 +3717,10 @@ groups, making tools like RuboCop, Sorbet and RSpec available via `bundle exec`.
 
 ### `style` \[*`options`*\] \[*`file`*\|*`tap`*\|*`formula`*\|*`cask`* ...\]
 
-Check formulae or files for conformance to Homebrew style guidelines.
+Check formulae or files for conformance to CoffeeBrewery style guidelines.
 
 Lists of *`file`*, *`tap`* and *`formula`* may not be combined. If none are
-provided, `style` will run style checks on the whole Homebrew library, including
+provided, `style` will run style checks on the whole CoffeeBrewery library, including
 core code and all formulae.
 
 `--fix`
@@ -3781,7 +3781,7 @@ Run the test method provided by an installed formula. There is no standard
 output or return code, but generally it should notify the user if something is
 wrong with the installed formula.
 
-*Example:* `brew install jruby && brew test jruby`
+*Example:* `coffee install jruby && coffee test jruby`
 
 `-f`, `--force`
 
@@ -3801,14 +3801,14 @@ wrong with the installed formula.
 
 ### `test-bot` \[*`options`*\] \[*`formula`*\]
 
-Tests the full lifecycle of a Homebrew change to a tap (Git repository). For
-example, for a GitHub Actions pull request that changes a formula `brew
+Tests the full lifecycle of a CoffeeBrewery change to a tap (Git repository). For
+example, for a GitHub Actions pull request that changes a formula `coffee
 test-bot` will ensure the system is cleaned and set up to test the formula,
 install the formula, run various tests and checks on it, bottle (package) the
 binaries and test formulae that depend on it to ensure they aren't broken by
 these changes.
 
-Only supports GitHub Actions as a CI provider. This is because Homebrew uses
+Only supports GitHub Actions as a CI provider. This is because CoffeeBrewery uses
 GitHub Actions and it's freely available for public and private use with macOS
 and Linux workers.
 
@@ -3818,7 +3818,7 @@ and Linux workers.
 
 `--cleanup`
 
-: Clean all state from the Homebrew directory. Use with care!
+: Clean all state from the CoffeeBrewery directory. Use with care!
 
 `--skip-setup`
 
@@ -3840,21 +3840,21 @@ and Linux workers.
 
 `--keep-old`
 
-: Run `brew bottle --keep-old` to build new bottles for a single platform.
+: Run `coffee bottle --keep-old` to build new bottles for a single platform.
 
 `--skip-relocation`
 
-: Run `brew bottle --skip-relocation` to build new bottles that don't require
+: Run `coffee bottle --skip-relocation` to build new bottles that don't require
   relocation.
 
 `--only-json-tab`
 
-: Run `brew bottle --only-json-tab` to build new bottles that do not contain a
+: Run `coffee bottle --only-json-tab` to build new bottles that do not contain a
   tab.
 
 `--local`
 
-: Ask Homebrew to write verbose logs under `./logs/` and set `$HOME` to
+: Ask CoffeeBrewery to write verbose logs under `./logs/` and set `$HOME` to
   `./home/`
 
 `--tap`
@@ -3879,7 +3879,7 @@ and Linux workers.
 `--root-url`
 
 : Use the specified *`URL`* as the root of the bottle's URL instead of
-  Homebrew's default.
+  CoffeeBrewery's default.
 
 `--git-name`
 
@@ -3895,15 +3895,15 @@ and Linux workers.
 
 `--skip-online-checks`
 
-: Don't pass `--online` to `brew audit` and skip `brew livecheck`.
+: Don't pass `--online` to `coffee audit` and skip `coffee livecheck`.
 
 `--skip-new`
 
-: Don't pass `--new` to `brew audit` for new formulae.
+: Don't pass `--new` to `coffee audit` for new formulae.
 
 `--skip-new-strict`
 
-: Don't pass `--strict` to `brew audit` for new formulae.
+: Don't pass `--strict` to `coffee audit` for new formulae.
 
 `--skip-dependents`
 
@@ -3939,7 +3939,7 @@ and Linux workers.
 
 `--stable`
 
-: Only run the tap syntax checks needed on stable brew.
+: Only run the tap syntax checks needed on stable coffee.
 
 `--only-formulae`
 
@@ -3987,7 +3987,7 @@ and Linux workers.
 
 ### `tests` \[*`options`*\]
 
-Run Homebrew's unit and integration tests.
+Run CoffeeBrewery's unit and integration tests.
 
 `--coverage`
 
@@ -4203,12 +4203,12 @@ Update versions for PyPI resource blocks in *`formula`*.
 
 ### `update-test` \[*`options`*\]
 
-Run a test of `brew update` with a new repository clone. If no options are
+Run a test of `coffee update` with a new repository clone. If no options are
 passed, use `origin/main` as the start commit.
 
 `--to-tag`
 
-: Set `$HOMEBREW_UPDATE_TO_TAG` to test updating between tags.
+: Set `$COFFEEBREWER_UPDATE_TO_TAG` to test updating between tags.
 
 `--keep-tmp`
 
@@ -4224,7 +4224,7 @@ passed, use `origin/main` as the start commit.
 
 ### `vendor-gems` \[`--update=`\] \[`--no-commit`\]
 
-Install and commit Homebrew's vendored gems.
+Install and commit CoffeeBrewery's vendored gems.
 
 `--update`
 
@@ -4240,7 +4240,7 @@ Verify the build provenance of bottles using GitHub's attestation tools. This is
 done by first fetching the given bottles and then verifying their provenance for
 `homebrew/core` and third-party taps that provide attestations.
 
-Note that this command depends on the GitHub CLI. Run `brew install gh`.
+Note that this command depends on the GitHub CLI. Run `coffee install gh`.
 
 `--os`
 
@@ -4270,7 +4270,7 @@ Note that this command depends on the GitHub CLI. Run `brew install gh`.
 
 ### `which-update` \[*`options`*\] *`database`*
 
-Database update for `brew which-formula`.
+Database update for `coffee which-formula`.
 
 `--bottle-json-dir`
 
@@ -4391,17 +4391,17 @@ These options are applicable across multiple subcommands.
 
 ## CUSTOM EXTERNAL COMMANDS
 
-Homebrew, like `git`(1), supports external commands. These are executable
-scripts that reside somewhere in the `$PATH`, named `brew-`*`cmdname`* or
-`brew-`*`cmdname`*`.rb`, which can be invoked like `brew` *`cmdname`*. This
-allows you to create your own commands without modifying Homebrew's internals.
+CoffeeBrewery, like `git`(1), supports external commands. These are executable
+scripts that reside somewhere in the `$PATH`, named `coffee-`*`cmdname`* or
+`coffee-`*`cmdname`*`.rb`, which can be invoked like `coffee` *`cmdname`*. This
+allows you to create your own commands without modifying CoffeeBrewery's internals.
 
 Instructions for creating your own commands can be found in the docs:
-<https://docs.brew.sh/External-Commands>
+<https://docs.coffee.sh/External-Commands>
 
 ## SPECIFYING FORMULAE
 
-Many Homebrew commands accept one or more *`formula`* arguments. These arguments
+Many CoffeeBrewery commands accept one or more *`formula`* arguments. These arguments
 can take several different forms:
 
 * The name of a formula: e.g. `git`, `node`, `wget`.
@@ -4420,52 +4420,52 @@ can be specified the same way as the *`formula`* arguments described in
 ## ENVIRONMENT
 
 Note that environment variables must have a value set to be detected. For
-example, run `export HOMEBREW_NO_INSECURE_REDIRECT=1` rather than just `export
-HOMEBREW_NO_INSECURE_REDIRECT`.
+example, run `export COFFEEBREWER_NO_INSECURE_REDIRECT=1` rather than just `export
+COFFEEBREWER_NO_INSECURE_REDIRECT`.
 
-`HOMEBREW_*` environment variables can also be set in Homebrew's environment
+`COFFEEBREWER_*` environment variables can also be set in CoffeeBrewery's environment
 files:
 
-* `/etc/homebrew/brew.env` (system-wide)
+* `/etc/homebrew/coffee.env` (system-wide)
 
-* `${HOMEBREW_PREFIX}/etc/homebrew/brew.env` (prefix-specific)
+* `${COFFEEBREWER_PREFIX}/etc/homebrew/coffee.env` (prefix-specific)
 
-* `$XDG_CONFIG_HOME/homebrew/brew.env` if `$XDG_CONFIG_HOME` is set or
-  `~/.homebrew/brew.env` otherwise (user-specific)
+* `$XDG_CONFIG_HOME/homebrew/coffee.env` if `$XDG_CONFIG_HOME` is set or
+  `~/.homebrew/coffee.env` otherwise (user-specific)
 
 User-specific environment files take precedence over prefix-specific files and
 prefix-specific files take precedence over system-wide files (unless
-`$HOMEBREW_SYSTEM_ENV_TAKES_PRIORITY` is set, see below).
+`$COFFEEBREWER_SYSTEM_ENV_TAKES_PRIORITY` is set, see below).
 
 Note that these files do not support shell variable expansion (e.g. `$HOME`) or
 command execution (e.g. `$(cat file)`).
 
 For MDM configuration, package restrictions and policy ownership, see:
 
-[Homebrew for Mac Admins][1]
+[CoffeeBrewery for Mac Admins][1]
 
-[Homebrew Package Policies][2]
+[CoffeeBrewery Package Policies][2]
 
-`HOMEBREW_API_AUTO_UPDATE_SECS`
+`COFFEEBREWER_API_AUTO_UPDATE_SECS`
 
-: Check Homebrew's API for new formulae or cask data every
-  `$HOMEBREW_API_AUTO_UPDATE_SECS` seconds. Alternatively, disable API
-  auto-update checks entirely with `$HOMEBREW_NO_AUTO_UPDATE`.
+: Check CoffeeBrewery's API for new formulae or cask data every
+  `$COFFEEBREWER_API_AUTO_UPDATE_SECS` seconds. Alternatively, disable API
+  auto-update checks entirely with `$COFFEEBREWER_NO_AUTO_UPDATE`.
   
   *Default:* `450`.
 
-`HOMEBREW_API_DOMAIN`
+`COFFEEBREWER_API_DOMAIN`
 
-: Use this URL as the download mirror for Homebrew JSON API. If metadata files
+: Use this URL as the download mirror for CoffeeBrewery JSON API. If metadata files
   at that URL are temporarily unavailable, the default API domain will be used
   as a fallback mirror.
   
-  *Default:* `https://formulae.brew.sh/api`.
+  *Default:* `https://formulae.coffee.sh/api`.
 
-`HOMEBREW_ARTIFACT_DOMAIN`
+`COFFEEBREWER_ARTIFACT_DOMAIN`
 
 : Prefix all download URLs, including those for bottles, with this value. For
-  example, `export HOMEBREW_ARTIFACT_DOMAIN=http://localhost:8080` will cause a
+  example, `export COFFEEBREWER_ARTIFACT_DOMAIN=http://localhost:8080` will cause a
   formula with the URL `https://example.com/foo.tar.gz` to instead download from
   `http://localhost:8080/https://example.com/foo.tar.gz`. Bottle URLs however,
   have their domain replaced with this prefix. This results in e.g.
@@ -4477,533 +4477,533 @@ For MDM configuration, package restrictions and policy ownership, see:
   the `v2` path is not duplicated, resulting in e.g.
   `https://mirror.example.com/v2/ghcr-io/homebrew/core/gettext/manifests/0.21`.
 
-`HOMEBREW_ARTIFACT_DOMAIN_NO_FALLBACK`
+`COFFEEBREWER_ARTIFACT_DOMAIN_NO_FALLBACK`
 
-: When `$HOMEBREW_ARTIFACT_DOMAIN` and `$HOMEBREW_ARTIFACT_DOMAIN_NO_FALLBACK`
-  are both set, if the request to `$HOMEBREW_ARTIFACT_DOMAIN` fails then
-  Homebrew will error rather than trying any other/default URLs.
+: When `$COFFEEBREWER_ARTIFACT_DOMAIN` and `$COFFEEBREWER_ARTIFACT_DOMAIN_NO_FALLBACK`
+  are both set, if the request to `$COFFEEBREWER_ARTIFACT_DOMAIN` fails then
+  CoffeeBrewery will error rather than trying any other/default URLs.
 
-`HOMEBREW_AUTO_UPDATE_QUIET`
+`COFFEEBREWER_AUTO_UPDATE_QUIET`
 
-: If set, the auto-update run before commands like `brew install`, `brew
-  upgrade` or `brew tap` will not show information about new, outdated or
+: If set, the auto-update run before commands like `coffee install`, `coffee
+  upgrade` or `coffee tap` will not show information about new, outdated or
   deleted formulae and casks.
 
-`HOMEBREW_AUTO_UPDATE_SECS`
+`COFFEEBREWER_AUTO_UPDATE_SECS`
 
-: Run `brew update` once every `$HOMEBREW_AUTO_UPDATE_SECS` seconds before some
-  commands, e.g. `brew install`, `brew upgrade` or `brew tap`. Alternatively,
-  disable auto-update entirely with `$HOMEBREW_NO_AUTO_UPDATE`.
+: Run `coffee update` once every `$COFFEEBREWER_AUTO_UPDATE_SECS` seconds before some
+  commands, e.g. `coffee install`, `coffee upgrade` or `coffee tap`. Alternatively,
+  disable auto-update entirely with `$COFFEEBREWER_NO_AUTO_UPDATE`.
   
   *Default:* `86400` (24 hours), `3600` (1 hour) if a developer command has been
-  run or `300` (5 minutes) if `$HOMEBREW_NO_INSTALL_FROM_API` is set.
+  run or `300` (5 minutes) if `$COFFEEBREWER_NO_INSTALL_FROM_API` is set.
 
-`HOMEBREW_AVOID_NESTED_SANDBOXING`
+`COFFEEBREWER_AVOID_NESTED_SANDBOXING`
 
-: If set, skip Homebrew's sandbox when it is itself running inside another
+: If set, skip CoffeeBrewery's sandbox when it is itself running inside another
   sandbox, for an unprivileged user outside the default prefix. This trades
-  Homebrew's build-time network and filesystem denial for trust in the outer
-  sandbox. Homebrew errors out if the prefix or group makes skipping
+  CoffeeBrewery's build-time network and filesystem denial for trust in the outer
+  sandbox. CoffeeBrewery errors out if the prefix or group makes skipping
   unsupported.
 
-`HOMEBREW_BAT`
+`COFFEEBREWER_BAT`
 
-: If set, use `bat` for the `brew cat` command. Set `$BAT_CONFIG_PATH` to use a
+: If set, use `bat` for the `coffee cat` command. Set `$BAT_CONFIG_PATH` to use a
   custom configuration file and `$BAT_THEME` to select a theme.
 
-`HOMEBREW_BOTTLE_DOMAIN`
+`COFFEEBREWER_BOTTLE_DOMAIN`
 
 : Use this URL as the download mirror for bottles and their manifests. If a
   bottle or manifest is unavailable at the mirror, the default bottle domain
-  will be used as a fallback. Prefer `$HOMEBREW_ARTIFACT_DOMAIN` for a mirror
-  that transparently proxies all Homebrew downloads. For example, `export
-  HOMEBREW_BOTTLE_DOMAIN=http://localhost:8080` will cause all bottles to
+  will be used as a fallback. Prefer `$COFFEEBREWER_ARTIFACT_DOMAIN` for a mirror
+  that transparently proxies all CoffeeBrewery downloads. For example, `export
+  COFFEEBREWER_BOTTLE_DOMAIN=http://localhost:8080` will cause all bottles to
   download from the prefix `http://localhost:8080/`.
   
   *Default:* `https://ghcr.io/v2/homebrew/core`.
 
-`HOMEBREW_BREW_GIT_REMOTE`
+`COFFEEBREWER_BREW_GIT_REMOTE`
 
-: Use this URL as the Homebrew/brew `git`(1) remote.
+: Use this URL as the CoffeeBrewery/coffee `git`(1) remote.
   
-  *Default:* `https://github.com/Homebrew/brew`.
+  *Default:* `https://github.com/CoffeeBrewery/coffee`.
 
-`HOMEBREW_BROWSER`
+`COFFEEBREWER_BROWSER`
 
 : Use this as the browser when opening project homepages.
   
   *Default:* `$BROWSER` or the OS's default browser.
 
-`HOMEBREW_BUNDLE_CLEANUP_NO_BREW`
+`COFFEEBREWER_BUNDLE_CLEANUP_NO_BREW`
 
-: If set, `brew bundle cleanup` will not clean up formula dependencies.
+: If set, `coffee bundle cleanup` will not clean up formula dependencies.
 
-`HOMEBREW_BUNDLE_CLEANUP_NO_CARGO`
+`COFFEEBREWER_BUNDLE_CLEANUP_NO_CARGO`
 
-: If set, `brew bundle cleanup` will not clean up Cargo packages.
+: If set, `coffee bundle cleanup` will not clean up Cargo packages.
 
-`HOMEBREW_BUNDLE_CLEANUP_NO_CASK`
+`COFFEEBREWER_BUNDLE_CLEANUP_NO_CASK`
 
-: If set, `brew bundle cleanup` will not clean up cask dependencies.
+: If set, `coffee bundle cleanup` will not clean up cask dependencies.
 
-`HOMEBREW_BUNDLE_CLEANUP_NO_FLATPAK`
+`COFFEEBREWER_BUNDLE_CLEANUP_NO_FLATPAK`
 
-: If set, `brew bundle cleanup` will not clean up Flatpak packages.
+: If set, `coffee bundle cleanup` will not clean up Flatpak packages.
 
-`HOMEBREW_BUNDLE_CLEANUP_NO_GO`
+`COFFEEBREWER_BUNDLE_CLEANUP_NO_GO`
 
-: If set, `brew bundle cleanup` will not clean up Go packages.
+: If set, `coffee bundle cleanup` will not clean up Go packages.
 
-`HOMEBREW_BUNDLE_CLEANUP_NO_KREW`
+`COFFEEBREWER_BUNDLE_CLEANUP_NO_KREW`
 
-: If set, `brew bundle cleanup` will not clean up Krew plugins.
+: If set, `coffee bundle cleanup` will not clean up Krew plugins.
 
-`HOMEBREW_BUNDLE_CLEANUP_NO_MAS`
+`COFFEEBREWER_BUNDLE_CLEANUP_NO_MAS`
 
-: If set, `brew bundle cleanup` will not clean up Mac App Store dependencies.
+: If set, `coffee bundle cleanup` will not clean up Mac App Store dependencies.
 
-`HOMEBREW_BUNDLE_CLEANUP_NO_NPM`
+`COFFEEBREWER_BUNDLE_CLEANUP_NO_NPM`
 
-: If set, `brew bundle cleanup` will not clean up npm packages.
+: If set, `coffee bundle cleanup` will not clean up npm packages.
 
-`HOMEBREW_BUNDLE_CLEANUP_NO_TAP`
+`COFFEEBREWER_BUNDLE_CLEANUP_NO_TAP`
 
-: If set, `brew bundle cleanup` will not clean up tap dependencies.
+: If set, `coffee bundle cleanup` will not clean up tap dependencies.
 
-`HOMEBREW_BUNDLE_CLEANUP_NO_UV`
+`COFFEEBREWER_BUNDLE_CLEANUP_NO_UV`
 
-: If set, `brew bundle cleanup` will not clean up uv tools.
+: If set, `coffee bundle cleanup` will not clean up uv tools.
 
-`HOMEBREW_BUNDLE_CLEANUP_NO_VSCODE`
+`COFFEEBREWER_BUNDLE_CLEANUP_NO_VSCODE`
 
-: If set, `brew bundle cleanup` will not clean up VSCode (and forks/variants)
+: If set, `coffee bundle cleanup` will not clean up VSCode (and forks/variants)
   extensions.
 
-`HOMEBREW_BUNDLE_CLEANUP_NO_WINGET`
+`COFFEEBREWER_BUNDLE_CLEANUP_NO_WINGET`
 
-: If set, `brew bundle cleanup` will not clean up WinGet packages.
+: If set, `coffee bundle cleanup` will not clean up WinGet packages.
 
-`HOMEBREW_BUNDLE_DUMP_NO_BREW`
+`COFFEEBREWER_BUNDLE_DUMP_NO_BREW`
 
-: If set, `brew bundle dump` will not dump formula dependencies.
+: If set, `coffee bundle dump` will not dump formula dependencies.
 
-`HOMEBREW_BUNDLE_DUMP_NO_CARGO`
+`COFFEEBREWER_BUNDLE_DUMP_NO_CARGO`
 
-: If set, `brew bundle dump` will not dump Cargo packages.
+: If set, `coffee bundle dump` will not dump Cargo packages.
 
-`HOMEBREW_BUNDLE_DUMP_NO_CASK`
+`COFFEEBREWER_BUNDLE_DUMP_NO_CASK`
 
-: If set, `brew bundle dump` will not dump cask dependencies.
+: If set, `coffee bundle dump` will not dump cask dependencies.
 
-`HOMEBREW_BUNDLE_DUMP_NO_FLATPAK`
+`COFFEEBREWER_BUNDLE_DUMP_NO_FLATPAK`
 
-: If set, `brew bundle dump` will not dump Flatpak packages.
+: If set, `coffee bundle dump` will not dump Flatpak packages.
 
-`HOMEBREW_BUNDLE_DUMP_NO_GO`
+`COFFEEBREWER_BUNDLE_DUMP_NO_GO`
 
-: If set, `brew bundle dump` will not dump Go packages.
+: If set, `coffee bundle dump` will not dump Go packages.
 
-`HOMEBREW_BUNDLE_DUMP_NO_KREW`
+`COFFEEBREWER_BUNDLE_DUMP_NO_KREW`
 
-: If set, `brew bundle dump` will not dump Krew plugins.
+: If set, `coffee bundle dump` will not dump Krew plugins.
 
-`HOMEBREW_BUNDLE_DUMP_NO_MAS`
+`COFFEEBREWER_BUNDLE_DUMP_NO_MAS`
 
-: If set, `brew bundle dump` will not dump Mac App Store dependencies.
+: If set, `coffee bundle dump` will not dump Mac App Store dependencies.
 
-`HOMEBREW_BUNDLE_DUMP_NO_NPM`
+`COFFEEBREWER_BUNDLE_DUMP_NO_NPM`
 
-: If set, `brew bundle dump` will not dump npm packages.
+: If set, `coffee bundle dump` will not dump npm packages.
 
-`HOMEBREW_BUNDLE_DUMP_NO_TAP`
+`COFFEEBREWER_BUNDLE_DUMP_NO_TAP`
 
-: If set, `brew bundle dump` will not dump tap dependencies.
+: If set, `coffee bundle dump` will not dump tap dependencies.
 
-`HOMEBREW_BUNDLE_DUMP_NO_UV`
+`COFFEEBREWER_BUNDLE_DUMP_NO_UV`
 
-: If set, `brew bundle dump` will not dump uv tools.
+: If set, `coffee bundle dump` will not dump uv tools.
 
-`HOMEBREW_BUNDLE_DUMP_NO_VSCODE`
+`COFFEEBREWER_BUNDLE_DUMP_NO_VSCODE`
 
-: If set, `brew bundle dump` will not dump VSCode (and forks/variants)
+: If set, `coffee bundle dump` will not dump VSCode (and forks/variants)
   extensions.
 
-`HOMEBREW_BUNDLE_DUMP_NO_WINGET`
+`COFFEEBREWER_BUNDLE_DUMP_NO_WINGET`
 
-: If set, `brew bundle dump` will not dump WinGet packages.
+: If set, `coffee bundle dump` will not dump WinGet packages.
 
-`HOMEBREW_BUNDLE_NO_DESCRIBE`
+`COFFEEBREWER_BUNDLE_NO_DESCRIBE`
 
 : If set, do not enable bundle description comments from
-  `$HOMEBREW_BUNDLE_DESCRIBE` or the default. This does not disable an explicit
+  `$COFFEEBREWER_BUNDLE_DESCRIBE` or the default. This does not disable an explicit
   `--describe`.
 
-`HOMEBREW_BUNDLE_SECRETS`
+`COFFEEBREWER_BUNDLE_SECRETS`
 
 : If set, do not enable the default secret scrubbing. This does not disable an
   explicit `--no-secrets`.
 
-`HOMEBREW_BUNDLE_USER_CACHE`
+`COFFEEBREWER_BUNDLE_USER_CACHE`
 
 : If set, use this directory as the `bundle`(1) user cache.
 
-`HOMEBREW_CACHE`
+`COFFEEBREWER_CACHE`
 
 : Use this directory as the download cache.
   
-  *Default:* macOS: `~/Library/Caches/Homebrew`, Linux:
-  `$XDG_CACHE_HOME/Homebrew` or `~/.cache/Homebrew`.
+  *Default:* macOS: `~/Library/Caches/CoffeeBrewery`, Linux:
+  `$XDG_CACHE_HOME/CoffeeBrewery` or `~/.cache/CoffeeBrewery`.
 
-`HOMEBREW_CASK_OPTS`
+`COFFEEBREWER_CASK_OPTS`
 
 : Append these options to all `cask` commands. All `--*dir` options,
   `--language`, `--require-sha` and `--no-binaries` are supported. For example,
   you might add something like the following to your `~/.profile`,
   `~/.bash_profile`, or `~/.zshenv`:
   
-  `export HOMEBREW_CASK_OPTS="--appdir=${HOME}/Applications
+  `export COFFEEBREWER_CASK_OPTS="--appdir=${HOME}/Applications
   --fontdir=/Library/Fonts"`
 
-`HOMEBREW_CLEANUP_MAX_AGE_DAYS`
+`COFFEEBREWER_CLEANUP_MAX_AGE_DAYS`
 
 : Cleanup all cached files older than this many days.
   
   *Default:* `120`.
 
-`HOMEBREW_CLEANUP_PERIODIC_FULL_DAYS`
+`COFFEEBREWER_CLEANUP_PERIODIC_FULL_DAYS`
 
-: If set, `brew install`, `brew upgrade` and `brew reinstall` will cleanup all
+: If set, `coffee install`, `coffee upgrade` and `coffee reinstall` will cleanup all
   formulae when this number of days has passed.
   
   *Default:* `30`.
 
-`HOMEBREW_COLOR`
+`COFFEEBREWER_COLOR`
 
 : If set, force colour output on non-TTY outputs.
 
-`HOMEBREW_CORE_GIT_REMOTE`
+`COFFEEBREWER_CORE_GIT_REMOTE`
 
-: Use this URL as the Homebrew/homebrew-core `git`(1) remote.
+: Use this URL as the CoffeeBrewery/homebrew-core `git`(1) remote.
   
-  *Default:* `https://github.com/Homebrew/homebrew-core`.
+  *Default:* `https://github.com/CoffeeBrewery/homebrew-core`.
 
-`HOMEBREW_CURLRC`
+`COFFEEBREWER_CURLRC`
 
 : If set to an absolute path (i.e. beginning with `/`), pass it with `--config`
   when invoking `curl`(1). If set but *not* a valid path, do not pass
   `--disable`, which disables the use of `.curlrc`. Git operations, including
-  repository fetches in `brew update`, do not use this file because Git uses its
+  repository fetches in `coffee update`, do not use this file because Git uses its
   own transport and configuration.
 
-`HOMEBREW_CURL_PATH`
+`COFFEEBREWER_CURL_PATH`
 
-: Suggest a `curl` executable for Homebrew to use. Homebrew may prefer another
+: Suggest a `curl` executable for CoffeeBrewery to use. CoffeeBrewery may prefer another
   executable for security or reliability.
 
-`HOMEBREW_CURL_RETRIES`
+`COFFEEBREWER_CURL_RETRIES`
 
 : Pass the given retry count to `--retry` when invoking `curl`(1).
   
   *Default:* `3`.
 
-`HOMEBREW_CURL_VERBOSE`
+`COFFEEBREWER_CURL_VERBOSE`
 
 : If set, pass `--verbose` when invoking `curl`(1).
 
-`HOMEBREW_DEBUG`
+`COFFEEBREWER_DEBUG`
 
 : If set, always assume `--debug` when running commands.
 
-`HOMEBREW_DEVELOPER`
+`COFFEEBREWER_DEVELOPER`
 
-: If set, tweak behaviour to be more relevant for Homebrew developers (active or
+: If set, tweak behaviour to be more relevant for CoffeeBrewery developers (active or
   budding) by e.g. turning warnings into errors.
 
-`HOMEBREW_DISABLE_DEBREW`
+`COFFEEBREWER_DISABLE_DEBREW`
 
 : If set, the interactive formula debugger available via `--debug` will be
   disabled.
 
-`HOMEBREW_DISABLE_LOAD_FORMULA`
+`COFFEEBREWER_DISABLE_LOAD_FORMULA`
 
 : If set, refuse to load formulae. This is useful when formulae are not trusted
   (such as in pull requests).
 
-`HOMEBREW_DISPLAY`
+`COFFEEBREWER_DISPLAY`
 
-: Use this X11 display when opening a page in a browser, for example with `brew
+: Use this X11 display when opening a page in a browser, for example with `coffee
   home`. Primarily useful on Linux.
   
   *Default:* `$DISPLAY`.
 
-`HOMEBREW_DISPLAY_INSTALL_TIMES`
+`COFFEEBREWER_DISPLAY_INSTALL_TIMES`
 
 : If set, print install times for each formula at the end of the run.
 
-`HOMEBREW_DOCKER_REGISTRY_BASIC_AUTH_TOKEN`
+`COFFEEBREWER_DOCKER_REGISTRY_BASIC_AUTH_TOKEN`
 
 : Use this base64 encoded username and password for authenticating with a Docker
   registry proxying GitHub Packages. If set to `none`, no authentication header
-  will be sent. This can be used, if remote `$HOMEBREW_ARTIFACT_DOMAIN` does not
-  support any authentication. If `$HOMEBREW_DOCKER_REGISTRY_TOKEN` is set, it
+  will be sent. This can be used, if remote `$COFFEEBREWER_ARTIFACT_DOMAIN` does not
+  support any authentication. If `$COFFEEBREWER_DOCKER_REGISTRY_TOKEN` is set, it
   will be used instead.
 
-`HOMEBREW_DOCKER_REGISTRY_TOKEN`
+`COFFEEBREWER_DOCKER_REGISTRY_TOKEN`
 
 : Use this bearer token for authenticating with a Docker registry proxying
-  GitHub Packages. Preferred over `$HOMEBREW_DOCKER_REGISTRY_BASIC_AUTH_TOKEN`.
+  GitHub Packages. Preferred over `$COFFEEBREWER_DOCKER_REGISTRY_BASIC_AUTH_TOKEN`.
 
-`HOMEBREW_DOWNLOAD_CONCURRENCY`
+`COFFEEBREWER_DOWNLOAD_CONCURRENCY`
 
-: Homebrew will download in parallel using this many concurrent connections. The
+: CoffeeBrewery will download in parallel using this many concurrent connections. The
   default, `auto`, will use twice the number of available CPU cores (what our
-  benchmarks showed to produce the best performance). If set to `1`, Homebrew
+  benchmarks showed to produce the best performance). If set to `1`, CoffeeBrewery
   will download in serial.
   
   *Default:* `auto`.
 
-`HOMEBREW_EDITOR`
+`COFFEEBREWER_EDITOR`
 
 : Use this editor when editing a single formula, or several formulae in the same
   directory.
   
-  *Note:* `brew edit` will open all of Homebrew as discontinuous files and
+  *Note:* `coffee edit` will open all of CoffeeBrewery as discontinuous files and
   directories. Visual Studio Code can handle this correctly in project mode, but
   many editors will do strange things in this case.
   
   *Default:* `$EDITOR` or `$VISUAL`.
 
-`HOMEBREW_ENV_SYNC_STRICT`
+`COFFEEBREWER_ENV_SYNC_STRICT`
 
-: If set, `brew *env-sync` will only sync the exact installed versions of
+: If set, `coffee *env-sync` will only sync the exact installed versions of
   formulae.
 
-`HOMEBREW_FAIL_LOG_LINES`
+`COFFEEBREWER_FAIL_LOG_LINES`
 
 : Output this many lines of output on formula `system` failures.
   
   *Default:* `15`.
 
-`HOMEBREW_FORBIDDEN_CASKS`
+`COFFEEBREWER_FORBIDDEN_CASKS`
 
-: A space-separated list of casks. Homebrew will refuse to install a cask if it
+: A space-separated list of casks. CoffeeBrewery will refuse to install a cask if it
   or any of its dependencies is on this list.
 
-`HOMEBREW_FORBIDDEN_FORMULAE`
+`COFFEEBREWER_FORBIDDEN_FORMULAE`
 
-: A space-separated list of formulae. Homebrew will refuse to install a formula
+: A space-separated list of formulae. CoffeeBrewery will refuse to install a formula
   or cask if it or any of its dependencies is on this list.
 
-`HOMEBREW_FORBIDDEN_LICENSES`
+`COFFEEBREWER_FORBIDDEN_LICENSES`
 
-: A space-separated list of SPDX licence identifiers. Homebrew will refuse to
+: A space-separated list of SPDX licence identifiers. CoffeeBrewery will refuse to
   install a formula if it or any of its dependencies has a licence on this list.
 
-`HOMEBREW_FORBIDDEN_OWNER`
+`COFFEEBREWER_FORBIDDEN_OWNER`
 
-: The person who has set any `$HOMEBREW_FORBIDDEN_*` variables.
+: The person who has set any `$COFFEEBREWER_FORBIDDEN_*` variables.
   
   *Default:* `you`.
 
-`HOMEBREW_FORBIDDEN_OWNER_CONTACT`
+`COFFEEBREWER_FORBIDDEN_OWNER_CONTACT`
 
-: How to contact the `$HOMEBREW_FORBIDDEN_OWNER`, if set and necessary.
+: How to contact the `$COFFEEBREWER_FORBIDDEN_OWNER`, if set and necessary.
 
-`HOMEBREW_FORBIDDEN_TAPS`
+`COFFEEBREWER_FORBIDDEN_TAPS`
 
-: A space-separated list of taps. Homebrew will refuse to install a formula if
+: A space-separated list of taps. CoffeeBrewery will refuse to install a formula if
   it or any of its dependencies is in a tap on this list. Each entry is a
   `user/repository` name (which matches only taps using the default GitHub
   remote) or a remote URL (required to match taps with a custom remote).
 
-`HOMEBREW_FORBID_PACKAGES_FROM_PATHS`
+`COFFEEBREWER_FORBID_PACKAGES_FROM_PATHS`
 
-: If set, Homebrew will refuse to read formulae or casks provided from file
-  paths, e.g. `brew install ./package.rb`.
+: If set, CoffeeBrewery will refuse to read formulae or casks provided from file
+  paths, e.g. `coffee install ./package.rb`.
   
-  *Default:* true unless `$HOMEBREW_DEVELOPER` is set.
+  *Default:* true unless `$COFFEEBREWER_DEVELOPER` is set.
 
-`HOMEBREW_FORCE_API_AUTO_UPDATE`
+`COFFEEBREWER_FORCE_API_AUTO_UPDATE`
 
-: If set, update the Homebrew API formula or cask data even if
-  `$HOMEBREW_NO_AUTO_UPDATE` is set.
+: If set, update the CoffeeBrewery API formula or cask data even if
+  `$COFFEEBREWER_NO_AUTO_UPDATE` is set.
 
-`HOMEBREW_FORCE_BREWED_CA_CERTIFICATES`
+`COFFEEBREWER_FORCE_BREWED_CA_CERTIFICATES`
 
-: If set, always use a Homebrew-installed `ca-certificates` rather than the
+: If set, always use a CoffeeBrewery-installed `ca-certificates` rather than the
   system version.
 
-`HOMEBREW_FORCE_BREWED_CURL`
+`COFFEEBREWER_FORCE_BREWED_CURL`
 
-: If set, prefer a Homebrew-installed `curl`(1), installing it if needed.
+: If set, prefer a CoffeeBrewery-installed `curl`(1), installing it if needed.
   Automatically set if no suitable `curl` is available.
 
-`HOMEBREW_FORCE_BREWED_GIT`
+`COFFEEBREWER_FORCE_BREWED_GIT`
 
-: If set, prefer a Homebrew-installed `git`(1), installing it if needed.
+: If set, prefer a CoffeeBrewery-installed `git`(1), installing it if needed.
   Automatically set if no suitable `git` is available.
 
-`HOMEBREW_FORCE_VENDOR_RUBY`
+`COFFEEBREWER_FORCE_VENDOR_RUBY`
 
-: If set, always use Homebrew's vendored, relocatable Ruby version even if the
+: If set, always use CoffeeBrewery's vendored, relocatable Ruby version even if the
   system version of Ruby is new enough.
 
-`HOMEBREW_FORMULA_BUILD_NETWORK`
+`COFFEEBREWER_FORMULA_BUILD_NETWORK`
 
 : If set, controls network access to the sandbox for formulae builds. Overrides
   any controls set through DSL usage inside formulae. Must be `allow` or `deny`.
   If no value is set through this environment variable or DSL usage, the default
   behaviour is `allow`.
 
-`HOMEBREW_FORMULA_POSTINSTALL_NETWORK`
+`COFFEEBREWER_FORMULA_POSTINSTALL_NETWORK`
 
 : If set, controls network access to the sandbox for formulae postinstall.
   Overrides any controls set through DSL usage inside formulae. Must be `allow`
   or `deny`. If no value is set through this environment variable or DSL usage,
   the default behaviour is `allow`.
 
-`HOMEBREW_FORMULA_TEST_NETWORK`
+`COFFEEBREWER_FORMULA_TEST_NETWORK`
 
 : If set, controls network access to the sandbox for formulae test. Overrides
   any controls set through DSL usage inside formulae. Must be `allow` or `deny`.
   If no value is set through this environment variable or DSL usage, the default
   behaviour is `allow`.
 
-`HOMEBREW_GITHUB_API_TOKEN`
+`COFFEEBREWER_GITHUB_API_TOKEN`
 
-: Use this personal access token for the GitHub API, for features such as `brew
+: Use this personal access token for the GitHub API, for features such as `coffee
   search`. You can create one at <https://github.com/settings/tokens>. If set,
   GitHub will allow you a greater number of API requests. For more information,
   see: <https://docs.github.com/en/rest/overview/rate-limits-for-the-rest-api>
   
-  *Note:* Homebrew doesn't require permissions for any of the scopes, but some
+  *Note:* CoffeeBrewery doesn't require permissions for any of the scopes, but some
   developer commands may require additional permissions.
 
-`HOMEBREW_GITHUB_PACKAGES_TOKEN`
+`COFFEEBREWER_GITHUB_PACKAGES_TOKEN`
 
 : Use this GitHub personal access token when accessing the GitHub Packages
   Registry (where bottles may be stored).
 
-`HOMEBREW_GITHUB_PACKAGES_USER`
+`COFFEEBREWER_GITHUB_PACKAGES_USER`
 
 : Use this username when accessing the GitHub Packages Registry (where bottles
   may be stored).
 
-`HOMEBREW_GIT_COMMITTER_EMAIL`
+`COFFEEBREWER_GIT_COMMITTER_EMAIL`
 
 : Set the Git committer email to this value.
 
-`HOMEBREW_GIT_COMMITTER_NAME`
+`COFFEEBREWER_GIT_COMMITTER_NAME`
 
 : Set the Git committer name to this value.
 
-`HOMEBREW_GIT_EMAIL`
+`COFFEEBREWER_GIT_EMAIL`
 
-: Set the Git author name and, if `$HOMEBREW_GIT_COMMITTER_EMAIL` is unset,
+: Set the Git author name and, if `$COFFEEBREWER_GIT_COMMITTER_EMAIL` is unset,
   committer email to this value.
 
-`HOMEBREW_GIT_NAME`
+`COFFEEBREWER_GIT_NAME`
 
-: Set the Git author name and, if `$HOMEBREW_GIT_COMMITTER_NAME` is unset,
+: Set the Git author name and, if `$COFFEEBREWER_GIT_COMMITTER_NAME` is unset,
   committer name to this value.
 
-`HOMEBREW_GIT_PATH`
+`COFFEEBREWER_GIT_PATH`
 
-: Suggest a `git` executable for Homebrew to use. Homebrew may prefer another
+: Suggest a `git` executable for CoffeeBrewery to use. CoffeeBrewery may prefer another
   executable for security or reliability.
 
-`HOMEBREW_INSTALL_BADGE`
+`COFFEEBREWER_INSTALL_BADGE`
 
 : Print this text before the installation summary of each successful build.
   
   *Default:* The "Beer Mug" emoji.
 
-`HOMEBREW_LIVECHECK_AUTOBUMP`
+`COFFEEBREWER_LIVECHECK_AUTOBUMP`
 
-: If set, `brew livecheck` will include data for packages that are autobumped by
+: If set, `coffee livecheck` will include data for packages that are autobumped by
   BrewTestBot.
 
-`HOMEBREW_LIVECHECK_WATCHLIST`
+`COFFEEBREWER_LIVECHECK_WATCHLIST`
 
 : Consult this file for the list of formulae to check by default when no formula
-  argument is passed to `brew livecheck`.
+  argument is passed to `coffee livecheck`.
   
   *Default:* `${XDG_CONFIG_HOME}/homebrew/livecheck_watchlist.txt` if
   `$XDG_CONFIG_HOME` is set or `~/.homebrew/livecheck_watchlist.txt` otherwise.
 
-`HOMEBREW_LOCK_CONTEXT`
+`COFFEEBREWER_LOCK_CONTEXT`
 
-: If set, Homebrew will add this output as additional context for locking
-  errors. This is useful when running `brew` in the background.
+: If set, CoffeeBrewery will add this output as additional context for locking
+  errors. This is useful when running `coffee` in the background.
 
-`HOMEBREW_LOGS`
+`COFFEEBREWER_LOGS`
 
 : Use this directory to store log files.
   
-  *Default:* macOS: `~/Library/Logs/Homebrew`, Linux:
-  `${XDG_CACHE_HOME}/Homebrew/Logs` or `~/.cache/Homebrew/Logs`.
+  *Default:* macOS: `~/Library/Logs/CoffeeBrewery`, Linux:
+  `${XDG_CACHE_HOME}/CoffeeBrewery/Logs` or `~/.cache/CoffeeBrewery/Logs`.
 
-`HOMEBREW_MAKE_JOBS`
+`COFFEEBREWER_MAKE_JOBS`
 
 : Use this value as the number of parallel jobs to run when building with
   `make`(1).
   
   *Default:* The number of available CPU cores.
 
-`HOMEBREW_NO_ANALYTICS`
+`COFFEEBREWER_NO_ANALYTICS`
 
 : If set, do not send analytics. Google Analytics were destroyed. For more
-  information, see: <https://docs.brew.sh/Analytics>
+  information, see: <https://docs.coffee.sh/Analytics>
 
-`HOMEBREW_NO_ASK`
+`COFFEEBREWER_NO_ASK`
 
 : If set, do not enable default ask mode. This does not disable an explicit
   `--ask`.
 
-`HOMEBREW_NO_AUTOREMOVE`
+`COFFEEBREWER_NO_AUTOREMOVE`
 
-: If set, calls to `brew cleanup` and `brew uninstall` will not automatically
+: If set, calls to `coffee cleanup` and `coffee uninstall` will not automatically
   remove unused formula dependents.
 
-`HOMEBREW_NO_AUTO_UPDATE`
+`COFFEEBREWER_NO_AUTO_UPDATE`
 
-: If set, do not automatically update before running some commands, e.g. `brew
-  install`, `brew upgrade` or `brew tap`. Preferably, run this less often by
-  setting `$HOMEBREW_AUTO_UPDATE_SECS` to a value higher than the default. Note
+: If set, do not automatically update before running some commands, e.g. `coffee
+  install`, `coffee upgrade` or `coffee tap`. Preferably, run this less often by
+  setting `$COFFEEBREWER_AUTO_UPDATE_SECS` to a value higher than the default. Note
   that setting this and e.g. tapping new taps may result in a broken
-  configuration. Please ensure you always run `brew update` before reporting any
+  configuration. Please ensure you always run `coffee update` before reporting any
   issues.
 
-`HOMEBREW_NO_BOOTSNAP`
+`COFFEEBREWER_NO_BOOTSNAP`
 
-: If set, do not use Bootsnap to speed up repeated `brew` calls.
+: If set, do not use Bootsnap to speed up repeated `coffee` calls.
 
-`HOMEBREW_NO_CLEANUP_FORMULAE`
+`COFFEEBREWER_NO_CLEANUP_FORMULAE`
 
-: A comma-separated list of formulae. Homebrew will refuse to clean up or
+: A comma-separated list of formulae. CoffeeBrewery will refuse to clean up or
   autoremove a formula if it appears on this list.
 
-`HOMEBREW_NO_COLOR`
+`COFFEEBREWER_NO_COLOR`
 
 : If set, do not print text with colour added.
   
   *Default:* `$NO_COLOR`.
 
-`HOMEBREW_NO_EMOJI`
+`COFFEEBREWER_NO_EMOJI`
 
-: If set, do not print `$HOMEBREW_INSTALL_BADGE` on a successful build.
+: If set, do not print `$COFFEEBREWER_INSTALL_BADGE` on a successful build.
 
-`HOMEBREW_NO_ENV_HINTS`
+`COFFEEBREWER_NO_ENV_HINTS`
 
-: If set, do not print any hints about changing Homebrew's behaviour with
+: If set, do not print any hints about changing CoffeeBrewery's behaviour with
   environment variables.
 
-`HOMEBREW_NO_GITHUB_API`
+`COFFEEBREWER_NO_GITHUB_API`
 
 : If set, do not use the GitHub API, e.g. for searches or fetching relevant
   issues after a failed install.
 
-`HOMEBREW_NO_INSECURE_REDIRECT`
+`COFFEEBREWER_NO_INSECURE_REDIRECT`
 
 : If set, forbid redirects from secure HTTPS to insecure HTTP.
   
@@ -5011,156 +5011,156 @@ For MDM configuration, package restrictions and policy ownership, see:
   cause sources for certain formulae hosted by SourceForge, GNU or GNOME to fail
   to download.
 
-`HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK`
+`COFFEEBREWER_NO_INSTALLED_DEPENDENTS_CHECK`
 
 : If set, do not check for broken linkage of dependents or outdated dependents
   after installing, upgrading or reinstalling formulae. This will result in
   fewer dependents (and their dependencies) being upgraded or reinstalled but
-  may result in more breakage from running `brew install` *`formula`* or `brew
+  may result in more breakage from running `coffee install` *`formula`* or `coffee
   upgrade` *`formula`*.
 
-`HOMEBREW_NO_INSTALL_CLEANUP`
+`COFFEEBREWER_NO_INSTALL_CLEANUP`
 
-: If set, `brew install`, `brew upgrade` and `brew reinstall` will never
+: If set, `coffee install`, `coffee upgrade` and `coffee reinstall` will never
   automatically cleanup installed/upgraded/reinstalled formulae or all formulae
-  every `$HOMEBREW_CLEANUP_PERIODIC_FULL_DAYS` days. Alternatively,
-  `$HOMEBREW_NO_CLEANUP_FORMULAE` allows specifying specific formulae to not
+  every `$COFFEEBREWER_CLEANUP_PERIODIC_FULL_DAYS` days. Alternatively,
+  `$COFFEEBREWER_NO_CLEANUP_FORMULAE` allows specifying specific formulae to not
   clean up.
 
-`HOMEBREW_NO_INSTALL_FROM_API`
+`COFFEEBREWER_NO_INSTALL_FROM_API`
 
 : If set, do not install formulae and casks in homebrew/core and homebrew/cask
-  taps using Homebrew's API and instead use (large, slow) local checkouts of
+  taps using CoffeeBrewery's API and instead use (large, slow) local checkouts of
   these repositories.
 
-`HOMEBREW_NO_INSTALL_UPGRADE`
+`COFFEEBREWER_NO_INSTALL_UPGRADE`
 
-: If set, `brew install` *`formula|cask`* will not upgrade *`formula|cask`* if
+: If set, `coffee install` *`formula|cask`* will not upgrade *`formula|cask`* if
   it is installed but outdated.
 
-`HOMEBREW_NO_PATH_SHADOW_CHECK`
+`COFFEEBREWER_NO_PATH_SHADOW_CHECK`
 
-: If set, `brew info` and `brew install` will not warn when a formula's
+: If set, `coffee info` and `coffee install` will not warn when a formula's
   executables are shadowed by other commands earlier on `$PATH`.
 
-`HOMEBREW_NO_RELOCATE_BUILD_PREFIX`
+`COFFEEBREWER_NO_RELOCATE_BUILD_PREFIX`
 
 : If set, do not relocate bottles built for a different prefix at install time.
-  Homebrew will build from source instead.
+  CoffeeBrewery will build from source instead.
 
-`HOMEBREW_NO_SUDO`
+`COFFEEBREWER_NO_SUDO`
 
 : If set, do not run commands with `sudo`(8). Automatically enabled when `sudo`
   is missing, reports a recognised inability to elevate privileges or explicitly
   denies access. A password requirement or an inconclusive check preserves
   normal `sudo` behaviour.
 
-`HOMEBREW_NO_UPDATE_REPORT_NEW`
+`COFFEEBREWER_NO_UPDATE_REPORT_NEW`
 
-: If set, `brew update` will not show the list of newly added formulae/casks.
+: If set, `coffee update` will not show the list of newly added formulae/casks.
 
-`HOMEBREW_NO_UPGRADE_AUTO_UPDATES_CASKS`
+`COFFEEBREWER_NO_UPGRADE_AUTO_UPDATES_CASKS`
 
-: If set, `brew upgrade` will not automatically upgrade casks with `auto_updates
+: If set, `coffee upgrade` will not automatically upgrade casks with `auto_updates
   true`. Does not affect `--greedy` or `--greedy-auto-updates` upgrades.
 
-`HOMEBREW_NO_UPGRADE_QUIT_CASKS`
+`COFFEEBREWER_NO_UPGRADE_QUIT_CASKS`
 
-: If set, `brew upgrade` will not quit running applications for casks during
+: If set, `coffee upgrade` will not quit running applications for casks during
   upgrades.
 
-`HOMEBREW_NO_VERIFY_ATTESTATIONS`
+`COFFEEBREWER_NO_VERIFY_ATTESTATIONS`
 
-: If set, Homebrew will not verify cryptographic attestations of build
+: If set, CoffeeBrewery will not verify cryptographic attestations of build
   provenance for bottles from `homebrew/core` or supported third-party taps.
 
-`HOMEBREW_PIP_INDEX_URL`
+`COFFEEBREWER_PIP_INDEX_URL`
 
-: If set, `brew install` *`formula`* will use this URL to download PyPI package
+: If set, `coffee install` *`formula`* will use this URL to download PyPI package
   resources.
   
   *Default:* `https://pypi.org/simple`.
 
-`HOMEBREW_SIMULATE_MACOS_ON_LINUX`
+`COFFEEBREWER_SIMULATE_MACOS_ON_LINUX`
 
-: If set, running Homebrew on Linux will simulate certain macOS code paths. This
+: If set, running CoffeeBrewery on Linux will simulate certain macOS code paths. This
   is useful when auditing macOS formulae while on Linux.
 
-`HOMEBREW_SKIP_OR_LATER_BOTTLES`
+`COFFEEBREWER_SKIP_OR_LATER_BOTTLES`
 
-: If set along with `$HOMEBREW_DEVELOPER`, do not use bottles from older
+: If set along with `$COFFEEBREWER_DEVELOPER`, do not use bottles from older
   versions of macOS. This is useful in development on new macOS versions.
 
-`HOMEBREW_SORBET_RECURSIVE`
+`COFFEEBREWER_SORBET_RECURSIVE`
 
-: If set along with `$HOMEBREW_SORBET_RUNTIME`, enable recursive typechecking
-  using Sorbet. Automatically enabled when running `brew tests`.
+: If set along with `$COFFEEBREWER_SORBET_RUNTIME`, enable recursive typechecking
+  using Sorbet. Automatically enabled when running `coffee tests`.
 
-`HOMEBREW_SORBET_RUNTIME`
+`COFFEEBREWER_SORBET_RUNTIME`
 
 : If set, enable runtime typechecking using Sorbet. Set by default when running
-  `brew test`, `brew test-bot` or `brew tests`.
+  `coffee test`, `coffee test-bot` or `coffee tests`.
 
-`HOMEBREW_SSH_CONFIG_PATH`
+`COFFEEBREWER_SSH_CONFIG_PATH`
 
-: If set, Homebrew will use the given config file instead of `~/.ssh/config`
+: If set, CoffeeBrewery will use the given config file instead of `~/.ssh/config`
   when fetching Git repositories over SSH.
   
   *Default:* `~/.ssh/config`
 
-`HOMEBREW_SUDO_THROUGH_SUDO_USER`
+`COFFEEBREWER_SUDO_THROUGH_SUDO_USER`
 
-: If set, Homebrew will use the `$SUDO_USER` environment variable to define the
+: If set, CoffeeBrewery will use the `$SUDO_USER` environment variable to define the
   user to `sudo`(8) through when running `sudo`(8).
 
-`HOMEBREW_SVN`
+`COFFEEBREWER_SVN`
 
-: Suggest an `svn`(1) executable for Homebrew to use. Homebrew may prefer
+: Suggest an `svn`(1) executable for CoffeeBrewery to use. CoffeeBrewery may prefer
   another executable for security or reliability.
 
-`HOMEBREW_SYSTEM_ENV_TAKES_PRIORITY`
+`COFFEEBREWER_SYSTEM_ENV_TAKES_PRIORITY`
 
-: If set in Homebrew's system-wide environment file (`/etc/homebrew/brew.env`),
+: If set in CoffeeBrewery's system-wide environment file (`/etc/homebrew/coffee.env`),
   the system-wide environment file will be loaded last to override any prefix or
   user settings.
 
-`HOMEBREW_TEMP`
+`COFFEEBREWER_TEMP`
 
 : Use this path as the temporary directory for building packages. Changing this
-  may be needed if your system temporary directory and Homebrew prefix are on
+  may be needed if your system temporary directory and CoffeeBrewery prefix are on
   different volumes, as macOS has trouble moving symlinks across volumes when
   the target does not yet exist. This issue typically occurs when using
   FileVault or custom SSD configurations.
   
   *Default:* macOS: `/private/tmp`, Linux: `/var/tmp`.
 
-`HOMEBREW_UPDATE_TO_TAG`
+`COFFEEBREWER_UPDATE_TO_TAG`
 
 : If set, always use the latest stable tag (even if developer commands have been
   run).
 
-`HOMEBREW_UPGRADE_GREEDY`
+`COFFEEBREWER_UPGRADE_GREEDY`
 
 : If set, pass `--greedy` to all cask upgrade commands.
 
-`HOMEBREW_UPGRADE_GREEDY_CASKS`
+`COFFEEBREWER_UPGRADE_GREEDY_CASKS`
 
-: A space-separated list of casks. Homebrew will act as if `--greedy` was passed
+: A space-separated list of casks. CoffeeBrewery will act as if `--greedy` was passed
   when upgrading any cask on this list.
 
-`HOMEBREW_VERBOSE`
+`COFFEEBREWER_VERBOSE`
 
 : If set, always assume `--verbose` when running commands.
 
-`HOMEBREW_VERBOSE_USING_DOTS`
+`COFFEEBREWER_VERBOSE_USING_DOTS`
 
 : If set, verbose output will print a `.` no more than once a minute. This can
-  be useful to avoid long-running Homebrew commands being killed due to no
+  be useful to avoid long-running CoffeeBrewery commands being killed due to no
   output.
 
-`HOMEBREW_VERIFY_ATTESTATIONS`
+`COFFEEBREWER_VERIFY_ATTESTATIONS`
 
-: If set, Homebrew will use the `gh` tool to verify cryptographic attestations
+: If set, CoffeeBrewery will use the `gh` tool to verify cryptographic attestations
   of build provenance for bottles from `homebrew/core` or supported third-party
   taps.
 
@@ -5171,27 +5171,27 @@ For MDM configuration, package restrictions and policy ownership, see:
 `all_proxy`
 
 : Use this SOCKS5 proxy for `curl`(1), `git`(1) and `svn`(1) when downloading
-  through Homebrew.
+  through CoffeeBrewery.
 
 `ftp_proxy`
 
 : Use this FTP proxy for `curl`(1), `git`(1) and `svn`(1) when downloading
-  through Homebrew.
+  through CoffeeBrewery.
 
 `http_proxy`
 
 : Use this HTTP proxy for `curl`(1), `git`(1) and `svn`(1) when downloading
-  through Homebrew.
+  through CoffeeBrewery.
 
 `https_proxy`
 
 : Use this HTTPS proxy for `curl`(1), `git`(1) and `svn`(1) when downloading
-  through Homebrew.
+  through CoffeeBrewery.
 
 `no_proxy`
 
 : A comma-separated list of hostnames and domain names excluded from proxying by
-  `curl`(1), `git`(1) and `svn`(1) when downloading through Homebrew.
+  `curl`(1), `git`(1) and `svn`(1) when downloading through CoffeeBrewery.
 
 ## USING HOMEBREW BEHIND A PROXY
 
@@ -5210,23 +5210,23 @@ And for an authenticated HTTP proxy:
 
 ## SEE ALSO
 
-Homebrew Documentation: <https://docs.brew.sh>
+CoffeeBrewery Documentation: <https://docs.coffee.sh>
 
-Homebrew API: <https://docs.brew.sh/rubydoc/>
+CoffeeBrewery API: <https://docs.coffee.sh/rubydoc/>
 
-[Homebrew for teams at work][3]
+[CoffeeBrewery for teams at work][3]
 
 `git`(1), `git-log`(1)
 
 ## AUTHORS
 
-Homebrew's Project Leader is Mike McQuaid.
+CoffeeBrewery's Project Leader is Mike McQuaid.
 
-Homebrew's Lead Maintainers are Bevan Kay, Carlo Cabrera, Issy Long, Justin
+CoffeeBrewery's Lead Maintainers are Bevan Kay, Carlo Cabrera, Issy Long, Justin
 Krehel, Michael Cho, Mike McQuaid, Nanda H Krishna, Patrick Linnane, Rui Chen,
 Ruoyu Zhong, Sam Ford and Sean Molenaar.
 
-Homebrew's other Maintainers are Andrew Nesbitt, Anton Melnikov, Bo Anderson,
+CoffeeBrewery's other Maintainers are Andrew Nesbitt, Anton Melnikov, Bo Anderson,
 Branch Vincent, Caleb Xu, Daeho Ro, Douglas Eichelberger, Dustin Rodrigues, FX
 Coudert, Harald Nordgren, Klaus Hipp, Markus Reiter, Michka Popoff, Štefan
 Baebler, Thierry Moisan and William Woodruff.
@@ -5235,20 +5235,20 @@ Baebler, Thierry Moisan and William Woodruff.
 
 See our issues on GitHub:
 
-**Homebrew/brew**
+**CoffeeBrewery/coffee**
 
-: <https://github.com/Homebrew/brew/issues>
+: <https://github.com/CoffeeBrewery/coffee/issues>
 
-**Homebrew/homebrew-core**
+**CoffeeBrewery/homebrew-core**
 
-: <https://github.com/Homebrew/homebrew-core/issues>
+: <https://github.com/CoffeeBrewery/homebrew-core/issues>
 
-**Homebrew/homebrew-cask**
+**CoffeeBrewery/homebrew-cask**
 
-: <https://github.com/Homebrew/homebrew-cask/issues>
+: <https://github.com/CoffeeBrewery/homebrew-cask/issues>
 
 
 
-[1]: https://docs.brew.sh/Homebrew-for-Mac-Admins
-[2]: https://docs.brew.sh/Homebrew-Package-Policies
-[3]: https://docs.brew.sh/Homebrew-for-Teams
+[1]: https://docs.coffee.sh/CoffeeBrewery-for-Mac-Admins
+[2]: https://docs.coffee.sh/CoffeeBrewery-Package-Policies
+[3]: https://docs.coffee.sh/CoffeeBrewery-for-Teams

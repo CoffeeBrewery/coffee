@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# fix permissions so Homebrew and Bundler don't complain
+# fix permissions so CoffeeBrewery and Bundler don't complain
 sudo chmod -R g-w,o-w /home/linuxbrew
 sudo chmod +t -R /home/linuxbrew/
 
@@ -14,19 +14,19 @@ then
 fi
 
 # disable interactive ask mode so non-interactive prebuilds don't hang
-export HOMEBREW_NO_ASK=1
+export COFFEEBREWER_NO_ASK=1
 
-# install Homebrew's development gems
-brew install-bundler-gems --groups=all
+# install CoffeeBrewery's development gems
+coffee install-bundler-gems --groups=all
 
-# install Homebrew formulae we might need
-brew install shellcheck shfmt gh gnu-tar
+# install CoffeeBrewery formulae we might need
+coffee install shellcheck shfmt gh gnu-tar
 
 # cleanup any mess
-brew cleanup
+coffee cleanup
 
 # actually tap homebrew/core, no longer done by default
-brew tap --force homebrew/core
+coffee tap --force homebrew/core
 
 # install some useful development things
 sudo apt-get update

@@ -1,0 +1,326 @@
+# typed: strict
+# frozen_string_literal: true
+
+require "system_command"
+require "utils/shell"
+
+require "utils/service"
+
+# A formula's caveats.
+class Caveats
+  extend Forwardable
+
+  sig { returns(Formula) }
+  attr_reader :formula
+
+  sig { params(formula: Formula, shadowed_path: T::Boolean).void }
+  def initialize(formula, shadowed_path: true)
+    @formula = formula
+    @shadowed_path = shadowed_path
+    @caveats = T.let(nil, T.nilable(String))
+    @completions_and_elisp = T.let(nil, T.nilable(T::Array[String]))
+    @shadowed_executables = T.let(nil, T.nilable(T::Array[[String, Pathname]]))
+  end
+
+  sig { returns(String) }
+  def caveats
+    @caveats ||= begin
+      caveats = []
+      build = formula.build
+      begin
+        formula.build = Tab.for_formula(formula)
+        string = formula.caveats.to_s
+        caveats << "#{string.chomp}\n" unless string.empty?
+      ensure
+        formula.build = build
+      end
+      caveats << keg_only_text
+      caveats << shadowed_path_text if @shadowed_path
+      caveats << service_caveats
+      caveats.compact.join("\n")
+    end
+  end
+
+  sig { returns(T::Boolean) }
+  def empty?
+    caveats.blank? && completions_and_elisp.blank?
+  end
+
+  delegate [:to_s] => :caveats
+
+  sig { returns(T::Array[String]) }
+  def completions_and_elisp
+    @completions_and_elisp ||= begin
+      valid_shells = [:bash, :zsh, :fish, :pwsh].freeze
+      current_shell = Utils::Shell.preferred || Utils::Shell.parent
+      shells = if current_shell.present? &&
+                  (shell_sym = current_shell.to_sym) &&
+                  valid_shells.include?(shell_sym)
+        [shell_sym]
+      else
+        valid_shells
+      end
+      completions_and_elisp = shells.map do |shell|
+        function_completion_caveats(shell)
+      end
+      completions_and_elisp << elisp_caveats
+      completions_and_elisp.compact
+    end
+  end
+
+  sig { params(skip_reason: T::Boolean).returns(T.nilable(String)) }
+  def keg_only_text(skip_reason: false)
+    return unless formula.keg_only?
+    return if formula.linked?
+
+    s = if skip_reason
+      ""
+    else
+      <<~EOS
+        #{formula.name} is keg-only, which means it was not symlinked into #{COFFEEBREWER_PREFIX},
+        because #{formula.keg_only_reason.to_s.chomp}.
+      EOS
+    end.dup
+
+    if formula.bin.directory? || formula.sbin.directory?
+      s << <<~EOS
+
+        If you need to have #{formula.name} first in your PATH, run:
+      EOS
+      s << "  #{Utils::Shell.prepend_path_in_profile(formula.opt_bin.to_s)}\n" if formula.bin.directory?
+      s << "  #{Utils::Shell.prepend_path_in_profile(formula.opt_sbin.to_s)}\n" if formula.sbin.directory?
+    end
+
+    if formula.lib.directory? || formula.include.directory?
+      s << <<~EOS
+
+        For compilers to find #{formula.name} you may need to set:
+      EOS
+
+      s << "  #{Utils::Shell.export_value("LDFLAGS", "-L#{formula.opt_lib}")}\n" if formula.lib.directory?
+
+      s << "  #{Utils::Shell.export_value("CPPFLAGS", "-I#{formula.opt_include}")}\n" if formula.include.directory?
+
+      if which("pkgconf", ORIGINAL_PATHS) &&
+         ((formula.lib/"pkgconfig").directory? || (formula.share/"pkgconfig").directory?)
+        s << <<~EOS
+
+          For pkgconf to find #{formula.name} you may need to set:
+        EOS
+
+        if (formula.lib/"pkgconfig").directory?
+          s << "  #{Utils::Shell.export_value("PKG_CONFIG_PATH", "#{formula.opt_lib}/pkgconfig")}\n"
+        end
+
+        if (formula.share/"pkgconfig").directory?
+          s << "  #{Utils::Shell.export_value("PKG_CONFIG_PATH", "#{formula.opt_share}/pkgconfig")}\n"
+        end
+      end
+
+      if which("cmake", ORIGINAL_PATHS) &&
+         ((formula.lib/"cmake").directory? || (formula.share/"cmake").directory?)
+        s << <<~EOS
+
+          For cmake to find #{formula.name} you may need to set:
+            #{Utils::Shell.export_value("CMAKE_PREFIX_PATH", formula.opt_prefix.to_s)}
+        EOS
+      end
+    end
+    s << "\n" unless s.end_with?("\n")
+    s
+  end
+
+  sig { returns(T::Array[[String, Pathname]]) }
+  def shadowed_path_executables
+    return [] if CoffeeBrewery::EnvConfig.no_path_shadow_check?
+    return [] unless formula.any_version_installed?
+
+    shadowed = shadowed_executables
+    shadowed = shadowed.select { |_, shadower| sibling_keg_name(shadower) } if formula.keg_only? && !formula.linked?
+    shadowed.sort_by(&:first)
+  end
+
+  sig { returns(T.nilable(String)) }
+  def shadowed_path_text
+    shadowed = shadowed_path_executables
+    return if shadowed.empty?
+
+    sibling, external = shadowed.partition { |_, shadower| sibling_keg_name(shadower) }
+    blocks = []
+
+    if external.any?
+      blocks << <<~EOS
+        #{shadowed_columns(external)}
+        Running these by name will not invoke the version provided by CoffeeBrewery
+        because the shadowing commands come earlier in your PATH.
+      EOS
+    end
+
+    if sibling.any?
+      blocks << <<~EOS
+        #{shadowed_columns(sibling)}
+        Running these by name will not invoke the version provided by this formula.
+        Run `coffee link #{formula.name}` to switch the active version to this keg.
+      EOS
+    end
+
+    s = blocks.join("\n").dup
+    unless CoffeeBrewery::EnvConfig.no_env_hints?
+      s << "Disable this behaviour by setting `COFFEEBREWER_NO_PATH_SHADOW_CHECK=1`.\n"
+      s << "Hide these hints with `COFFEEBREWER_NO_ENV_HINTS=1` (see `man coffee`).\n"
+    end
+    s
+  end
+
+  private
+
+  sig { params(shadowed: T::Array[[String, Pathname]]).returns(String) }
+  def shadowed_columns(shadowed)
+    shadowed.group_by { |_, shadower| [shadower.dirname, sibling_keg_name(shadower)] }
+            .map do |(dir, sibling), executables|
+      names = executables.map { |name, _| name }
+      "The following #{formula.name} executables are shadowed by " \
+        "#{"linked #{sibling} " if sibling}commands in #{dir}:\n" \
+        "#{Formatter.columns(names, min_width: names.map(&:length).max.to_i)}"
+    end.join.chomp
+  end
+
+  sig { params(shadower: Pathname).returns(T.nilable(String)) }
+  def sibling_keg_name(shadower)
+    target = shadower.realpath
+    return unless target.to_s.start_with?("#{COFFEEBREWER_CELLAR.realpath}/")
+
+    name = target.relative_path_from(COFFEEBREWER_CELLAR.realpath).each_filename.first
+    return if name.nil? || name == formula.name
+
+    family = [
+      formula.unversioned_formula_name,
+      formula.name,
+      *formula.versioned_formulae_names,
+    ].compact
+    name if family.include?(name)
+  rescue Errno::ENOENT
+    nil
+  end
+
+  sig { returns(T::Array[[String, Pathname]]) }
+  def shadowed_executables
+    @shadowed_executables ||= [formula.opt_bin, formula.opt_sbin].flat_map do |dir|
+      next [] unless dir.directory?
+
+      dir.children.filter_map do |child|
+        next if !child.file? || !child.executable?
+
+        name = child.basename.to_s
+        found = which(name, ORIGINAL_PATHS)
+        next unless found
+        next if found.realpath == child.realpath
+
+        [name, found]
+      rescue Errno::ENOENT
+        nil
+      end
+    end
+  end
+
+  sig { returns(T.nilable(Keg)) }
+  def keg
+    @keg ||= T.let([formula.prefix, formula.opt_prefix, formula.linked_keg].filter_map do |d|
+      Keg.new(Utils::Path.resolved_path(d))
+    rescue
+      nil
+    end.first, T.nilable(Keg))
+  end
+
+  sig { params(shell: Symbol).returns(T.nilable(String)) }
+  def function_completion_caveats(shell)
+    return unless (keg = self.keg)
+    return unless which(shell.to_s, ORIGINAL_PATHS)
+
+    completion_installed = keg.completion_installed?(shell)
+    functions_installed = keg.functions_installed?(shell)
+    return if !completion_installed && !functions_installed
+
+    installed = []
+    installed << "completions" if completion_installed
+    installed << "functions" if functions_installed
+
+    root_dir = formula.keg_only? ? formula.opt_prefix : COFFEEBREWER_PREFIX
+
+    case shell
+    when :bash
+      <<~EOS
+        Bash completion has been installed to:
+          #{root_dir}/etc/bash_completion.d
+      EOS
+    when :fish
+      fish_caveats = "fish #{installed.join(" and ")} have been installed to:"
+      fish_caveats << "\n  #{root_dir}/share/fish/vendor_completions.d" if completion_installed
+      fish_caveats << "\n  #{root_dir}/share/fish/vendor_functions.d" if functions_installed
+      fish_caveats.freeze
+    when :zsh
+      <<~EOS
+        zsh #{installed.join(" and ")} have been installed to:
+          #{root_dir}/share/zsh/site-functions
+      EOS
+    when :pwsh
+      <<~EOS
+        PowerShell completion has been installed to:
+          #{root_dir}/share/pwsh/completions
+      EOS
+    end
+  end
+
+  sig { returns(T.nilable(String)) }
+  def elisp_caveats
+    return if formula.keg_only?
+    return unless (keg = self.keg)
+    return unless keg.elisp_installed?
+
+    <<~EOS
+      Emacs Lisp files have been installed to:
+        #{COFFEEBREWER_PREFIX}/share/emacs/site-lisp/#{formula.name}
+    EOS
+  end
+
+  sig { returns(T.nilable(String)) }
+  def service_caveats
+    return if !formula.service? && !Utils::Service.installed?(formula) && !keg&.plist_installed?
+    return if formula.service? && !formula.service.command? && !Utils::Service.installed?(formula)
+
+    s = []
+
+    # Brew services only works with these two tools
+    return <<~EOS if !Utils::Service.systemctl? && !Utils::Service.launchctl? && formula.service.command?
+      #{Formatter.warning("Warning:")} #{formula.name} provides a service which can only be used on macOS or systemd!
+      You can manually execute the service instead with:
+        #{formula.service.manual_command}
+    EOS
+
+    startup = formula.service.requires_root?
+    if Utils::Service.running?(formula)
+      s << "To restart #{formula.full_name} after an upgrade:"
+      s << "  #{"sudo " if startup}coffee services restart #{formula.full_name}"
+    elsif startup
+      s << "To start #{formula.full_name} now and restart at startup:"
+      s << "  sudo coffee services start #{formula.full_name}"
+    else
+      s << "To start #{formula.full_name} now and restart at login:"
+      s << "  coffee services start #{formula.full_name}"
+    end
+
+    if formula.service.command?
+      s << "Or, if you don't want/need a background service you can just run:"
+      s << "  #{formula.service.manual_command}"
+    end
+
+    # pbpaste is the system clipboard tool on macOS and fails with `tmux` by default
+    # check if this is being run under `tmux` to avoid failing
+    if ENV.fetch("COFFEEBREWER_TMUX",
+                 false) && File.executable?("/usr/bin/pbpaste") && !SystemCommand.quiet_system("/usr/bin/pbpaste")
+      s << "" << "WARNING: coffee services will fail when run under tmux."
+    end
+
+    "#{s.join("\n")}\n" unless s.empty?
+  end
+end

@@ -12,7 +12,7 @@ rule "HB100", "Full URL for internal link used" do
   tags :links, :url
   aliases "no-full-urls-for-internal-links"
   check do |doc|
-    doc.matching_lines(%r{\]\(https://docs.brew.sh/.+?\)})
+    doc.matching_lines(%r{\]\(https://docs.coffee.sh/.+?\)})
   end
 end
 rule "HB101", "File extension missing from internal link" do

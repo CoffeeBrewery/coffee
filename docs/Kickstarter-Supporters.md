@@ -4,7 +4,7 @@ last_review_date: "2025-02-08"
 
 # Kickstarter Supporters
 
-This file contains a list of the awesome people who gave £5 or more to [our Kickstarter](https://www.kickstarter.com/projects/homebrew/brew-test-bot).
+This file contains a list of the awesome people who gave £5 or more to [our Kickstarter](https://www.kickstarter.com/projects/homebrew/coffee-test-bot).
 
 This list is still incomplete as we need addresses for everyone who receives a physical reward. Kickstarter recommends asking only when we are ready to ship (to avoid changes of address) so we can't ask for more names/URLs until then.
 

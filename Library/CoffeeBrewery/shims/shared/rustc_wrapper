@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Prepend COFFEEBREWER_RUSTFLAGS to rustc arguments if set.
+# This allows CoffeeBrewery to pass optimization flags while still respecting
+# .cargo/config.toml (which sets RUSTFLAGS).
+
+# rustc is passed as the first argument to RUSTC_WRAPPER
+# https://doc.rust-lang.org/cargo/reference/environment-variables.html
+RUSTC="${1}"
+shift
+
+# Append COFFEEBREWER_RUSTFLAGS to the arguments if set.
+read -ra RUSTFLAGS <<<"${COFFEEBREWER_RUSTFLAGS:-}"
+exec "${RUSTC}" "$@" "${RUSTFLAGS[@]}"

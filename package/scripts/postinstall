@@ -1,6 +1,6 @@
 #!/bin/bash
 # $1 Full path to the installer (unused)
-# $2 Location of the Homebrew installation we may need to move into place
+# $2 Location of the CoffeeBrewery installation we may need to move into place
 # $3 Target install location (unused)
 # $4 System root directory (unused)
 set -euo pipefail
@@ -17,12 +17,12 @@ then
 else
   # This fallback keeps direct local execution from the repository working.
   # shellcheck disable=SC1091
-  source "${script_dir}/../../Library/Homebrew/utils/macos_user.sh"
+  source "${script_dir}/../../Library/CoffeeBrewery/utils/macos_user.sh"
 fi
 
 # disable analytics while installing
-export HOMEBREW_NO_ANALYTICS_THIS_RUN=1
-export HOMEBREW_NO_ANALYTICS_MESSAGE_OUTPUT=1
+export COFFEEBREWER_NO_ANALYTICS_THIS_RUN=1
+export COFFEEBREWER_NO_ANALYTICS_MESSAGE_OUTPUT=1
 
 # verify the installation exists
 # default to /opt/homebrew to make development/testing easier
@@ -71,13 +71,13 @@ prefix_directory="$(pwd -P)"
 # otherwise, get valid logged in user
 homebrew_pkg_user="$(homebrew-package-user)" ||
   {
-    echo "No valid user for Homebrew installation. Log in before install or specify an install user."
+    echo "No valid user for CoffeeBrewery installation. Log in before install or specify an install user."
     exit 1
   }
 
 if [[ "$(id -u "${homebrew_pkg_user}")" -eq 0 ]]
 then
-  echo "The Homebrew installation user must not be root."
+  echo "The CoffeeBrewery installation user must not be root."
   exit 1
 fi
 
@@ -89,7 +89,7 @@ fi
 homebrew_pkg_mode="ug=rwx"
 if [[ "${homebrew_pkg_group}" == staff ]]
 then
-  # Keep in sync with brew.sh and Homebrew/install's install.sh.
+  # Keep in sync with coffee.sh and CoffeeBrewery/install's install.sh.
   umask go-w
   homebrew_pkg_mode="u=rwx,go-w"
   chmod -R go-w .
@@ -105,14 +105,14 @@ mkdir -vp Caskroom Cellar Frameworks etc include lib opt sbin share var
   mkdir -vp linked
 )
 
-if [[ -z "${HOMEBREW_NO_SUDO:-}" ]] && command -v sudo &>/dev/null
+if [[ -z "${COFFEEBREWER_NO_SUDO:-}" ]] && command -v sudo &>/dev/null
 then
   user_command=(sudo -u "${homebrew_pkg_user}")
 elif [[ "$(id -u)" == 0 ]]
 then
   user_command=(homebrew-login "${homebrew_pkg_user}")
 else
-  echo "Switching to the Homebrew installation user without sudo requires root." >&2
+  echo "Switching to the CoffeeBrewery installation user without sudo requires root." >&2
   exit 1
 fi
 
@@ -152,13 +152,13 @@ then
   git_as_user -C "${homebrew_directory}" clean -f -d
 fi
 
-# move API cache to ~/Library/Caches/Homebrew
+# move API cache to ~/Library/Caches/CoffeeBrewery
 user_home_dir="$(homebrew-user-home "${homebrew_pkg_user}")" ||
   {
-    echo "No home directory for Homebrew installation user: ${homebrew_pkg_user}"
+    echo "No home directory for CoffeeBrewery installation user: ${homebrew_pkg_user}"
     exit 1
   }
-user_cache_dir="${user_home_dir}/Library/Caches/Homebrew"
+user_cache_dir="${user_home_dir}/Library/Caches/CoffeeBrewery"
 user_api_cache_dir="${user_cache_dir}/api"
 # Seed the cache as the install user: as root, `cp` follows a symlink planted at the
 # destination, and the `chown -R` this removes would reach anything hard-linked into the tree.
@@ -170,7 +170,7 @@ then
 fi
 rm -vrf "${homebrew_directory}/cache_api"
 
-# add Homebrew to the default PATH
+# add CoffeeBrewery to the default PATH
 if [[ -d "/etc/paths.d" ]]
 then
   echo "${homebrew_directory}/bin" >/etc/paths.d/homebrew

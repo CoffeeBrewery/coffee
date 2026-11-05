@@ -7,7 +7,7 @@ on:
       - "**"
     paths:
       - .github/workflows/release.yml
-      - Library/Homebrew/utils/macos_user.sh
+      - Library/CoffeeBrewery/utils/macos_user.sh
       - package/**/*
   workflow_dispatch:
     inputs:
@@ -17,8 +17,8 @@ on:
         type: string
 env:
   PKG_APPLE_DEVELOPER_TEAM_ID: ${{ secrets.PKG_APPLE_DEVELOPER_TEAM_ID }}
-  HOMEBREW_NO_ANALYTICS_THIS_RUN: 1
-  HOMEBREW_NO_ANALYTICS_MESSAGE_OUTPUT: 1
+  COFFEEBREWER_NO_ANALYTICS_THIS_RUN: 1
+  COFFEEBREWER_NO_ANALYTICS_MESSAGE_OUTPUT: 1
 
 permissions: {}
 
@@ -28,15 +28,15 @@ defaults:
 
 jobs:
   build:
-    if: github.repository_owner == 'Homebrew' && github.actor != 'dependabot[bot]'
+    if: github.repository_owner == 'CoffeeBrewery' && github.actor != 'dependabot[bot]'
     runs-on: macos-26
     outputs:
-      installer_path: "Homebrew-${{ steps.homebrew-version.outputs.version }}.pkg"
+      installer_path: "CoffeeBrewery-${{ steps.homebrew-version.outputs.version }}.pkg"
     env:
       TEMPORARY_CERTIFICATE_FILE: "homebrew_developer_id_installer_certificate.p12"
       TEMPORARY_KEYCHAIN_FILE: "homebrew_installer_signing.keychain-db"
       # Set to the oldest supported version of macOS
-      HOMEBREW_MACOS_OLDEST_SUPPORTED: "15.0"
+      COFFEEBREWER_MACOS_OLDEST_SUPPORTED: "15.0"
     permissions:
       contents: write # for creating tags and releases
       attestations: write # for actions/attest
@@ -50,7 +50,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ inputs.tag }}
         # Keep in sync with the release blocker check in
-        # Library/Homebrew/dev-cmd/release.rb.
+        # Library/CoffeeBrewery/dev-cmd/release.rb.
         run: |
           labels=("release blocker")
           if [[ "${TAG}" =~ ^[0-9]+\.[0-9]+\.0$ ]]
@@ -60,7 +60,7 @@ jobs:
 
           blockers="$(for label in "${labels[@]}"
           do
-            gh api --method GET repos/Homebrew/brew/issues \
+            gh api --method GET repos/CoffeeBrewery/coffee/issues \
               --raw-field state=open --raw-field labels="${label}" \
               --jq '.[].html_url'
           done | sort -u)"
@@ -73,17 +73,17 @@ jobs:
           fi
 
       - name: Remove existing API cache (to force update)
-        run: rm -rvf ~/Library/Caches/Homebrew/api
+        run: rm -rvf ~/Library/Caches/CoffeeBrewery/api
 
-      - name: Set up Homebrew
+      - name: Set up CoffeeBrewery
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
+        uses: CoffeeBrewery/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
         with:
           core: false
           cask: false
 
       - name: Install Pandoc
-        run: brew install pandoc
+        run: coffee install pandoc
 
       - name: Create and unlock temporary macOS keychain
         run: |
@@ -113,47 +113,47 @@ jobs:
         if: ${{ always() }}
         run: rm -f "${RUNNER_TEMP}/${TEMPORARY_CERTIFICATE_FILE}"
 
-      - name: Checkout another Homebrew to brew subdirectory
+      - name: Checkout another CoffeeBrewery to coffee subdirectory
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          path: brew
+          path: coffee
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Create tag if needed, check and get Homebrew version from Git
+      - name: Create tag if needed, check and get CoffeeBrewery version from Git
         id: homebrew-version
         env:
           TAG: ${{ inputs.tag }}
         run: |
           if [ -n "${TAG}" ]; then
-            git -C brew tag "${TAG}"
+            git -C coffee tag "${TAG}"
           fi
 
-          homebrew_version=$(git -C brew describe --tags --always)
+          homebrew_version=$(git -C coffee describe --tags --always)
 
           if [ -n "${TAG}" ] && [ "${homebrew_version}" != "${TAG}" ]; then
-            echo "Homebrew version ${homebrew_version} does not match tag ${TAG}"
+            echo "CoffeeBrewery version ${homebrew_version} does not match tag ${TAG}"
             exit 1
           fi
 
           echo "version=${homebrew_version}" >> "${GITHUB_OUTPUT}"
 
           # Ship a stable checkout for hosts without Git or developer tools.
-          git -C brew checkout --force -B stable
+          git -C coffee checkout --force -B stable
 
-      - name: Prepare Homebrew API cache for package
+      - name: Prepare CoffeeBrewery API cache for package
         run: |
           package_api_cache="${RUNNER_TEMP}/homebrew-api-cache"
-          rm -rvf ~/Library/Caches/Homebrew/api "${package_api_cache}"
+          rm -rvf ~/Library/Caches/CoffeeBrewery/api "${package_api_cache}"
 
-          HOMEBREW_DEVELOPER=1 HOMEBREW_UPDATE_SKIP_BREW=1 brew update --auto-update --verbose
-          cp -vR ~/Library/Caches/Homebrew/api brew/cache_api
+          COFFEEBREWER_DEVELOPER=1 COFFEEBREWER_UPDATE_SKIP_BREW=1 coffee update --auto-update --verbose
+          cp -vR ~/Library/Caches/CoffeeBrewery/api coffee/cache_api
 
       - name: Check installer Git commands
         run: |
           # Keep repository Git calls using the install user's wrapper.
           if grep -nE 'git .* (checkout|reset|clean)\b|git .* tag --list\b' \
-            brew/package/scripts/postinstall
+            coffee/package/scripts/postinstall
           then
             echo "Installer Git repository operations must use \`git_as_user\`."
             exit 1
@@ -162,45 +162,45 @@ jobs:
       - name: Open macOS keychain
         run: security list-keychain -d user -s "${RUNNER_TEMP}/${TEMPORARY_KEYCHAIN_FILE}"
 
-      - name: Prepare Homebrew installer scripts
+      - name: Prepare CoffeeBrewery installer scripts
         run: |
           installer_scripts="${RUNNER_TEMP}/homebrew-installer-scripts"
           rm -rvf "${installer_scripts}"
           mkdir -vp "${installer_scripts}"
-          cp -vp brew/package/scripts/preinstall \
-            brew/package/scripts/postinstall \
-            brew/Library/Homebrew/utils/macos_user.sh \
+          cp -vp coffee/package/scripts/preinstall \
+            coffee/package/scripts/postinstall \
+            coffee/Library/CoffeeBrewery/utils/macos_user.sh \
             "${installer_scripts}/"
-          echo "HOMEBREW_INSTALLER_SCRIPTS=${installer_scripts}" >> "${GITHUB_ENV}"
+          echo "COFFEEBREWER_INSTALLER_SCRIPTS=${installer_scripts}" >> "${GITHUB_ENV}"
 
-      - name: Build Homebrew installer component package
+      - name: Build CoffeeBrewery installer component package
         env:
-          HOMEBREW_VERSION: ${{ steps.homebrew-version.outputs.version }}
-        # Note: `Library/Homebrew/test/support/fixtures/` contains unsigned
+          COFFEEBREWER_VERSION: ${{ steps.homebrew-version.outputs.version }}
+        # Note: `Library/CoffeeBrewery/test/support/fixtures/` contains unsigned
         # binaries so it needs to be excluded from notarization.
-        run: pkgbuild --root brew
-          --scripts "${HOMEBREW_INSTALLER_SCRIPTS}"
-          --identifier sh.brew.homebrew
-          --version "${HOMEBREW_VERSION}"
+        run: pkgbuild --root coffee
+          --scripts "${COFFEEBREWER_INSTALLER_SCRIPTS}"
+          --identifier sh.coffee.homebrew
+          --version "${COFFEEBREWER_VERSION}"
           --install-location /opt/homebrew
           --filter .DS_Store
-          --filter "(.*)/Library/Homebrew/test/support/fixtures/"
-          --min-os-version "${HOMEBREW_MACOS_OLDEST_SUPPORTED}"
+          --filter "(.*)/Library/CoffeeBrewery/test/support/fixtures/"
+          --min-os-version "${COFFEEBREWER_MACOS_OLDEST_SUPPORTED}"
           --sign "${PKG_APPLE_DEVELOPER_TEAM_ID}"
-          Homebrew.pkg
+          CoffeeBrewery.pkg
 
-      - name: Convert Homebrew license file to RTF
-        run: (printf "### " && cat brew/LICENSE.txt) |
-          pandoc --from markdown --standalone --output brew/package/resources/LICENSE.rtf
+      - name: Convert CoffeeBrewery license file to RTF
+        run: (printf "### " && cat coffee/LICENSE.txt) |
+          pandoc --from markdown --standalone --output coffee/package/resources/LICENSE.rtf
 
-      - name: Build Homebrew installer product package
+      - name: Build CoffeeBrewery installer product package
         env:
-          HOMEBREW_VERSION: ${{ steps.homebrew-version.outputs.version }}
-        run: productbuild --resources brew/package/resources
-          --distribution brew/package/Distribution.xml
-          --package-path Homebrew.pkg
+          COFFEEBREWER_VERSION: ${{ steps.homebrew-version.outputs.version }}
+        run: productbuild --resources coffee/package/resources
+          --distribution coffee/package/Distribution.xml
+          --package-path CoffeeBrewery.pkg
           --sign "${PKG_APPLE_DEVELOPER_TEAM_ID}"
-          "Homebrew-${HOMEBREW_VERSION}.pkg"
+          "CoffeeBrewery-${COFFEEBREWER_VERSION}.pkg"
 
       - name: Clean up temporary macOS keychain
         if: ${{ always() }}
@@ -213,13 +213,13 @@ jobs:
       - name: Generate build provenance
         uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
         with:
-          subject-path: Homebrew-${{ steps.homebrew-version.outputs.version }}.pkg
+          subject-path: CoffeeBrewery-${{ steps.homebrew-version.outputs.version }}.pkg
 
       - name: Upload installer to GitHub Actions
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: Homebrew-${{ steps.homebrew-version.outputs.version }}.pkg
-          path: Homebrew-${{ steps.homebrew-version.outputs.version }}.pkg
+          name: CoffeeBrewery-${{ steps.homebrew-version.outputs.version }}.pkg
+          path: CoffeeBrewery-${{ steps.homebrew-version.outputs.version }}.pkg
   test:
     needs: build
     runs-on: ${{ matrix.runner }}
@@ -236,16 +236,16 @@ jobs:
       - name: Unset global Git safe directory setting
         run: git config --global --unset-all safe.directory
 
-      - name: Remove existing Homebrew installations
+      - name: Remove existing CoffeeBrewery installations
         run: |
-          sudo rm -rf brew /opt/homebrew/{Cellar,Caskroom,Homebrew/Library/Taps}
-          brew cleanup --prune-prefix
+          sudo rm -rf coffee /opt/homebrew/{Cellar,Caskroom,CoffeeBrewery/Library/Taps}
+          coffee cleanup --prune-prefix
           sudo rm -rf /opt/homebrew /home/linuxbrew
 
       - name: Zero existing installer logs
         run: echo | sudo tee /var/log/install.log
 
-      - name: Install Homebrew from installer package
+      - name: Install CoffeeBrewery from installer package
         env:
           INSTALLER_PATH: ${{ needs.build.outputs.installer_path }}
         run: sudo installer -verbose -pkg "${INSTALLER_PATH}" -target /
@@ -254,24 +254,24 @@ jobs:
         if: ${{ always() }}
         run: sudo cat /var/log/install.log
 
-      - name: Check Homebrew version matches tag
+      - name: Check CoffeeBrewery version matches tag
         env:
           TAG: ${{ inputs.tag }}
         run: |
-          homebrew_version=$(brew --version)
-          if [ -n "${TAG}" ] && [ "${homebrew_version}" != "Homebrew ${TAG}" ]; then
-            echo "Homebrew version ${homebrew_version} does not match tag ${TAG}"
+          homebrew_version=$(coffee --version)
+          if [ -n "${TAG}" ] && [ "${homebrew_version}" != "CoffeeBrewery ${TAG}" ]; then
+            echo "CoffeeBrewery version ${homebrew_version} does not match tag ${TAG}"
             exit 1
           fi
 
-      - run: brew config
+      - run: coffee config
 
-      - run: brew doctor
+      - run: coffee doctor
 
       - name: Zero existing installer logs (again)
         run: echo | sudo tee /var/log/install.log
 
-      - name: Reinstall Homebrew from installer package
+      - name: Reinstall CoffeeBrewery from installer package
         env:
           INSTALLER_PATH: ${{ needs.build.outputs.installer_path }}
         run: sudo installer -verbose -pkg "${INSTALLER_PATH}" -target /
@@ -280,11 +280,11 @@ jobs:
         if: ${{ always() }}
         run: sudo cat /var/log/install.log
 
-      - run: brew config
+      - run: coffee config
 
-      - run: brew doctor
+      - run: coffee doctor
 
-      - name: Install Homebrew for a non-admin user
+      - name: Install CoffeeBrewery for a non-admin user
         env:
           INSTALLER_PATH: ${{ needs.build.outputs.installer_path }}
         run: |
@@ -295,14 +295,14 @@ jobs:
             echo "The test account must not be an administrator."
             exit 1
           fi
-          sudo defaults write /var/tmp/.homebrew_pkg_user HOMEBREW_PKG_USER brewtest
+          sudo defaults write /var/tmp/.homebrew_pkg_user COFFEEBREWER_PKG_USER brewtest
           sudo chown root:wheel /var/tmp/.homebrew_pkg_user.plist
           sudo chmod 600 /var/tmp/.homebrew_pkg_user.plist
           sudo chmod -N /var/tmp/.homebrew_pkg_user.plist
           sudo rm -rf /opt/homebrew
           sudo installer -verbose -pkg "${INSTALLER_PATH}" -target /
-          sudo -i -u brewtest /usr/bin/env HOMEBREW_NO_SUDO=1 \
-            /opt/homebrew/bin/brew install --force-bottle hello
+          sudo -i -u brewtest /usr/bin/env COFFEEBREWER_NO_SUDO=1 \
+            /opt/homebrew/bin/coffee install --force-bottle hello
           sudo -i -u brewtest /opt/homebrew/bin/hello --version
           test -z "$(find /opt/homebrew ! -user brewtest -o ! -group "$(id -gn brewtest)")"
 
@@ -314,11 +314,11 @@ jobs:
           do
             if [[ "${phase}" == reinstall ]]
             then
-              sudo chmod go+w /opt/homebrew /opt/homebrew/bin /opt/homebrew/bin/brew \
-                /Users/brewtest/Library/Caches/Homebrew
+              sudo chmod go+w /opt/homebrew /opt/homebrew/bin /opt/homebrew/bin/coffee \
+                /Users/brewtest/Library/Caches/CoffeeBrewery
               sudo installer -verbose -pkg "${INSTALLER_PATH}" -target /
             fi
-            writable_paths="$(sudo find /opt/homebrew /Users/brewtest/Library/Caches/Homebrew \
+            writable_paths="$(sudo find /opt/homebrew /Users/brewtest/Library/Caches/CoffeeBrewery \
               ! -type l \( -perm -0020 -o -perm -0002 \))"
             if [[ -n "${writable_paths}" ]]
             then
@@ -327,7 +327,7 @@ jobs:
             fi
             test ! -w /opt/homebrew
             test ! -w /opt/homebrew/bin
-            test ! -w /opt/homebrew/bin/brew
+            test ! -w /opt/homebrew/bin/coffee
           done
 
   upload:
@@ -337,7 +337,7 @@ jobs:
       # To write assets to GitHub release
       contents: write
     steps:
-      - name: Checkout Homebrew/brew
+      - name: Checkout CoffeeBrewery/coffee
         if: github.event_name == 'workflow_dispatch'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -349,7 +349,7 @@ jobs:
         with:
           name: "${{ needs.build.outputs.installer_path }}"
 
-      - name: Notarize Homebrew installer package
+      - name: Notarize CoffeeBrewery installer package
         env:
           PKG_APPLE_ID_EMAIL: ${{ secrets.PKG_APPLE_ID_EMAIL }}
           PKG_APPLE_ID_APP_SPECIFIC_PASSWORD: ${{ secrets.PKG_APPLE_ID_APP_SPECIFIC_PASSWORD }}
@@ -367,7 +367,7 @@ jobs:
           TAG: ${{ inputs.tag }}
         run: |
           gh release create "${TAG}" \
-            --repo Homebrew/brew \
+            --repo CoffeeBrewery/coffee \
             --title "${TAG}" \
             --draft \
             --generate-notes \
@@ -376,7 +376,7 @@ jobs:
       - name: Rename installer to unversioned path
         env:
           INSTALLER_PATH: ${{ needs.build.outputs.installer_path }}
-        run: mv "${INSTALLER_PATH}" Homebrew.pkg
+        run: mv "${INSTALLER_PATH}" CoffeeBrewery.pkg
 
       - name: Upload installer to GitHub release
         if: github.event_name == 'workflow_dispatch'
@@ -384,6 +384,6 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           INSTALLER_PATH: ${{ needs.build.outputs.installer_path }}
         run: |
-          VERSION="${INSTALLER_PATH#Homebrew-}"
+          VERSION="${INSTALLER_PATH#CoffeeBrewery-}"
           VERSION="${VERSION%.pkg}"
-          gh release upload --repo Homebrew/brew "${VERSION}" Homebrew.pkg
+          gh release upload --repo CoffeeBrewery/coffee "${VERSION}" CoffeeBrewery.pkg

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Set SDKROOT to ensure it matches CoffeeBrewery's choice of SDK.
+
+# COFFEEBREWER_LIBRARY is set by bin/coffee
+# COFFEEBREWER_SDKROOT is set by extend/ENV/super.rb
+# shellcheck disable=SC2154
+source "${COFFEEBREWER_LIBRARY}/CoffeeBrewery/shims/utils.sh"
+
+if [[ -z "${SDKROOT}" && -n "${COFFEEBREWER_SDKROOT}" ]]
+then
+  export SDKROOT="${COFFEEBREWER_SDKROOT}"
+fi
+
+try_exec_non_system "${SHIM_FILE}" "$@"
+safe_exec "/usr/bin/${SHIM_FILE}" "$@"

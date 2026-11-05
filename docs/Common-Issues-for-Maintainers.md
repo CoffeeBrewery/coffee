@@ -15,22 +15,22 @@ If the formula commits are correct and only bottle publication failed:
 
 1. Download and extract the bottle artifact from the failed workflow.
 2. Change to the extracted artifact directory.
-3. Run `brew pr-upload --no-commit` with the appropriate upload options.
+3. Run `coffee pr-upload --no-commit` with the appropriate upload options.
 
-`brew pr-pull` always operates on the canonical tap checkout, regardless of the current directory.
+`coffee pr-pull` always operates on the canonical tap checkout, regardless of the current directory.
 If it must be repeated from an earlier commit, first ensure that the canonical `homebrew/core` checkout has no uncommitted work, fetch its remote and create a backup branch at its current commit:
 
 ```sh
-git -C "$(brew --repository homebrew/core)" status --short
-git -C "$(brew --repository homebrew/core)" fetch origin
-git -C "$(brew --repository homebrew/core)" branch pr-pull-recovery-backup
+git -C "$(coffee --repository homebrew/core)" status --short
+git -C "$(coffee --repository homebrew/core)" fetch origin
+git -C "$(coffee --repository homebrew/core)" branch pr-pull-recovery-backup
 ```
 
-Reset the canonical checkout to the commit before the commits created by the failed `brew pr-pull`, then repeat the command with the original options:
+Reset the canonical checkout to the commit before the commits created by the failed `coffee pr-pull`, then repeat the command with the original options:
 
 ```sh
-git -C "$(brew --repository homebrew/core)" reset --hard COMMIT_SHA
-brew pr-pull PULL_REQUEST
+git -C "$(coffee --repository homebrew/core)" reset --hard COMMIT_SHA
+coffee pr-pull PULL_REQUEST
 ```
 
 Add `--warn-on-upload-failure` only when bottles were partially uploaded and their checksums are known to match the existing `bottle do` block.
@@ -38,7 +38,7 @@ Add `--warn-on-upload-failure` only when bottles were partially uploaded and the
 After publication succeeds, return the checkout to the remote default branch:
 
 ```sh
-git -C "$(brew --repository homebrew/core)" reset --hard origin/HEAD
+git -C "$(coffee --repository homebrew/core)" reset --hard origin/HEAD
 ```
 
 Delete the backup branch only after confirming that it is no longer needed.

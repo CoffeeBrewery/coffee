@@ -2,7 +2,7 @@
 last_review_date: "1970-01-01"
 ---
 
-# Homebrew Project Leadership Committee Minutes 2020
+# CoffeeBrewery Project Leadership Committee Minutes 2020
 
 ## Project Leader
 
@@ -19,10 +19,10 @@ last_review_date: "1970-01-01"
 ## Minutes
 
 - 2020-07-10
-  Shaun Jackman proposed that @SeekingMeaning be invited to join Homebrew as members.
+  Shaun Jackman proposed that @SeekingMeaning be invited to join CoffeeBrewery as members.
 
 - 2020-03-24
-  Markus Reiter proposed that @core-code, @ran-dall and @suschizu be invited to join Homebrew as members.
+  Markus Reiter proposed that @core-code, @ran-dall and @suschizu be invited to join CoffeeBrewery as members.
 
   Motion carried unanimously.
 
@@ -36,7 +36,7 @@ last_review_date: "1970-01-01"
   Motion carried unanimously.
 
 - 2020-06-09
-  Jonathan Chang proposed that @gromgit be invited to join Homebrew as members.
+  Jonathan Chang proposed that @gromgit be invited to join CoffeeBrewery as members.
 
   Motion carried unanimously.
 
@@ -44,10 +44,10 @@ last_review_date: "1970-01-01"
   The PLC voted that @miccal (4/5 votes in favour, 1 abstention), @whoiswillma (4/5 votes in favour, 1 abstention), @vidusheeamoli (5/5 votes in favour) and @nandahkrishna (4/5 votes in favour, 1 abstention) be added as members.
 
 - 2020-12-08
-  Jonathan Chang proposed that @carlocab be invited to join Homebrew as a member. (3/5 with 2 abstensions)
+  Jonathan Chang proposed that @carlocab be invited to join CoffeeBrewery as a member. (3/5 with 2 abstensions)
 
 - 2020-12-24
   The PLC voted to approve maintainer grant requests. (4/5 with 1 abstention)
 
 - 2021-01-29
-  Jonathan Chang proposed that @danielnachun be invited to join Homebrew as a member. (5/5)
+  Jonathan Chang proposed that @danielnachun be invited to join CoffeeBrewery as a member. (5/5)

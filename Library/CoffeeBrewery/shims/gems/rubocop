@@ -1,0 +1,3 @@
+#!/bin/bash
+COFFEEBREWER_PREFIX_BIN="$(cd "$(dirname "$0")"/../../../../ && pwd)/bin/"
+exec "${COFFEEBREWER_PREFIX_BIN}"coffee rubocop "$@"

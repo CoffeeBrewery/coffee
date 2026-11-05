@@ -7,7 +7,7 @@ AllCops:
     - "**/vendor/**/*"
 
 # These are included in docs deliberately to show what
-# `brew create` does and what the user should replace.
+# `coffee create` does and what the user should replace.
 FormulaAudit/Comments:
   Enabled: false
 

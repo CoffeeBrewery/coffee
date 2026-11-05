@@ -3,16 +3,16 @@
 #
 # Their review is required to merge PRs that change these files.
 #
-# To be explicit: we will never accept changes to this file adding people from outside the Homebrew GitHub
-# organisation. If you are not a Homebrew maintainer: you do not personally "own" or "maintain" any files.
+# To be explicit: we will never accept changes to this file adding people from outside the CoffeeBrewery GitHub
+# organisation. If you are not a CoffeeBrewery maintainer: you do not personally "own" or "maintain" any files.
 #
 # Note: teams without write-access to this repository cannot be listed in this file.
 
-CODEOWNERS             @Homebrew/lead-maintainers @MikeMcQuaid
-docs/Support-Tiers.md  @Homebrew/lead-maintainers @MikeMcQuaid
+CODEOWNERS             @CoffeeBrewery/lead-maintainers @MikeMcQuaid
+docs/Support-Tiers.md  @CoffeeBrewery/lead-maintainers @MikeMcQuaid
 
-Library/Homebrew/sandbox.rb                            @Homebrew/security
-Library/Homebrew/extend/os/mac/sandbox.rb              @Homebrew/security
-Library/Homebrew/extend/os/linux/sandbox.rb            @Homebrew/security
-Library/Homebrew/extend/os/linux/sandbox/backend.rb    @Homebrew/security
-Library/Homebrew/extend/os/linux/sandbox/landlock.rb   @Homebrew/security
+Library/CoffeeBrewery/sandbox.rb                            @CoffeeBrewery/security
+Library/CoffeeBrewery/extend/os/mac/sandbox.rb              @CoffeeBrewery/security
+Library/CoffeeBrewery/extend/os/linux/sandbox.rb            @CoffeeBrewery/security
+Library/CoffeeBrewery/extend/os/linux/sandbox/backend.rb    @CoffeeBrewery/security
+Library/CoffeeBrewery/extend/os/linux/sandbox/landlock.rb   @CoffeeBrewery/security

@@ -4,12 +4,12 @@ last_review_date: "2026-07-26"
 
 # Responsible AI Usage
 
-This guide is for maintainers and contributors who use "Artificial Intelligence"/Large Language Model (AI/LLM) tools when working on Homebrew.
-It expands on the [AI/LLM usage rules in our Contributing guide](https://github.com/Homebrew/brew/blob/HEAD/CONTRIBUTING.md#artificial-intelligencelarge-language-model-aillm-usage) and the repository's `AGENTS.md` files with the principles we expect you to apply.
+This guide is for maintainers and contributors who use "Artificial Intelligence"/Large Language Model (AI/LLM) tools when working on CoffeeBrewery.
+It expands on the [AI/LLM usage rules in our Contributing guide](https://github.com/CoffeeBrewery/coffee/blob/HEAD/CONTRIBUTING.md#artificial-intelligencelarge-language-model-aillm-usage) and the repository's `AGENTS.md` files with the principles we expect you to apply.
 
 AI tools can make you faster.
 They can also produce confidently plausible but wrong output.
-These guidelines exist to make Homebrew better rather than shifting work and risk onto other maintainers.
+These guidelines exist to make CoffeeBrewery better rather than shifting work and risk onto other maintainers.
 
 ## Human in the loop
 
@@ -22,12 +22,12 @@ Verify AI output for correctness as you would that of an avatarless GitHub user 
 Read it, run it, test it and make sure you understand it.
 
 Do not ask other humans to review your AI-generated code until you have reviewed it yourself.
-This is already a requirement in our [Contributing guide](https://github.com/Homebrew/brew/blob/HEAD/CONTRIBUTING.md#artificial-intelligencelarge-language-model-aillm-usage): you must review all AI/LLM-generated content before asking anyone in Homebrew to review it.
+This is already a requirement in our [Contributing guide](https://github.com/CoffeeBrewery/coffee/blob/HEAD/CONTRIBUTING.md#artificial-intelligencelarge-language-model-aillm-usage): you must review all AI/LLM-generated content before asking anyone in CoffeeBrewery to review it.
 
 Answer maintainer questions and pull request review comments yourself without using AI/LLM.
 Reviewers need to engage directly with the person responsible for the contribution.
 
-As the [pull request template](https://github.com/Homebrew/brew/blob/HEAD/.github/PULL_REQUEST_TEMPLATE.md) sets out, disclose when AI was used to generate or assist with a pull request and explain how you verified the changes.
+As the [pull request template](https://github.com/CoffeeBrewery/coffee/blob/HEAD/.github/PULL_REQUEST_TEMPLATE.md) sets out, disclose when AI was used to generate or assist with a pull request and explain how you verified the changes.
 
 ## Trust appropriately
 
@@ -35,8 +35,8 @@ AI tools should not be trusted much more or much less than those of humans.
 Treat their output as a fallible first draft.
 
 Verify output: it may be wrong.
-Where Homebrew has fast feedback loops, use them.
-Run `brew lgtm` (style, typechecking and tests) on every change, and read the diff with `git diff` to keep it small and intentional.
+Where CoffeeBrewery has fast feedback loops, use them.
+Run `coffee lgtm` (style, typechecking and tests) on every change, and read the diff with `git diff` to keep it small and intentional.
 
 Review code, but don't try to make all of it perfectly match how you would have written it by hand.
 Reviewing for correctness, security and maintainability matters far more than reviewing for personal style; our [Prose Style Guidelines](Prose-Style-Guidelines.md) and RuboCop already cover most of the latter.
@@ -45,7 +45,7 @@ Review mission-critical code, such as anything touching installation, security, 
 
 ## Use AI to improve AI
 
-For maintainers or regular contributors, when prompting an AI requires repeated corrections and nudges to get Homebrew conventions right, ask it to write or update an `AGENTS.md` file so the next person and the next agent start from a better place.
+For maintainers or regular contributors, when prompting an AI requires repeated corrections and nudges to get CoffeeBrewery conventions right, ask it to write or update an `AGENTS.md` file so the next person and the next agent start from a better place.
 We already keep instructions in `AGENTS.md` at the repository root.
 
 It's acceptable to do this in the same pull request as your 3rd or later PR.
@@ -64,7 +64,7 @@ Running agents in sandboxed git worktrees, for example, lets you give them more 
 
 ## See also
 
-- [Contributing to Homebrew](https://github.com/Homebrew/brew/blob/HEAD/CONTRIBUTING.md)
+- [Contributing to CoffeeBrewery](https://github.com/CoffeeBrewery/coffee/blob/HEAD/CONTRIBUTING.md)
 - [Maintainer Guidelines](Maintainer-Guidelines.md)
 - [Maintainers: Avoiding Burnout](Maintainers-Avoiding-Burnout.md)
 - [Prose Style Guidelines](Prose-Style-Guidelines.md)

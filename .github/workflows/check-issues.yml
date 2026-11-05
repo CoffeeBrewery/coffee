@@ -23,7 +23,7 @@ jobs:
     # Restrict this write-token workflow to repositories with supported templates.
     # The first step also fails if a repository checkout has occurred.
     if: >-
-      contains(fromJSON('["Homebrew/BrewUI", "Homebrew/brew", "Homebrew/homebrew-core", "Homebrew/homebrew-cask"]'), github.repository) &&
+      contains(fromJSON('["CoffeeBrewery/BrewUI", "CoffeeBrewery/coffee", "CoffeeBrewery/homebrew-core", "CoffeeBrewery/homebrew-cask"]'), github.repository) &&
       github.event.issue.user.login != 'BrewTestBot' &&
       github.event.issue.user.login != 'dependabot[bot]'
     runs-on: ubuntu-latest
@@ -55,11 +55,11 @@ jobs:
 
       - name: Fetch issue templates
         run: |
-          # Validate against the brew, homebrew-core and homebrew-cask templates so
+          # Validate against the coffee, homebrew-core and homebrew-cask templates so
           # issues transferred between these repositories are not closed for using a
           # sibling repository's (valid) template.
-          template_repositories=(Homebrew/brew Homebrew/homebrew-core Homebrew/homebrew-cask)
-          if [[ "${GITHUB_REPOSITORY}" == "Homebrew/BrewUI" ]]
+          template_repositories=(CoffeeBrewery/coffee CoffeeBrewery/homebrew-core CoffeeBrewery/homebrew-cask)
+          if [[ "${GITHUB_REPOSITORY}" == "CoffeeBrewery/BrewUI" ]]
           then
             template_repositories=("${GITHUB_REPOSITORY}")
           fi
@@ -77,7 +77,7 @@ jobs:
 
       - name: Fetch template checker
         run: |
-          gh api "repos/Homebrew/.github/contents/.github/scripts/check_template.rb?ref=main" \
+          gh api "repos/CoffeeBrewery/.github/contents/.github/scripts/check_template.rb?ref=main" \
             --jq ".content" |
             base64 --decode >"${RUNNER_TEMP:?}/check_template.rb"
 
@@ -87,10 +87,10 @@ jobs:
           ISSUE_TITLE: ${{ github.event.issue.title }}
         run: |
           # Released apps attach a crash report instead of filling in the issue form.
-          if [[ "${GITHUB_REPOSITORY}" == "Homebrew/BrewUI" &&
+          if [[ "${GITHUB_REPOSITORY}" == "CoffeeBrewery/BrewUI" &&
                 "${ISSUE_TITLE}" == "Crash: "* ]] &&
              grep -q '^<summary>Automatic crash report</summary>[[:space:]]*$' "${RUNNER_TEMP}/check-issues/body" &&
-             grep -q '^Homebrew[.]app crash report[[:space:]]*$' "${RUNNER_TEMP}/check-issues/body"
+             grep -q '^CoffeeBrewery[.]app crash report[[:space:]]*$' "${RUNNER_TEMP}/check-issues/body"
           then
             echo "complete_template=true" >>"${GITHUB_OUTPUT:?}"
             exit 0

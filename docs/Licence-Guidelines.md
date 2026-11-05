@@ -9,7 +9,7 @@ redirect_from:
 Formulae in `homebrew/core` must use a licence compatible with the [Debian Free Software Guidelines](https://wiki.debian.org/DFSGLicenses) or be released into the public domain under the [DFSG public-domain guidance](https://wiki.debian.org/DFSGLicenses#Public_Domain).
 
 These guidelines describe the licences of packaged software.
-See [package licence policies](Homebrew-Package-Policies.md#choose-the-restriction-that-matches-the-requirement) for organisational restrictions.
+See [package licence policies](CoffeeBrewery-Package-Policies.md#choose-the-restriction-that-matches-the-requirement) for organisational restrictions.
 
 ## Specifying a licence
 
@@ -84,19 +84,19 @@ license any_of: [
 
 ## Specifying forbidden licences
 
-The `HOMEBREW_FORBIDDEN_LICENSES` environment variable can be set to forbid installation of formulae that require or have dependencies that require certain licences.
+The `COFFEEBREWER_FORBIDDEN_LICENSES` environment variable can be set to forbid installation of formulae that require or have dependencies that require certain licences.
 
-`HOMEBREW_FORBIDDEN_LICENSES` should be set to a space-separated list of licences. Use `public_domain` to forbid installation of formulae with a `:public_domain` licence.
+`COFFEEBREWER_FORBIDDEN_LICENSES` should be set to a space-separated list of licences. Use `public_domain` to forbid installation of formulae with a `:public_domain` licence.
 
 For example, the following forbids installation of `MIT`, `Artistic-1.0` and `:public_domain` licences:
 
 ```bash
-export HOMEBREW_FORBIDDEN_LICENSES="MIT Artistic-1.0 public_domain"
+export COFFEEBREWER_FORBIDDEN_LICENSES="MIT Artistic-1.0 public_domain"
 ```
 
-In this example Homebrew would refuse to install any formula that specifies the `MIT` licence. Homebrew would also forbid installation of any formula that declares a dependency on a formula that specifies `MIT`, even if the original formula has an allowed licence.
+In this example CoffeeBrewery would refuse to install any formula that specifies the `MIT` licence. CoffeeBrewery would also forbid installation of any formula that declares a dependency on a formula that specifies `MIT`, even if the original formula has an allowed licence.
 
-Homebrew interprets complex licence expressions and determines whether the licences permit installation. To continue the above example, Homebrew would not allow installation of a formula with the following licence declarations:
+CoffeeBrewery interprets complex licence expressions and determines whether the licences permit installation. To continue the above example, CoffeeBrewery would not allow installation of a formula with the following licence declarations:
 
 ```ruby
 license any_of: ["MIT", "Artistic-1.0"]
@@ -106,20 +106,20 @@ license any_of: ["MIT", "Artistic-1.0"]
 license all_of: ["MIT", "0BSD"]
 ```
 
-Homebrew _would_ allow formulae with the following declaration to be installed:
+CoffeeBrewery _would_ allow formulae with the following declaration to be installed:
 
 ```ruby
 license any_of: ["MIT", "0BSD"]
 ```
 
-`HOMEBREW_FORBIDDEN_LICENSES` can also forbid future versions of specific licences. For example, to forbid `Artistic-1.0`, `Artistic-2.0` and any future Artistic licences, use:
+`COFFEEBREWER_FORBIDDEN_LICENSES` can also forbid future versions of specific licences. For example, to forbid `Artistic-1.0`, `Artistic-2.0` and any future Artistic licences, use:
 
 ```bash
-export HOMEBREW_FORBIDDEN_LICENSES="Artistic-1.0+"
+export COFFEEBREWER_FORBIDDEN_LICENSES="Artistic-1.0+"
 ```
 
 For GNU licences (such as `GPL`, `LGPL`, `AGPL` and `GFDL`), use `-only` or `-or-later`. For example, the following would forbid `GPL-2.0`, `LGPL-2.1` and `LGPL-3.0` formulae from being installed, but would allow `GPL-3.0`:
 
 ```bash
-export HOMEBREW_FORBIDDEN_LICENSES="GPL-2.0-only LGPL-2.1-or-later"
+export COFFEEBREWER_FORBIDDEN_LICENSES="GPL-2.0-only LGPL-2.1-or-later"
 ```

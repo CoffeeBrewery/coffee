@@ -17,16 +17,16 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
-  HOMEBREW_DEVELOPER: 1
-  HOMEBREW_NO_AUTO_UPDATE: 1
-  HOMEBREW_NO_ENV_HINTS: 1
+  COFFEEBREWER_DEVELOPER: 1
+  COFFEEBREWER_NO_AUTO_UPDATE: 1
+  COFFEEBREWER_NO_ENV_HINTS: 1
 
 permissions: {}
 
 jobs:
   brew_ruby:
-    name: No brew ruby
-    if: github.repository_owner == 'Homebrew'
+    name: No coffee ruby
+    if: github.repository_owner == 'CoffeeBrewery'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -35,35 +35,35 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Check for `brew ruby`
+      - name: Check for `coffee ruby`
         run: |
           status=0
-          git grep --line-number --word-regexp --extended-regexp 'brew[[:space:]]+ruby' -- \
+          git grep --line-number --word-regexp --extended-regexp 'coffee[[:space:]]+ruby' -- \
             .github ':(glob)**/action.yml' ':(glob)**/action.yaml' ':!.github/workflows/actionlint.yml' || status=$?
           if [[ "${status}" -eq 0 ]]
           then
-            echo "::error::Use a dedicated brew command or Homebrew/actions/setup-ruby instead of \`brew ruby\`."
+            echo "::error::Use a dedicated coffee command or CoffeeBrewery/actions/setup-ruby instead of \`coffee ruby\`."
             exit 1
           fi
           [[ "${status}" -eq 1 ]]
 
   workflow_syntax:
-    if: github.repository_owner == 'Homebrew'
+    if: github.repository_owner == 'CoffeeBrewery'
     runs-on: ubuntu-latest
     permissions:
       contents: read
     container:
-      image: ghcr.io/homebrew/brew:main
+      image: ghcr.io/homebrew/coffee:main
     steps:
-      - name: Set up Homebrew
+      - name: Set up CoffeeBrewery
         id: setup-homebrew
-        uses: Homebrew/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
+        uses: CoffeeBrewery/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
         with:
           core: false
           cask: false
 
       - name: Install tools
-        run: brew install actionlint shellcheck zizmor
+        run: coffee install actionlint shellcheck zizmor
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -88,7 +88,7 @@ jobs:
           sed -i 's|shell: /bin/bash -x|shell: bash -x|' .github/workflows/*.y*ml
 
           # In homebrew-core, the JSON matcher needs to be accessible to the container host.
-          cp "$(brew --repository)/.github/actionlint-matcher.json" "$HOME"
+          cp "$(coffee --repository)/.github/actionlint-matcher.json" "$HOME"
 
           echo "::add-matcher::$HOME/actionlint-matcher.json"
 

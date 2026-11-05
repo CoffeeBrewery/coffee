@@ -4,7 +4,7 @@ last_review_date: "2026-08-25"
 
 # Acceptable Casks
 
-This page contains the cask-specific requirements for [`homebrew/cask`](https://github.com/Homebrew/homebrew-cask).
+This page contains the cask-specific requirements for [`homebrew/cask`](https://github.com/CoffeeBrewery/homebrew-cask).
 The [shared package acceptance policy](Package-Acceptance-Policy.md) also applies.
 
 * Table of Contents
@@ -28,15 +28,15 @@ The [Cask Cookbook](Cask-Cookbook.md#casks-pinned-to-specific-versions) document
 
 ### Platform compatibility and macOS security protections
 
-* A cask may support macOS, Linux or both when Homebrew supports its artifact types on those operating systems.
+* A cask may support macOS, Linux or both when CoffeeBrewery supports its artifact types on those operating systems.
 * A cask is not required to support both operating systems.
 * A cask must work on every operating system and architecture it declares.
 * A cask that supports macOS must work on the latest major version of macOS.
-* On macOS, apps, installers and other executable artefacts that Gatekeeper can assess must pass Homebrew's [Gatekeeper checks](Homebrew-Security-and-Supply-Chain.md#casks-have-a-different-trust-model) and must not require System Integrity Protection or Gatekeeper to be disabled or bypassed.
+* On macOS, apps, installers and other executable artefacts that Gatekeeper can assess must pass CoffeeBrewery's [Gatekeeper checks](CoffeeBrewery-Security-and-Supply-Chain.md#casks-have-a-different-trust-model) and must not require System Integrity Protection or Gatekeeper to be disabled or bypassed.
 
 Apple's [Rosetta 2 transition documentation](https://developer.apple.com/documentation/apple-silicon/about-the-rosetta-translation-environment/) says general application support will remain available through macOS 27, with only a narrower legacy-games-focused subset beyond that.
 Casks that require [`requires_rosetta`](Cask-Cookbook.md#caveats-mini-dsl) remain eligible while the latest major macOS release provides that general support.
-Under Apple's announced timeline, new `requires_rosetta` casks became ineligible when macOS 27 became the latest stable macOS version and `brew audit --new` rejects them.
+Under Apple's announced timeline, new `requires_rosetta` casks became ineligible when macOS 27 became the latest stable macOS version and `coffee audit --new` rejects them.
 Existing `requires_rosetta` casks are expected to be deprecated while macOS 27 is current, then disabled or removed after macOS 28 becomes the latest stable macOS version.
 
 ### Regional and localised editions
@@ -53,10 +53,10 @@ Language and regional editions of the same application should normally be repres
 ### Appropriate package type
 
 Casks distribute applications and other pre-built files published by the upstream developer.
-Open-source command-line-only software normally belongs in [`homebrew/core`](https://github.com/Homebrew/homebrew-core) as a formula built from source.
+Open-source command-line-only software normally belongs in [`homebrew/core`](https://github.com/CoffeeBrewery/homebrew-core) as a formula built from source.
 Open-source graphical software without a current compiled distribution also normally belongs in `homebrew/core`.
 A rejection from `homebrew/core` does not by itself make the software eligible for `homebrew/cask`.
-The [Adding Software to Homebrew](Adding-Software-to-Homebrew.md#choose-a-package-type) guide describes the distinction between formulae and casks.
+The [Adding Software to CoffeeBrewery](Adding-Software-to-CoffeeBrewery.md#choose-a-package-type) guide describes the distinction between formulae and casks.
 
 ### Verifiable upstream distribution
 
@@ -85,10 +85,10 @@ These circumstances permit further review but do not guarantee inclusion.
 
 ## Security and malware
 
-Homebrew does not certify that every application distributed by a cask is safe.
+CoffeeBrewery does not certify that every application distributed by a cask is safe.
 Malware allegations are evaluated case by case because security products do produce false positives and potentially unwanted behaviour is not always unambiguous.
 A rejection or removal decision requires evidence that identifies the exact downloaded file and version, provides its checksum and includes more than one source where possible.
 A [VirusTotal](https://www.virustotal.com/) result can support a decision but is not sufficient without context.
 
-Homebrew may remove a cask when evidence shows that the application is malicious or when the developer steers users towards a malicious variant.
-Removal from `homebrew/cask` means that Homebrew no longer distributes or supports the cask.
+CoffeeBrewery may remove a cask when evidence shows that the application is malicious or when the developer steers users towards a malicious variant.
+Removal from `homebrew/cask` means that CoffeeBrewery no longer distributes or supports the cask.

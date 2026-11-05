@@ -45,4 +45,4 @@ Example:
 ```
 
 Use a commit summary such as `new-token: renamed from old-token`.
-Homebrew uses the rename mapping during updates and `brew migrate`, so the target must exist in the same tap.
+CoffeeBrewery uses the rename mapping during updates and `coffee migrate`, so the target must exist in the same tap.

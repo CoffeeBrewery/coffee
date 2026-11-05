@@ -1,26 +1,26 @@
-# Agent Instructions for Homebrew/brew
+# Agent Instructions for CoffeeBrewery/coffee
 
-Most importantly, run `./bin/brew lgtm` (style checks, type checks and tests) to verify any file edits before prompting for input.
+Most importantly, run `./bin/coffee lgtm` (style checks, type checks and tests) to verify any file edits before prompting for input.
 
 Inline any new or existing methods or variables used only once unless they are needed for unit tests or explain magic numbers.
 Keep the diff as small, DRY and YAGNI as possible.
 Re-read relevant files after each prompt and preserve user edits and comments.
 Before finishing, check your work and point out anything the user may not have considered.
 
-This is a Ruby repository with Bash scripts for faster execution that provides the `brew` command for the Homebrew package manager.
+This is a Ruby repository with Bash scripts for faster execution that provides the `coffee` command for the CoffeeBrewery package manager.
 
 ## Running Commands
 
-- Use `./bin/brew`, never a system `brew` on `PATH`.
-- Never use the system Ruby; it is an incompatible older version. Run Ruby with `./bin/brew ruby -- <args>` to load Homebrew's vendored Ruby and libraries.
+- Use `./bin/coffee`, never a system `coffee` on `PATH`.
+- Never use the system Ruby; it is an incompatible older version. Run Ruby with `./bin/coffee ruby -- <args>` to load CoffeeBrewery's vendored Ruby and libraries.
 
 ## Required Before Each Commit
 
-- `./bin/brew typecheck`: Sorbet type checking. It only runs globally but is fast.
-- `./bin/brew style --fix --changed`: RuboCop linting. Pass files to check them individually, e.g. `./bin/brew style --fix Library/Homebrew/cmd/reinstall.rb`.
-- `./bin/brew tests --online --changed`: RSpec tests. Online tests can be flaky, so ignore failures that pass on a rerun. Pass `--only` for individual files, e.g. `./bin/brew tests --only=cmd/reinstall` runs `Library/Homebrew/test/cmd/reinstall_spec.rb`.
-- `./bin/brew lgtm --online` runs all of the above in one command.
-- The Homebrew MCP Server (`./bin/brew mcp-server`) can also run all of the above.
+- `./bin/coffee typecheck`: Sorbet type checking. It only runs globally but is fast.
+- `./bin/coffee style --fix --changed`: RuboCop linting. Pass files to check them individually, e.g. `./bin/coffee style --fix Library/CoffeeBrewery/cmd/reinstall.rb`.
+- `./bin/coffee tests --online --changed`: RSpec tests. Online tests can be flaky, so ignore failures that pass on a rerun. Pass `--only` for individual files, e.g. `./bin/coffee tests --only=cmd/reinstall` runs `Library/CoffeeBrewery/test/cmd/reinstall_spec.rb`.
+- `./bin/coffee lgtm --online` runs all of the above in one command.
+- The CoffeeBrewery MCP Server (`./bin/coffee mcp-server`) can also run all of the above.
 
 ## Git
 
@@ -38,9 +38,9 @@ This is a Ruby repository with Bash scripts for faster execution that provides t
 - Never use `T.must` (enforced by `Sorbet/ForbidTMust`): bind the value to a local and branch on `nil`, use `fetch` or `first(n)` on collections, or raise an exception with a helpful message where `nil` is impossible.
 - Never use `T.unsafe` (enforced by `Sorbet/ForbidTUnsafe`): give DSL parameters `= nil` defaults with nilable types, narrow with `is_a?` or `case`, use `requires_ancestor` for typed modules and `public_send` behind a `respond_to?` guard for duck typing.
 - Avoid `T.cast`, `T.let`, `T.untyped` and `T.anything`: use precise types and APIs that return non-nil values. If a generic top type is unavoidable, use `T.anything` rather than `T.untyped`.
-- Never use `.send`: call methods directly, use `.public_send` only for dynamically-named public methods and make private methods public in tests (enforced by `Homebrew/NoSendInTests`). In tests, read and write state through public `attr_*` accessors rather than `instance_variable_get`/`instance_variable_set` (enforced by `Homebrew/NoInstanceVariableAccessInTests`).
-- Shell out via `HOMEBREW_BREW_FILE` instead of requiring `cmd/` or `dev-cmd` when composing brew commands.
-- Avoid calling `Homebrew::Cmd` or `Homebrew::DevCmd` methods from other code: put shared helpers under `Utils` or on the relevant class, e.g. a `Formula` class method.
+- Never use `.send`: call methods directly, use `.public_send` only for dynamically-named public methods and make private methods public in tests (enforced by `CoffeeBrewery/NoSendInTests`). In tests, read and write state through public `attr_*` accessors rather than `instance_variable_get`/`instance_variable_set` (enforced by `CoffeeBrewery/NoInstanceVariableAccessInTests`).
+- Shell out via `COFFEEBREWER_BREW_FILE` instead of requiring `cmd/` or `dev-cmd` when composing coffee commands.
+- Avoid calling `CoffeeBrewery::Cmd` or `CoffeeBrewery::DevCmd` methods from other code: put shared helpers under `Utils` or on the relevant class, e.g. a `Formula` class method.
 - Keep `extend/os/*` prepends thin: put the `prepend` in the OS-specific `linux` or `macos` file rather than the shared loader with an inline `if`, and put substantive logic in shared code outside `extend/` so it is tested on all platforms rather than in `:needs_linux` or `:needs_macos` specs.
 - When Bash logic mirrors Ruby logic, keep both in sync with two-way comments naming the matching Ruby and Bash locations and keep matching helper filenames aligned.
 - Use `&>/dev/null` instead of `>/dev/null 2>&1`.
@@ -59,16 +59,16 @@ This is a Ruby repository with Bash scripts for faster execution that provides t
 - Use at most one `:integration_test` per command: a fast happy-path test. Add another only for essential core functionality in essential non-developer commands.
 - Use a single `expect` per unit test; combine expectations only in integration tests or when the `before` setup is non-trivial.
 - Formula classes created in specs may be frozen, so stub instances rather than class methods.
-- `Library/Homebrew/test/spec_helper.rb` snapshots and restores `ENV` around every example, so set environment variables directly without `with_env` or manual cleanup.
+- `Library/CoffeeBrewery/test/spec_helper.rb` snapshots and restores `ENV` around every example, so set environment variables directly without `with_env` or manual cleanup.
 
 ## Repository Structure
 
-- `bin/brew`: Homebrew's `brew` command main Bash entry point script.
-- `completions/` and `manpages/`: generated shell completions and `man` pages. Don't edit directly; regenerate with `./bin/brew generate-man-completions`.
-- `Library/Homebrew/`: Homebrew's core Ruby (with a little Bash) logic.
-- `Library/Homebrew/bundle/`: Homebrew's `brew bundle` command.
-- `Library/Homebrew/cask/`: Homebrew's Cask classes and DSL.
-- `Library/Homebrew/extend/os/`: Homebrew's OS-specific (i.e. macOS or Linux) class extension logic.
-- `Library/Homebrew/formula.rb`: Homebrew's Formula class and DSL.
-- `docs/`: Documentation for Homebrew users, contributors and maintainers. Consult these for best practices and help.
+- `bin/coffee`: CoffeeBrewery's `coffee` command main Bash entry point script.
+- `completions/` and `manpages/`: generated shell completions and `man` pages. Don't edit directly; regenerate with `./bin/coffee generate-man-completions`.
+- `Library/CoffeeBrewery/`: CoffeeBrewery's core Ruby (with a little Bash) logic.
+- `Library/CoffeeBrewery/bundle/`: CoffeeBrewery's `coffee bundle` command.
+- `Library/CoffeeBrewery/cask/`: CoffeeBrewery's Cask classes and DSL.
+- `Library/CoffeeBrewery/extend/os/`: CoffeeBrewery's OS-specific (i.e. macOS or Linux) class extension logic.
+- `Library/CoffeeBrewery/formula.rb`: CoffeeBrewery's Formula class and DSL.
+- `docs/`: Documentation for CoffeeBrewery users, contributors and maintainers. Consult these for best practices and help.
 - `package/`: Files to generate the macOS `.pkg` file.

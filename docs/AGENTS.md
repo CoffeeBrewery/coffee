@@ -2,18 +2,18 @@
 last_review_date: "2026-06-10"
 ---
 
-# Agent Instructions for Homebrew/brew docs
+# Agent Instructions for CoffeeBrewery/coffee docs
 
 These instructions apply when working in `docs/`.
 
 ## Tooling
 
-- Use the system Homebrew `brew bundle exec ...` workflow from this directory
-  rather than `./bin/brew` for the docs site toolchain.
-- Set `HOMEBREW_NO_AUTO_UPDATE=1` for docs verification commands to match the
+- Use the system CoffeeBrewery `coffee bundle exec ...` workflow from this directory
+  rather than `./bin/coffee` for the docs site toolchain.
+- Set `COFFEEBREWER_NO_AUTO_UPDATE=1` for docs verification commands to match the
   CI workflow.
 - Install or refresh the docs Ruby environment with
-  `brew bundle exec bundle install`.
+  `coffee bundle exec bundle install`.
 
 ## Markdown style
 
@@ -25,7 +25,7 @@ These instructions apply when working in `docs/`.
   Keep `license` when referring to the exact DSL stanza, command-line option or other interface name.
 - Avoid em-dashes (prefer semicolons, colons and commas) and Oxford commas.
 - Do not use bare URLs; use Markdown links.
-  Internal links must point at the `.md` file (for example `[Bottles](Bottles.md)`), not a `docs.brew.sh` URL.
+  Internal links must point at the `.md` file (for example `[Bottles](Bottles.md)`), not a `docs.coffee.sh` URL.
 - Indent nested unordered lists by 2 spaces.
 
 ## Verification
@@ -35,21 +35,21 @@ and `docs/Rakefile`.
 
 At a minimum, from `docs/` run:
 
-- `HOMEBREW_NO_AUTO_UPDATE=1 brew bundle exec bundle install`
-- `HOMEBREW_NO_AUTO_UPDATE=1 brew bundle exec bin/jekyll build`
-- `HOMEBREW_NO_AUTO_UPDATE=1 brew bundle exec bundle exec rake lint`
-- `HOMEBREW_NO_AUTO_UPDATE=1 brew bundle exec bundle exec rake test`
+- `COFFEEBREWER_NO_AUTO_UPDATE=1 coffee bundle exec bundle install`
+- `COFFEEBREWER_NO_AUTO_UPDATE=1 coffee bundle exec bin/jekyll build`
+- `COFFEEBREWER_NO_AUTO_UPDATE=1 coffee bundle exec bundle exec rake lint`
+- `COFFEEBREWER_NO_AUTO_UPDATE=1 coffee bundle exec bundle exec rake test`
 
 Also run these from the repository root when docs content changes:
 
 - `rg --files docs -0 -g '*.md' -g '!vendor/**' -g '!_site/**' -g '!rubydoc/**' | xargs -0 vale`
-- `HOMEBREW_NO_AUTO_UPDATE=1 brew style docs`
+- `COFFEEBREWER_NO_AUTO_UPDATE=1 coffee style docs`
 
 ## Notes
 
-- Prefer `brew bundle exec bin/jekyll build` explicitly for site builds.
-- Prefer `brew bundle exec bundle exec rake ...` for Rake tasks so bundled
+- Prefer `coffee bundle exec bin/jekyll build` explicitly for site builds.
+- Prefer `coffee bundle exec bundle exec rake ...` for Rake tasks so bundled
   executables such as `mdl` are available to the task.
-- For `Homebrew/brew`, the docs CI also runs
-  `brew generate-man-completions --no-exit-code` before docs checks. Run it
+- For `CoffeeBrewery/coffee`, the docs CI also runs
+  `coffee generate-man-completions --no-exit-code` before docs checks. Run it
   when your docs change depends on updated generated manpages or completions.

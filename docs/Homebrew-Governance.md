@@ -2,9 +2,9 @@
 last_review_date: "2026-01-13"
 ---
 
-# Homebrew Governance
+# CoffeeBrewery Governance
 
-Homebrew’s governance is grounded in the principle that only active contributors should decide the project’s direction.
+CoffeeBrewery’s governance is grounded in the principle that only active contributors should decide the project’s direction.
 
 ---
 
@@ -12,28 +12,28 @@ Homebrew’s governance is grounded in the principle that only active contributo
 
 - The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119](https://www.ietf.org/rfc/rfc2119.txt).
 - **AGM**: Annual General Meeting, a typically in-person event hosted by the Project Leader that all maintainers may attend.
-- **Maintainer**: Active contributors with commit access to one or more Primary Homebrew repositories (defined below).
-- **Lead Maintainer**: A Maintainer with sustained, long-term impact and leadership within the project with commit access to all Homebrew repositories.
+- **Maintainer**: Active contributors with commit access to one or more Primary CoffeeBrewery repositories (defined below).
+- **Lead Maintainer**: A Maintainer with sustained, long-term impact and leadership within the project with commit access to all CoffeeBrewery repositories.
 - **Security Team**: A security-focused subteam of Maintainers and the Project Leader, some of whom may have increased access rights than otherwise needed.
-- **Ops Team**: Maintainers responsible for operating Homebrew's infrastructure.
-- **Project Leader (PL)**: A Maintainer elected from the Lead Maintainers to serve as Homebrew’s primary public representative and project-wide coordinator.
+- **Ops Team**: Maintainers responsible for operating CoffeeBrewery's infrastructure.
+- **Project Leader (PL)**: A Maintainer elected from the Lead Maintainers to serve as CoffeeBrewery’s primary public representative and project-wide coordinator.
 - **Deputy Project Leader (DPL)**: A Maintainer elected from the Lead Maintainers to act as Project Leader when the Project Leader is unavailable.
-- **Quarterly activity criteria**: Around 50 meaningful maintainer contributions per quarter to Primary Homebrew repositories to remain in good standing as a Maintainer.
+- **Quarterly activity criteria**: Around 50 meaningful maintainer contributions per quarter to Primary CoffeeBrewery repositories to remain in good standing as a Maintainer.
   Lead Maintainers have mandatory numerical requirements, defined below.
-- **Quarter**: A Homebrew reporting quarter, defined as one of the following periods: December–February, March–May, June–August, or September–November.
-  Monthly reports cover contributions for the preceding month from the Maintainers listed in Homebrew/brew's README at the end of that month.
+- **Quarter**: A CoffeeBrewery reporting quarter, defined as one of the following periods: December–February, March–May, June–August, or September–November.
+  Monthly reports cover contributions for the preceding month from the Maintainers listed in CoffeeBrewery/coffee's README at the end of that month.
   The `maintainer met` and `lead met` columns assess the latest completed quarter.
   The report's `potential new role` column uses up to four full quarters of monthly or historical quarterly reports to apply multi-quarter role requirements.
   Recommendations are omitted when the history required for the relevant activity check is incomplete.
   Its recommendations require review against Maintainer discretion, Security and Ops Team exceptions and non-numerical eligibility criteria before role changes are made.
-- **Meaningful maintainer contributions**: Merged pull requests by the Maintainer, pull requests created by others that GitHub reports as both reviewed and approved by the Maintainer, or merged co-authored commits in Primary Homebrew repositories.
+- **Meaningful maintainer contributions**: Merged pull requests by the Maintainer, pull requests created by others that GitHub reports as both reviewed and approved by the Maintainer, or merged co-authored commits in Primary CoffeeBrewery repositories.
   A pull request opened and merged by the same Maintainer counts only once for that Maintainer.
   Review attribution uses GitHub's `review:approved reviewed-by:USERNAME` search as an intentionally ambiguous, 100-result-capped activity proxy, not a precise approval audit.
   Repository-scoped follow-up searches ensure that capped counts do not affect role activity checks.
-- **Primary Homebrew repositories**: The three highest-traffic, security-critical repositories in the Homebrew project:
-  - [Homebrew/brew](https://github.com/Homebrew/brew) ([contributions](https://github.com/Homebrew/brew/graphs/contributors)),
-  - [Homebrew/homebrew-core](https://github.com/Homebrew/homebrew-core) ([contributions](https://github.com/Homebrew/homebrew-core/graphs/contributors)),
-  - [Homebrew/homebrew-cask](https://github.com/Homebrew/homebrew-cask) ([contributions](https://github.com/Homebrew/homebrew-cask/graphs/contributors))
+- **Primary CoffeeBrewery repositories**: The three highest-traffic, security-critical repositories in the CoffeeBrewery project:
+  - [CoffeeBrewery/coffee](https://github.com/CoffeeBrewery/coffee) ([contributions](https://github.com/CoffeeBrewery/coffee/graphs/contributors)),
+  - [CoffeeBrewery/homebrew-core](https://github.com/CoffeeBrewery/homebrew-core) ([contributions](https://github.com/CoffeeBrewery/homebrew-core/graphs/contributors)),
+  - [CoffeeBrewery/homebrew-cask](https://github.com/CoffeeBrewery/homebrew-cask) ([contributions](https://github.com/CoffeeBrewery/homebrew-cask/graphs/contributors))
 
 ## 2. Roles
 
@@ -48,7 +48,7 @@ Homebrew’s governance is grounded in the principle that only active contributo
 
 **Expectations:**
 
-- Maintains consistent quarterly contribution activity, as defined in Homebrew's activity criteria.
+- Maintains consistent quarterly contribution activity, as defined in CoffeeBrewery's activity criteria.
 - Contributions require write access e.g. review of pull requests and not just fork access e.g. opening pull requests.
 
 **Accession:**
@@ -73,7 +73,7 @@ Ops Team members may also retain Maintainer status if the Project Leader determi
 
 ### Lead Maintainer
 
-Lead Maintainers act collectively as Homebrew’s leadership.
+Lead Maintainers act collectively as CoffeeBrewery’s leadership.
 
 **Privileges:**
 
@@ -82,7 +82,7 @@ Lead Maintainers act collectively as Homebrew’s leadership.
 
 **Expectations:**
 
-- Must make at least 50 meaningful maintainer contributions in total and at least 25 in each of any two Primary Homebrew repositories per quarter.
+- Must make at least 50 meaningful maintainer contributions in total and at least 25 in each of any two Primary CoffeeBrewery repositories per quarter.
   These numerical requirements are mandatory for eligibility and retention and cannot be waived or replaced by other work.
 - A higher level of responsibility and responsiveness than standard maintainers e.g. timely pull request review, timely responses in Slack, pulling weight on shared project tasks and not just whatever is personally most interesting.
 
@@ -90,8 +90,8 @@ Lead Maintainers act collectively as Homebrew’s leadership.
 
 - 3 years tenure of continuous Maintainer status.
 - Has met the Lead Maintainer quarterly activity expectation defined above in all four quarters of the preceding year.
-- Must have attended at least one in-person AGM (or another official Homebrew event) to verify identity and participation within the community.
-  As a fallback: must have met at least one other Homebrew Lead Maintainer in person before becoming a Lead Maintainer.
+- Must have attended at least one in-person AGM (or another official CoffeeBrewery event) to verify identity and participation within the community.
+  As a fallback: must have met at least one other CoffeeBrewery Lead Maintainer in person before becoming a Lead Maintainer.
 - Demonstrates initiative beyond personal contributions, including leadership in review, policy, tooling, or infrastructure.
 
 **Accession:**
@@ -190,10 +190,10 @@ Lead Maintainers act collectively as Homebrew’s leadership.
 ## 4. Security & emergency actions
 
 - The Security Team comprises the Project Leader and any number of Maintainers appointed by the Project Leader, serving until resignation or removal from the team by the Project Leader.
-- Before joining the Security or Ops Team or becoming a human GitHub organisation owner, Maintainers must have met a Homebrew Lead Maintainer in person, preferably at an in-person AGM or another official Homebrew event.
+- Before joining the Security or Ops Team or becoming a human GitHub organisation owner, Maintainers must have met a CoffeeBrewery Lead Maintainer in person, preferably at an in-person AGM or another official CoffeeBrewery event.
 - Security Team members may be exempt from Maintainer numerical contribution requirements and may instead be evaluated by the Project Leader on qualitative security observations, such as their helpfulness to the project's security goals.
   This exemption does not waive the mandatory numerical requirements for becoming or remaining a Lead Maintainer.
-- Only Security Team members may make Homebrew/brew releases, whether directly or through automation.
+- Only Security Team members may make CoffeeBrewery/coffee releases, whether directly or through automation.
 - GitHub organisation owners must include the Project Leader, Deputy Project Leader and at least one other Maintainer, preferably from the Security Team.
   At least three human owners must be retained, including while an elected position is vacant.
 - Only Security Team members may hold owner or equivalent top-level administrative access to Slack, 1Password or other project services apart from GitHub.
@@ -201,7 +201,7 @@ Lead Maintainers act collectively as Homebrew’s leadership.
   Leaving the Security Team requires revocation of release access and any administrative permissions no longer authorised by this policy.
 - Only Security Team members who are GitHub organisation owners may be granted bypass permissions on GitHub repository rules.
   Maintainer and Lead Maintainer roles do not grant repository Admin or bypass permissions; organisation owners retain their inherited administrative access.
-- GitHub organisation owners are granted the necessary technical permissions on all primary Homebrew repositories to immediately revoke access in emergencies.
+- GitHub organisation owners are granted the necessary technical permissions on all primary CoffeeBrewery repositories to immediately revoke access in emergencies.
   The Project Leader and at least 2 other Security Team members hold the equivalent emergency permissions for other project infrastructure.
 - In emergencies (e.g. malicious commits, compromised credentials, abuse of access), any Security Team member or Lead Maintainer may immediately revoke access using their existing permissions and must notify all other Lead Maintainers.
   Where additional permissions are needed, they must request action from a GitHub organisation owner or the Security Team as appropriate.
@@ -226,7 +226,7 @@ Lead Maintainers act collectively as Homebrew’s leadership.
 
 ## 6. Code of conduct
 
-All contributors, Maintainers and Lead Maintainers must follow the Homebrew [Code of Conduct](https://github.com/Homebrew/.github/blob/HEAD/CODE_OF_CONDUCT.md).
+All contributors, Maintainers and Lead Maintainers must follow the CoffeeBrewery [Code of Conduct](https://github.com/CoffeeBrewery/.github/blob/HEAD/CODE_OF_CONDUCT.md).
 
 **Code of Conduct Maintainer Enforcement Process:**
 
@@ -241,6 +241,6 @@ All contributors, Maintainers and Lead Maintainers must follow the Homebrew [Cod
 The Lead Maintainers may take one or more of the following actions in response to a Code of Conduct violation, depending on the severity and context:
 
 - Removal from the Maintainer or Lead Maintainer role.
-- Temporary or permanent block from Homebrew's GitHub organisation.
+- Temporary or permanent block from CoffeeBrewery's GitHub organisation.
 
 The Lead Maintainers may use their discretion to determine the most appropriate action(s) based on the circumstances of each case.

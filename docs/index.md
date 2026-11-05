@@ -3,71 +3,71 @@ last_review_date: "2026-10-25"
 ---
 
 Start with [installation](Installation.md),
-[`man brew`](Manpage.md),
+[`man coffee`](Manpage.md),
 [troubleshooting](Troubleshooting.md) and
-[FAQ (Frequently Asked Questions)](FAQ.md) guides if you are new to Homebrew.
+[FAQ (Frequently Asked Questions)](FAQ.md) guides if you are new to CoffeeBrewery.
 
-Documentation is grouped below by audience: users, system administrators, contributors, maintainers and those interested in Homebrew's governance.
+Documentation is grouped below by audience: users, system administrators, contributors, maintainers and those interested in CoffeeBrewery's governance.
 
 ## Users
 
-- [`brew` manual page (command documentation, also available with `man brew`)](Manpage.md)
-- [Homebrew Blog (news on major updates)](https://brew.sh/blog/)
-- [Sponsoring Homebrew](Sponsoring-Homebrew.md)
+- [`coffee` manual page (command documentation, also available with `man coffee`)](Manpage.md)
+- [CoffeeBrewery Blog (news on major updates)](https://coffee.sh/blog/)
+- [Sponsoring CoffeeBrewery](Sponsoring-CoffeeBrewery.md)
 - [Installation](Installation.md)
 - [Support Tiers](Support-Tiers.md)
 - [Troubleshooting](Troubleshooting.md)
 - [FAQ (Frequently Asked Questions)](FAQ.md)
 - [Common Issues](Common-Issues.md)
-- [`brew` Shell Completion](Shell-Completion.md)
+- [`coffee` Shell Completion](Shell-Completion.md)
 - [Command Not Found](Command-Not-Found.md)
-- [Homebrew on Linux](Homebrew-on-Linux.md)
-- [Homebrew Bundle, `brew bundle` and `Brewfile`](Brew-Bundle-and-Brewfile.md)
-- [Homebrew MCP Server](MCP-Server.md)
+- [CoffeeBrewery on Linux](CoffeeBrewery-on-Linux.md)
+- [CoffeeBrewery Bundle, `coffee bundle` and `Brewfile`](Brew-Bundle-and-Brewfile.md)
+- [CoffeeBrewery MCP Server](MCP-Server.md)
 
 - [Bottles (binary packages)](Bottles.md)
 - [Taps (third-party repositories)](Taps.md)
 - [Trusting Taps](Tap-Trust.md)
-- [Homebrew Security and Supply Chain](Homebrew-Security-and-Supply-Chain.md)
+- [CoffeeBrewery Security and Supply Chain](CoffeeBrewery-Security-and-Supply-Chain.md)
 - [Interesting Taps and Forks](Interesting-Taps-and-Forks.md)
 - [Tips and Tricks](Tips-and-Tricks.md)
 - [Anonymous Analytics](Analytics.md)
 
-- [Querying `brew`](Querying-Brew.md)
+- [Querying `coffee`](Querying-Brew.md)
 - [C++ Standard Libraries](C%2B%2B-Standard-Libraries.md)
 - [Custom GCC and Cross-Compilers](Custom-GCC-and-cross-compilers.md)
 - [External Commands](External-Commands.md)
 - [Language Runtimes and Packages](Language-Runtimes-and-Packages.md)
-- [Building Software with Homebrew Keg-Only Dependencies](How-to-Build-Software-Outside-Homebrew-with-Homebrew-keg-only-Dependencies.md)
+- [Building Software with CoffeeBrewery Keg-Only Dependencies](How-to-Build-Software-Outside-CoffeeBrewery-with-CoffeeBrewery-keg-only-Dependencies.md)
 
-- [Creating a Homebrew Issue](Creating-a-Homebrew-Issue.md)
-- [Updating Software in Homebrew](Updating-Software-in-Homebrew.md)
-- [Adding Software to Homebrew](Adding-Software-to-Homebrew.md)
+- [Creating a CoffeeBrewery Issue](Creating-a-CoffeeBrewery-Issue.md)
+- [Updating Software in CoffeeBrewery](Updating-Software-in-CoffeeBrewery.md)
+- [Adding Software to CoffeeBrewery](Adding-Software-to-CoffeeBrewery.md)
 
 ## Teams
 
-- [Homebrew for teams at work: shared Brewfiles](Homebrew-for-Teams.md)
+- [CoffeeBrewery for teams at work: shared Brewfiles](CoffeeBrewery-for-Teams.md)
 
 ## System administrators
 
-- [Homebrew Software Inventory, SBOMs and Audit Reporting](Homebrew-Inventory-and-SBOM.md)
-- [Homebrew Vulnerability Scanning and Patch Management](Homebrew-Vulnerability-Management.md)
-- [Homebrew Package Policies and Supply Chain Protection](Homebrew-Package-Policies.md)
+- [CoffeeBrewery Software Inventory, SBOMs and Audit Reporting](CoffeeBrewery-Inventory-and-SBOM.md)
+- [CoffeeBrewery Vulnerability Scanning and Patch Management](CoffeeBrewery-Vulnerability-Management.md)
+- [CoffeeBrewery Package Policies and Supply Chain Protection](CoffeeBrewery-Package-Policies.md)
 
 ## Mac Admins
 
-- [Homebrew for Mac Admins: MDM and Non-Admin Accounts](Homebrew-for-Mac-Admins.md)
-- [Homebrew Fleet Management with MDM and Brewfiles](Homebrew-Fleet-Management.md)
-- [Jamf Pro](Homebrew-and-Jamf-Pro.md)
-- [Iru (formerly Kandji)](Homebrew-and-Iru.md)
-- [Microsoft Intune](Homebrew-and-Microsoft-Intune.md)
-- [Other MDMs](Homebrew-Fleet-Management.md#other-management-systems)
+- [CoffeeBrewery for Mac Admins: MDM and Non-Admin Accounts](CoffeeBrewery-for-Mac-Admins.md)
+- [CoffeeBrewery Fleet Management with MDM and Brewfiles](CoffeeBrewery-Fleet-Management.md)
+- [Jamf Pro](CoffeeBrewery-and-Jamf-Pro.md)
+- [Iru (formerly Kandji)](CoffeeBrewery-and-Iru.md)
+- [Microsoft Intune](CoffeeBrewery-and-Microsoft-Intune.md)
+- [Other MDMs](CoffeeBrewery-Fleet-Management.md#other-management-systems)
 
 ## Contributors
 
-- [How to Open a Homebrew Pull Request (and get it merged)](How-To-Open-a-Homebrew-Pull-Request.md)
+- [How to Open a CoffeeBrewery Pull Request (and get it merged)](How-To-Open-a-CoffeeBrewery-Pull-Request.md)
 - [Responsible AI Usage](Responsible-AI-Usage.md)
-- [Working with Homebrew as an Upstream Project](Working-with-Homebrew-as-an-Upstream-Project.md)
+- [Working with CoffeeBrewery as an Upstream Project](Working-with-CoffeeBrewery-as-an-Upstream-Project.md)
 - [Formula Cookbook](Formula-Cookbook.md)
 - [Cask Cookbook](Cask-Cookbook.md)
 - [Acceptable Formulae](Acceptable-Formulae.md)
@@ -79,11 +79,11 @@ Documentation is grouped below by audience: users, system administrators, contri
 - [Formulae Versions](Versions.md)
 - [Deprecating, Disabling and Removing](Deprecating-Disabling-and-Removing.md)
 - [Language-Specific Formulae](Language-Specific-Formulae.md)
-- [`brew livecheck`](Brew-Livecheck.md)
+- [`coffee livecheck`](Brew-Livecheck.md)
 - [Autobump](Autobump.md)
 - [Migrating a Formula to a Tap](Migrating-A-Formula-To-A-Tap.md)
 - [Renaming a Formula](Rename-A-Formula.md)
-- [Building Against Non-Homebrew Dependencies](Building-Against-Non-Homebrew-Dependencies.md)
+- [Building Against Non-CoffeeBrewery Dependencies](Building-Against-Non-CoffeeBrewery-Dependencies.md)
 - [How to Create and Maintain a Tap](How-to-Create-and-Maintain-a-Tap.md)
 - [BrewTestBot](BrewTestBot.md)
 - [Prose Style Guidelines](Prose-Style-Guidelines.md)
@@ -98,9 +98,9 @@ Documentation is grouped below by audience: users, system administrators, contri
 - [Maintainers: Avoiding Burnout](Maintainers-Avoiding-Burnout.md)
 
 - [Maintainer Guidelines](Maintainer-Guidelines.md)
-- [Homebrew/brew Maintainer Guide](Homebrew-brew-Maintainer-Guide.md)
-- [Homebrew/homebrew-core Maintainer Guide](Homebrew-homebrew-core-Maintainer-Guide.md)
-- [Homebrew/homebrew-cask Maintainer Guide](Homebrew-homebrew-cask-Maintainer-Guide.md)
+- [CoffeeBrewery/coffee Maintainer Guide](CoffeeBrewery-coffee-Maintainer-Guide.md)
+- [CoffeeBrewery/homebrew-core Maintainer Guide](CoffeeBrewery-homebrew-core-Maintainer-Guide.md)
+- [CoffeeBrewery/homebrew-cask Maintainer Guide](CoffeeBrewery-homebrew-cask-Maintainer-Guide.md)
 
 - [BrewTestBot for Maintainers](BrewTestBot-For-Maintainers.md)
 - [Advisory Matching](Advisory-Matching.md)
@@ -112,12 +112,12 @@ Documentation is grouped below by audience: users, system administrators, contri
 
 ## Governance
 
-- [Homebrew Governance](Homebrew-Governance.md)
-- [Homebrew Leadership Responsibilities](Homebrew-Leadership-Responsibilities.md)
-- [Homebrew Governance Archives](Homebrew-Governance-Archives.md)
-- [Homebrew's Expense and Reimbursement Policy](Expense-and-Reimbursement-Policy.md)
-- [How To Organise the Homebrew AGM](How-To-Organise-the-AGM.md)
-- [Homebrew's Maintainer Stipends and Grants](Maintainer-Stipends-and-Grants.md)
+- [CoffeeBrewery Governance](CoffeeBrewery-Governance.md)
+- [CoffeeBrewery Leadership Responsibilities](CoffeeBrewery-Leadership-Responsibilities.md)
+- [CoffeeBrewery Governance Archives](CoffeeBrewery-Governance-Archives.md)
+- [CoffeeBrewery's Expense and Reimbursement Policy](Expense-and-Reimbursement-Policy.md)
+- [How To Organise the CoffeeBrewery AGM](How-To-Organise-the-AGM.md)
+- [CoffeeBrewery's Maintainer Stipends and Grants](Maintainer-Stipends-and-Grants.md)
 
 ## Project history
 

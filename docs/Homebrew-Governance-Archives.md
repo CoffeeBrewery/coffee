@@ -2,7 +2,7 @@
 last_review_date: "2026-07-18"
 ---
 
-# Homebrew Governance Archives
+# CoffeeBrewery Governance Archives
 
 {% assign governance_pages = site.pages | where: "category", "governance-archives" %}
 {% assign marker = "-" %}

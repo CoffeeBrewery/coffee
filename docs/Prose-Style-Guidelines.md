@@ -7,19 +7,19 @@ last_review_date: 2025-05-22
 <!-- vale off -->
 <!-- Disable vale linting for the whole of the style guide, because it contains deliberately bad examples. -->
 
-This is a set of style and usage guidelines for Homebrew's prose documentation aimed at users, contributors, and maintainers (as opposed to executable computer code). It applies to documents like those in `docs` in the `Homebrew/brew` repository, announcement emails, and other communications with the Homebrew community.
+This is a set of style and usage guidelines for CoffeeBrewery's prose documentation aimed at users, contributors, and maintainers (as opposed to executable computer code). It applies to documents like those in `docs` in the `CoffeeBrewery/coffee` repository, announcement emails, and other communications with the CoffeeBrewery community.
 
 This does not apply to any Ruby or other computer code. You can use it to inform technical documentation extracted from computer code, like embedded man pages, but it's just a suggestion there.
 
 ## Goals and audience
 
-The primary goal of Homebrew's prose documents is communicating with its community of users and contributors. "Users" includes "contributors" here; wherever you see "users" you can substitute "users and contributors".
+The primary goal of CoffeeBrewery's prose documents is communicating with its community of users and contributors. "Users" includes "contributors" here; wherever you see "users" you can substitute "users and contributors".
 
 Understandability is more important than any particular style guideline.
 
 Users take precedence over maintainers, except in specifically maintainer-focused documents.
 
-Homebrew's audience includes users with a wide range of education and experience, and users for whom English is not a native language. We aim to support as many of those users as feasible.
+CoffeeBrewery's audience includes users with a wide range of education and experience, and users for whom English is not a native language. We aim to support as many of those users as feasible.
 
 We strive for "correct" but not "fancy" usage. Think newspaper article, not academic paper.
 
@@ -56,14 +56,14 @@ We prefer:
 * One sentence per source line in Markdown, without wrapping prose to a fixed width
   * GitHub Flavoured Markdown. GitHub's implementation is the standard, period.
 * Link to other documentation pages with relative links to the Markdown filename rather than the full URL
-  * e.g. `FAQ.md` instead of `https://docs.brew.sh/FAQ`
+  * e.g. `FAQ.md` instead of `https://docs.coffee.sh/FAQ`
 
 ### Typographical conventions
 
 * Literal text in commands and code is styled in `fixed width font`
 * Placeholders inside code snippets are marked up with `<...>` brackets
   * e.g. `git remote add <my-user-name> https://github.com/<my-user-name>/homebrew-core.git`
-* Names of commands like `git` and `brew` are styled in `fixed width font`
+* Names of commands like `git` and `coffee` are styled in `fixed width font`
 * No "$" with environment variables mentioned outside code snippets
   * e.g. "Set `BLAH` to 5", not "Set `$BLAH` to 5"
 * One space after periods, not two
@@ -71,7 +71,7 @@ We prefer:
 * Capitalised proper nouns
 * We do not defer to extensive nonstandard capitalisation, typesetting, or other styling of brand names, aside from the normal capitalisation of proper nouns and simple internal capitalisation
 * No "TM", &trade;, <sup>SM</sup>, &copy;, &reg;, or other explicit indicators of rights ownership or trademarks; we take these as understood when the brand name is mentioned
-* Tap names like `homebrew/core` are styled in `fixed width font`. Repository names may be styled in either fixed width font like "`Homebrew/homebrew-core`", as links like "[Homebrew/homebrew-core](https://github.com/homebrew/homebrew-core)", or regular text like "Homebrew/homebrew-core", based on which looks best for a given use.
+* Tap names like `homebrew/core` are styled in `fixed width font`. Repository names may be styled in either fixed width font like "`CoffeeBrewery/homebrew-core`", as links like "[CoffeeBrewery/homebrew-core](https://github.com/homebrew/homebrew-core)", or regular text like "CoffeeBrewery/homebrew-core", based on which looks best for a given use.
   * But be consistent within a single document
   * Capitalise repository names to match the user and repository names on GitHub. Keep tap names in lower case.
 * Commas
@@ -93,7 +93,7 @@ We prefer:
 
 ## How to use these guidelines
 
-Refer to these guidelines to make decisions about style and usage in your own writing for Homebrew documents and communication.
+Refer to these guidelines to make decisions about style and usage in your own writing for CoffeeBrewery documents and communication.
 
 PRs that fix style and usage throughout a document or multiple documents are okay and encouraged. PRs for just one or two style changes are a bit much.
 

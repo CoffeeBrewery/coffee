@@ -1,0 +1,165 @@
+# typed: strict
+# frozen_string_literal: true
+
+require "utils/path"
+
+module OS
+  module Mac
+    module Superenv
+      extend T::Helpers
+
+      requires_ancestor { SharedEnvExtension }
+      requires_ancestor { ::Superenv }
+
+      module ClassMethods
+        sig { returns(::Pathname) }
+        def shims_path
+          COFFEEBREWER_SHIMS_PATH/"mac/super/bin"
+        end
+
+        sig { returns(T.nilable(::Pathname)) }
+        def bin
+          return unless ::DevelopmentTools.installed?
+
+          shims_path.realpath
+        end
+      end
+
+      sig { returns(T::Array[::Pathname]) }
+      def homebrew_extra_pkg_config_paths
+        %W[
+          /usr/lib/pkgconfig
+          #{COFFEEBREWER_LIBRARY}/CoffeeBrewery/os/mac/pkgconfig/#{MacOS.version}
+        ].map { |p| ::Pathname.new(p) }
+      end
+
+      sig { returns(T::Array[::Pathname]) }
+      def homebrew_extra_isystem_paths
+        paths = []
+        paths << "#{self["COFFEEBREWER_SDKROOT"]}/usr/include/apache2" if MacOS::Xcode.without_clt?
+        paths << "#{self["COFFEEBREWER_SDKROOT"]}/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers"
+        paths.map { |p| ::Pathname.new(p) }
+      end
+
+      sig { returns(T::Array[::Pathname]) }
+      def homebrew_extra_library_paths
+        paths = []
+        if compiler == :llvm_clang
+          paths << "#{self["COFFEEBREWER_SDKROOT"]}/usr/lib"
+          paths << Utils::Path.formula_opt_lib("llvm")
+        end
+        paths << "#{self["COFFEEBREWER_SDKROOT"]}/System/Library/Frameworks/OpenGL.framework/Versions/Current/Libraries"
+        paths.map { |p| ::Pathname.new(p) }
+      end
+
+      sig { returns(T::Array[::Pathname]) }
+      def homebrew_extra_cmake_include_paths
+        paths = []
+        paths << "#{self["COFFEEBREWER_SDKROOT"]}/usr/include/apache2" if MacOS::Xcode.without_clt?
+        paths << "#{self["COFFEEBREWER_SDKROOT"]}/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers"
+        paths.map { |p| ::Pathname.new(p) }
+      end
+
+      sig { returns(T::Array[::Pathname]) }
+      def homebrew_extra_cmake_library_paths
+        %W[
+          #{self["COFFEEBREWER_SDKROOT"]}/System/Library/Frameworks/OpenGL.framework/Versions/Current/Libraries
+        ].map { |p| ::Pathname.new(p) }
+      end
+
+      sig { returns(T::Array[::Pathname]) }
+      def homebrew_extra_cmake_frameworks_paths
+        paths = []
+        paths << "#{self["COFFEEBREWER_SDKROOT"]}/System/Library/Frameworks" if MacOS::Xcode.without_clt?
+        paths.map { |p| ::Pathname.new(p) }
+      end
+
+      sig { returns(String) }
+      def determine_cccfg
+        s = +""
+        # Pass `-no_fixup_chains` whenever the linker is invoked with `-undefined dynamic_lookup`.
+        # See: https://github.com/python/cpython/issues/97524
+        #      https://github.com/pybind/pybind11/pull/4301
+        s << "f" if no_fixup_chains_support?
+        # Pass `-ld_classic` whenever the linker is invoked with `-dead_strip_dylibs`
+        # on `ld` versions that don't properly handle that option.
+        s << "c" if ::DevelopmentTools.ld64_version.between?("1015.7", "1022.1")
+        s.freeze
+      end
+
+      # @private
+      sig {
+        params(
+          formula:         T.nilable(Formula),
+          cc:              T.nilable(String),
+          build_bottle:    T.nilable(T::Boolean),
+          bottle_arch:     T.nilable(String),
+          testing_formula: T::Boolean,
+          debug_symbols:   T.nilable(T::Boolean),
+        ).void
+      }
+      def setup_build_environment(formula: nil, cc: nil, build_bottle: false, bottle_arch: nil,
+                                  testing_formula: false, debug_symbols: false)
+        sdk = formula ? MacOS.sdk_for_formula(formula) : MacOS.sdk
+        is_xcode_sdk = sdk&.source == :xcode
+
+        CoffeeBrewery::Diagnostic.checks(:fatal_setup_build_environment_checks)
+        self["COFFEEBREWER_SDKROOT"] = sdk.path.to_s if sdk
+
+        self["COFFEEBREWER_DEVELOPER_DIR"] = if is_xcode_sdk
+          MacOS::Xcode.prefix.to_s
+        else
+          MacOS::CLT::PKG_PATH
+        end
+
+        # This is a workaround for the missing `m4` in Xcode CLT 15.3, which was
+        # reported in FB13679972. Apple has fixed this in Xcode CLT 16.0.
+        # See https://github.com/CoffeeBrewery/homebrew-core/issues/165388
+        if deps.none? { |d| d.name == "m4" } &&
+           MacOS.active_developer_dir == MacOS::CLT::PKG_PATH &&
+           !File.exist?("#{MacOS::CLT::PKG_PATH}/usr/bin/m4") &&
+           (gm4 = ::DevelopmentTools.locate("gm4").to_s).present?
+          self["M4"] = gm4
+        end
+
+        super
+
+        # On macOS Sonoma and later, iconv() is generally present and working,
+        # but has a minor regression that defeats the test implemented in gettext's
+        # configure script (and used by many gettext dependents).
+        # All reported bugs were fixed in Sonoma patch releases, though some new bugs
+        # were revealed since then (and unfortunately very rarely actually reported to Apple).
+        # Using brewed libiconv is a disruptive option that requires rebuilding most dependents,
+        # so is never accepted apart from a select few leaf formulae that are worse impacted.
+        ENV["am_cv_func_iconv_works"] = "yes" if MacOS.version >= "14"
+
+        # The tools in /usr/bin proxy to the active developer directory.
+        # This means we can use them for any combination of CLT and Xcode.
+        self["COFFEEBREWER_PREFER_CLT_PROXIES"] = "1"
+
+        # Deterministic timestamping.
+        self["ZERO_AR_DATE"] = "1"
+      end
+
+      sig { void }
+      def no_weak_imports
+        # This has little-to-no usage and doesn't make sense to have a special function for.
+        # When removing this function, also cleanup related usage in the `cc` shim
+        # and remove `no_weak_imports_support?`.
+        odisabled "ENV.no_weak_imports", "passing `-Wl,-no_weak_imports` to the linker"
+        append_to_cccfg "w" if no_weak_imports_support?
+      end
+
+      sig { void }
+      def no_fixup_chains
+        # This function has been no-op for quite some time as it's set by default.
+        # Unlike above, do not touch the `cc` shim or the support method when removing this.
+        odisabled "ENV.no_fixup_chains", "the default linker behaviour"
+        append_to_cccfg "f" if no_fixup_chains_support?
+      end
+    end
+  end
+end
+
+Superenv.singleton_class.prepend(OS::Mac::Superenv::ClassMethods)
+Superenv.prepend(OS::Mac::Superenv)

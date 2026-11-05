@@ -1,0 +1,348 @@
+# typed: true
+# frozen_string_literal: true
+
+require "utils/analytics"
+require "formula_installer"
+require "cmd/info"
+
+RSpec.describe Utils::Analytics do
+  describe "::with_wsl_suffix_if_needed" do
+    it "adds WSL by default on WSL" do
+      allow(OS).to receive(:wsl?).and_return(true)
+
+      expect(described_class.with_wsl_suffix_if_needed("Ubuntu 24.04 LTS")).to eq(
+        "Ubuntu 24.04 LTS#{Utils::Analytics::WSL_SUFFIX}",
+      )
+    end
+
+    it "does not add WSL with an explicit override" do
+      expect(described_class.with_wsl_suffix_if_needed("Ubuntu 24.04 LTS", wsl: false)).to eq("Ubuntu 24.04 LTS")
+    end
+
+    it "does not add duplicate WSL suffixes" do
+      expect(described_class.with_wsl_suffix_if_needed("Ubuntu 24.04 LTS#{Utils::Analytics::WSL_SUFFIX}", wsl: true))
+        .to eq("Ubuntu 24.04 LTS#{Utils::Analytics::WSL_SUFFIX}")
+    end
+  end
+
+  describe "::default_package_tags" do
+    let(:ci) { ", CI" if ENV["CI"] }
+
+    it "returns OS_VERSION and prefix when COFFEEBREWER_PREFIX is a custom prefix on intel" do
+      expect(CoffeeBrewery).to receive(:default_prefix?).and_return(false).at_least(:once)
+      expect(described_class.default_package_tags).to have_key(:prefix)
+      expect(described_class.default_package_tags[:prefix]).to eq "custom-prefix"
+    end
+
+    it "returns OS_VERSION, ARM and prefix when COFFEEBREWER_PREFIX is a custom prefix on arm" do
+      expect(CoffeeBrewery).to receive(:default_prefix?).and_return(false).at_least(:once)
+      expect(described_class.default_package_tags).to have_key(:arch)
+      expect(described_class.default_package_tags[:arch]).to eq COFFEEBREWER_PHYSICAL_PROCESSOR
+      expect(described_class.default_package_tags).to have_key(:prefix)
+      expect(described_class.default_package_tags[:prefix]).to eq "custom-prefix"
+    end
+
+    it "returns OS_VERSION, Rosetta and prefix when COFFEEBREWER_PREFIX is a custom prefix on Rosetta", :needs_macos do
+      expect(CoffeeBrewery).to receive(:default_prefix?).and_return(false).at_least(:once)
+      expect(described_class.default_package_tags).to have_key(:prefix)
+      expect(described_class.default_package_tags[:prefix]).to eq "custom-prefix"
+    end
+
+    it "does not include prefix when COFFEEBREWER_PREFIX is the default prefix" do
+      expect(CoffeeBrewery).to receive(:default_prefix?).and_return(true).at_least(:once)
+      expect(described_class.default_package_tags).to have_key(:prefix)
+      expect(described_class.default_package_tags[:prefix]).to eq COFFEEBREWER_PREFIX.to_s
+    end
+
+    it "includes CI when ENV['CI'] is set" do
+      ENV["CI"] = "1"
+      expect(described_class.default_package_tags).to have_key(:ci)
+    end
+
+    it "includes developer when ENV['COFFEEBREWER_DEVELOPER'] is set" do
+      expect(CoffeeBrewery::EnvConfig).to receive(:developer?).and_return(true)
+      expect(described_class.default_package_tags).to have_key(:developer)
+    end
+
+    it "includes WSL in the OS tag on WSL" do
+      described_class.clear_cache
+      allow(OS).to receive(:wsl?).and_return(true)
+
+      expect(described_class.default_package_tags[:os]).to eq("#{COFFEEBREWER_SYSTEM}#{Utils::Analytics::WSL_SUFFIX}")
+    end
+  end
+
+  describe "::default_package_fields" do
+    it "includes WSL in the OS name and version on WSL" do
+      described_class.clear_cache
+      allow(OS).to receive(:wsl?).and_return(true)
+
+      expect(described_class.default_package_fields[:os_name_and_version]).to eq("#{OS_VERSION}#{Utils::Analytics::WSL_SUFFIX}")
+    end
+  end
+
+  describe "::report_package_event" do
+    let(:f) do
+      formula do
+        T.bind(self, T.class_of(Formula))
+        url "foo-1.0"
+      end
+    end
+    let(:package_name) { f.name }
+    let(:tap_name) { f.tap.name }
+    let(:on_request) { false }
+    let(:options) { "--HEAD" }
+
+    context "when ENV vars is set" do
+      it "returns nil when COFFEEBREWER_NO_ANALYTICS is true" do
+        ENV["COFFEEBREWER_NO_ANALYTICS"] = "true"
+        expect(described_class).not_to receive(:report_influx)
+        described_class.report_package_event(:install, package_name:, tap_name:,
+          on_request:, options:)
+      end
+
+      it "returns nil when COFFEEBREWER_NO_ANALYTICS_THIS_RUN is true" do
+        ENV["COFFEEBREWER_NO_ANALYTICS_THIS_RUN"] = "true"
+        expect(described_class).not_to receive(:report_influx)
+        described_class.report_package_event(:install, package_name:, tap_name:,
+          on_request:, options:)
+      end
+
+      it "returns nil when COFFEEBREWER_ANALYTICS_DEBUG is true" do
+        ENV.delete("COFFEEBREWER_NO_ANALYTICS_THIS_RUN")
+        ENV.delete("COFFEEBREWER_NO_ANALYTICS")
+        ENV["COFFEEBREWER_ANALYTICS_DEBUG"] = "true"
+        expect(described_class).to receive(:report_influx)
+
+        described_class.report_package_event(:install, package_name:, tap_name:,
+          on_request:, options:)
+      end
+    end
+
+    it "passes to the influxdb method" do
+      ENV.delete("COFFEEBREWER_NO_ANALYTICS_THIS_RUN")
+      ENV.delete("COFFEEBREWER_NO_ANALYTICS")
+      ENV["COFFEEBREWER_ANALYTICS_DEBUG"] = "true"
+      expect(described_class).to receive(:report_influx).with(:install, hash_including(on_request:),
+                                                              hash_including(package: package_name)).once
+      described_class.report_package_event(:install, package_name:, tap_name:,
+          on_request:, options:)
+    end
+  end
+
+  describe "::report_influx" do
+    let(:f) do
+      formula do
+        T.bind(self, T.class_of(Formula))
+        url "foo-1.0"
+      end
+    end
+    let(:package)  { f.name }
+    let(:tap_name) { f.tap.name }
+    let(:on_request) { false }
+    let(:options) { "--HEAD" }
+
+    it "outputs in debug mode" do
+      ENV.delete("COFFEEBREWER_NO_ANALYTICS_THIS_RUN")
+      ENV.delete("COFFEEBREWER_NO_ANALYTICS")
+      ENV["COFFEEBREWER_ANALYTICS_DEBUG"] = "true"
+      expect(described_class).to receive(:deferred_curl).once
+      described_class.report_influx(:install, { on_request: }, { package:, tap_name: })
+    end
+
+    it "escapes WSL tag values for Influx line protocol" do
+      ENV.delete("COFFEEBREWER_NO_ANALYTICS_THIS_RUN")
+      ENV.delete("COFFEEBREWER_NO_ANALYTICS")
+      allow(Time).to receive(:now).and_return(Time.at(123))
+      expect(described_class).to receive(:deferred_curl).with(
+        anything,
+        array_including(
+          "--data-binary",
+          'formula_install,os=Linux\ [WSL] os_name_and_version="Ubuntu 24.04 LTS [WSL]" 123',
+        ),
+      )
+
+      described_class.report_influx(
+        :formula_install,
+        { os: "Linux#{Utils::Analytics::WSL_SUFFIX}" },
+        { os_name_and_version: "Ubuntu 24.04 LTS#{Utils::Analytics::WSL_SUFFIX}" },
+      )
+    end
+  end
+
+  describe "::deferred_curl" do
+    it "forwards args and silences subprocess output outside debug mode" do
+      ENV.delete("COFFEEBREWER_ANALYTICS_DEBUG")
+
+      allow(Utils::Curl).to receive(:curl_executable).and_return("/usr/bin/curl")
+      allow(Utils::Curl).to receive(:curl_args) { |*args, **| args }
+      expect(described_class).to receive(:spawn)
+        .with("/usr/bin/curl", "--max-time", "3", "--silent", "--output", File::NULL, "https://example.com",
+              out: File::NULL, err: File::NULL)
+        .and_return(123)
+      expect(Process).to receive(:detach).with(123)
+
+      described_class.deferred_curl("https://example.com", ["--max-time", "3"])
+    end
+  end
+
+  describe "::report_build_error" do
+    context "when tap is installed" do
+      let(:err) { BuildError.new(f, "badprg", %w[arg1 arg2], {}) }
+      let(:f) do
+        formula do
+          T.bind(self, T.class_of(Formula))
+          url "foo-1.0"
+        end
+      end
+
+      it "reports event if BuildError raised for a formula with a public remote repository" do
+        allow_any_instance_of(Tap).to receive(:custom_remote?).and_return(false)
+        expect(described_class).to respond_to(:report_package_event)
+        described_class.report_build_error(err)
+      end
+
+      it "does not report event if BuildError raised for a formula with a private remote repository" do
+        allow_any_instance_of(Tap).to receive(:private?).and_return(true)
+        expect(described_class).not_to receive(:report_package_event)
+        described_class.report_build_error(err)
+      end
+    end
+
+    context "when formula does not have a tap" do
+      let(:err) { BuildError.new(f, "badprg", %w[arg1 arg2], {}) }
+      let(:f) { instance_double(Formula, name: "foo", path: "blah", tap: nil) }
+
+      it "does not report event if BuildError is raised" do
+        expect(described_class).not_to receive(:report_package_event)
+        described_class.report_build_error(err)
+      end
+    end
+
+    context "when tap for a formula is not installed" do
+      let(:err) { BuildError.new(f, "badprg", %w[arg1 arg2], {}) }
+      let(:f) { instance_double(Formula, name: "foo", path: "blah", tap: CoreTap.instance) }
+
+      it "does not report event if BuildError is raised" do
+        allow_any_instance_of(Pathname).to receive(:directory?).and_return(false)
+        expect(described_class).not_to receive(:report_package_event)
+        described_class.report_build_error(err)
+      end
+    end
+  end
+
+  describe "::report_command_run" do
+    let(:command) { "audit" }
+    let(:options) { "--tap=" }
+    let(:command_instance) do
+      require "dev-cmd/audit"
+      CoffeeBrewery::DevCmd::Audit.new(["--tap=homebrew/core"])
+    end
+
+    it "passes to the influxdb method" do
+      ENV.delete("COFFEEBREWER_NO_ANALYTICS_THIS_RUN")
+      ENV.delete("COFFEEBREWER_NO_ANALYTICS")
+      ENV["COFFEEBREWER_ANALYTICS_DEBUG"] = "true"
+      expect(CoffeeBrewery::EnvConfig).not_to receive(:non_default_variable?)
+      expect(described_class).to receive(:report_influx).with(
+        :command_run,
+        hash_including(command:),
+        hash_including(options:),
+      ).once
+      described_class.report_command_run(command_instance)
+    end
+
+    it "samples one environment configuration for selected commands" do
+      ENV.delete("COFFEEBREWER_NO_ANALYTICS_THIS_RUN")
+      ENV.delete("COFFEEBREWER_NO_ANALYTICS")
+      ENV["COFFEEBREWER_ANALYTICS_DEBUG"] = "true"
+      allow(command_instance.class).to receive(:command_name).and_return("update")
+      stub_const("CoffeeBrewery::EnvConfig::ANALYTICS_VARIABLES", [:COFFEEBREWER_ALLOWED_TAPS])
+      ENV["COFFEEBREWER_ALLOWED_TAPS"] = "homebrew/core"
+      ENV["COFFEEBREWER_USER_SET_VARS"] = "COFFEEBREWER_ALLOWED_TAPS"
+      expect(CoffeeBrewery::EnvConfig).to receive(:non_default_variable?).with(:COFFEEBREWER_ALLOWED_TAPS).and_return(true)
+
+      expect(described_class).to receive(:report_influx).with(
+        :command_run,
+        hash_including(
+          command:          "update",
+          env_config:       "COFFEEBREWER_ALLOWED_TAPS",
+          env_config_state: "non_default",
+        ),
+        hash_including(options:),
+      ).once
+      described_class.report_command_run(command_instance)
+    end
+
+    it "samples variables exported by coffee itself as unset" do
+      ENV.delete("COFFEEBREWER_NO_ANALYTICS_THIS_RUN")
+      ENV.delete("COFFEEBREWER_NO_ANALYTICS")
+      ENV["COFFEEBREWER_ANALYTICS_DEBUG"] = "true"
+      allow(command_instance.class).to receive(:command_name).and_return("update")
+      stub_const("CoffeeBrewery::EnvConfig::ANALYTICS_VARIABLES", [:COFFEEBREWER_ALLOWED_TAPS])
+      ENV["COFFEEBREWER_ALLOWED_TAPS"] = "homebrew/core"
+      ENV["COFFEEBREWER_USER_SET_VARS"] = ""
+
+      expect(described_class).to receive(:report_influx).with(
+        :command_run,
+        hash_including(env_config: "COFFEEBREWER_ALLOWED_TAPS", env_config_state: "unset"),
+        hash_including(options:),
+      ).once
+      described_class.report_command_run(command_instance)
+    end
+  end
+
+  describe "::report_test_bot_test" do
+    let(:command) { "install wget" }
+    let(:passed) { true }
+
+    it "passes to the influxdb method" do
+      ENV.delete("COFFEEBREWER_NO_ANALYTICS_THIS_RUN")
+      ENV.delete("COFFEEBREWER_NO_ANALYTICS")
+      ENV["COFFEEBREWER_ANALYTICS_DEBUG"] = "true"
+      ENV["COFFEEBREWER_TEST_BOT_ANALYTICS"] = "true"
+      expect(described_class).to receive(:report_influx).with(
+        :test_bot_test,
+        hash_including(passed:),
+        hash_including(command:),
+      ).once
+      described_class.report_test_bot_test(command, passed)
+    end
+  end
+
+  specify "::table_output" do
+    results = { "ack" => 10, "wget" => 100 }
+    expect { described_class.table_output("install", "30", results) }
+      .to output(/110 |  100.00%/).to_stdout
+      .and not_to_output.to_stderr
+  end
+
+  describe "::output_github_packages_downloads" do
+    let(:analytics) { { "install" => { "30d" => { "wget" => 750_000, "wget --HEAD" => 500 } } } }
+    let(:args) { CoffeeBrewery::Cmd::Info.new(["--github-packages-downloads", "wget"]).args }
+    let(:wget) { instance_double(Formula, name: "wget", core_formula?: true) }
+
+    it "outputs package totals and their ratio to analytics install events" do
+      allow(GitHubPackages).to receive(:downloads).with("wget").and_return(
+        GitHubPackages::Downloads.new(source: "https://github.com/example", all_time: 22_776_486,
+                                      last_30_days: 1_501_000, start_date: "2026-09-23", end_date: "2026-10-23",
+                                      fetched_at: "2026-10-23T12:00:00Z"),
+      )
+
+      expect { described_class.output_github_packages_downloads(wget, analytics, args:) }
+        .to output(
+          include("GitHub Packages downloads (since Bintray migration): 22,776,486",
+                  "GitHub Packages downloads (30 days): 1,501,000",
+                  "Downloads / analytics install events (30 days): 2.00x (750,500 events)"),
+        ).to_stdout
+    end
+
+    it "warns instead of reporting missing download counts as zero" do
+      allow(GitHubPackages).to receive(:downloads).with("wget").and_return(nil)
+
+      expect { described_class.output_github_packages_downloads(wget, analytics, args:) }
+        .to output(/Failed to fetch GitHub Packages downloads for: wget/).to_stderr
+        .and not_to_output.to_stdout
+    end
+  end
+end

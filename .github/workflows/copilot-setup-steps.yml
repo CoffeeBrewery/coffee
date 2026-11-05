@@ -15,20 +15,20 @@ jobs:
       contents: read
 
     steps:
-      - name: Set up Homebrew
+      - name: Set up CoffeeBrewery
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
+        uses: CoffeeBrewery/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
         with:
           core: true
           cask: true
 
       # Copilot ignores job-level env; persist developer mode for the agent session.
-      - run: brew developer on
+      - run: coffee developer on
 
-      - run: brew install-bundler-gems --groups=all
+      - run: coffee install-bundler-gems --groups=all
 
-      # install Homebrew formulae we might need
-      - run: brew install shellcheck shfmt gh gnu-tar subversion curl
+      # install CoffeeBrewery formulae we might need
+      - run: coffee install shellcheck shfmt gh gnu-tar subversion curl
 
-      # brew tests doesn't like world writable directories
-      - run: sudo chmod -R g-w,o-w /home/linuxbrew/.linuxbrew/Homebrew
+      # coffee tests doesn't like world writable directories
+      - run: sudo chmod -R g-w,o-w /home/linuxbrew/.linuxbrew/CoffeeBrewery

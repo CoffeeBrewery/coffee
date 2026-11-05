@@ -2,9 +2,9 @@
 last_review_date: 2025-05-28
 ---
 
-# `brew livecheck`
+# `coffee livecheck`
 
-The `brew livecheck` command finds the newest version of a formula or cask's software by checking upstream. Livecheck has [strategies](/rubydoc/Homebrew/Livecheck/Strategy.html) to identify versions from various sources, such as Git repositories, websites, etc.
+The `coffee livecheck` command finds the newest version of a formula or cask's software by checking upstream. Livecheck has [strategies](/rubydoc/CoffeeBrewery/Livecheck/Strategy.html) to identify versions from various sources, such as Git repositories, websites, etc.
 
 ## Behaviour
 
@@ -26,7 +26,7 @@ This can be accomplished by adding a `livecheck` block to the formula/cask/resou
 
 ## Creating a check
 
-1. **Use the debug output to understand the situation**. `brew livecheck --debug <formula>|<cask>` provides information about which URLs livecheck tries, any strategies that apply, matched versions, etc.
+1. **Use the debug output to understand the situation**. `coffee livecheck --debug <formula>|<cask>` provides information about which URLs livecheck tries, any strategies that apply, matched versions, etc.
 
 1. **Research available sources to select a URL**. Try removing the file name from `stable`/`url` to see if it provides a directory listing page. If that doesn't work, try to find a page that links to the file (e.g. a download page). If it's not possible to find the newest version on the website, try checking other sources from the formula/cask. When necessary, search for other sources outside of the formula/cask.
 
@@ -352,10 +352,10 @@ end
 
 #### `Sparkle` `strategy` block
 
-A `strategy` block for `Sparkle` receives an `item` which has methods for the `version`, `short_version`, `nice_version`, `url`, `channel` and `title`. It expects a URL for an XML feed providing release information to a macOS application that self-updates using the Sparkle framework. This URL can be found within the app bundle as the `SUFeedURL` property in `Contents/Info.plist` or by using the `brew find-appcast` command. Run it with:
+A `strategy` block for `Sparkle` receives an `item` which has methods for the `version`, `short_version`, `nice_version`, `url`, `channel` and `title`. It expects a URL for an XML feed providing release information to a macOS application that self-updates using the Sparkle framework. This URL can be found within the app bundle as the `SUFeedURL` property in `Contents/Info.plist` or by using the `coffee find-appcast` command. Run it with:
 
 ```bash
-brew find-appcast '/path/to/application.app'
+coffee find-appcast '/path/to/application.app'
 ```
 
 The default pattern for the `Sparkle` strategy is to generate `"#{item.short_version},#{item.version}"` from `sparkle:shortVersionString` and `sparkle:version` if both are set. In the example below, the returned value also includes a needed download ID from the `url`:
@@ -422,7 +422,7 @@ end
 
 #### `ExtractPlist` `strategy` block
 
-If no means are available online for checking which version of a macOS package is current, as a last resort the `:extract_plist` strategy will have `brew livecheck` download the artifact and retrieve its version string from contained `.plist` files.
+If no means are available online for checking which version of a macOS package is current, as a last resort the `:extract_plist` strategy will have `coffee livecheck` download the artifact and retrieve its version string from contained `.plist` files.
 
 ```ruby
 livecheck do

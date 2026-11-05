@@ -16,13 +16,13 @@ class StaleLeadMaintainerPrApproval
   API_URL = "https://api.github.com"
   MAX_PER_PAGE = 100
 
-  REPOSITORY = "Homebrew/brew"
+  REPOSITORY = "CoffeeBrewery/coffee"
   GITHUB_ACTIONS_URL = "https://github.com/apps/github-actions"
   APPROVABLE_CHECK_RUN_CONCLUSIONS = ["success", "neutral", "skipped"].freeze
   HUMAN_REVIEW_WINDOW_HOURS = 48
   SENSITIVE_PATH_PREFIXES = [".github/"].freeze
   SENSITIVE_PATHS = [
-    "Library/Homebrew/utils/github.rb",
+    "Library/CoffeeBrewery/utils/github.rb",
     "README.md",
   ].freeze
   REPORT_BRANCH = "approve-stale-lead-maintainer-prs"
@@ -32,7 +32,7 @@ class StaleLeadMaintainerPrApproval
   GitHubResult = T.type_alias { T.any(GitHubPayload, GitHubPayloads) }
   RequestData = T.type_alias { T::Hash[Symbol, String] }
 
-  # Recent qualifying approval for another Homebrew/brew PR.
+  # Recent qualifying approval for another CoffeeBrewery/coffee PR.
   class RecentApproval < T::Struct
     const :number, Integer
     const :url, String
@@ -83,7 +83,7 @@ class StaleLeadMaintainerPrApproval
     @event_name = T.let(ENV.fetch("GITHUB_EVENT_NAME"), String)
     @pull_request_number = T.let(ENV.fetch("PR_NUMBER", ""), String)
     lead_maintainers_line = File.read("README.md").each_line.find do |line|
-      line.start_with?("Homebrew's [Lead Maintainers]")
+      line.start_with?("CoffeeBrewery's [Lead Maintainers]")
     end
     raise "Could not find lead maintainers in README.md." if lead_maintainers_line.nil?
 
@@ -150,7 +150,7 @@ class StaleLeadMaintainerPrApproval
             - [##{data.number}](#{data.pr_url}) is not a draft.
             - The approval workflow is running on a weekday.
             - [@#{data.author}](#{data.author_url}) is listed as a lead maintainer in [README.md](#{@server_url}/#{@repository}/blob/HEAD/README.md).
-            - [@#{data.author}](#{data.author_url}) approved Homebrew/brew PR [##{data.approved_pr_number}](#{data.approved_pr_url}) in the last 7 days.
+            - [@#{data.author}](#{data.author_url}) approved CoffeeBrewery/coffee PR [##{data.approved_pr_number}](#{data.approved_pr_url}) in the last 7 days.
             - [##{data.number}](#{data.pr_url}) was created at least #{HUMAN_REVIEW_WINDOW_HOURS} hours ago and has had no human review since creation.
             - Copilot has already reviewed [##{data.number}](#{data.pr_url}).
             - [##{data.number}](#{data.pr_url}) does not modify `.github/` or other sensitive files.
@@ -167,7 +167,7 @@ class StaleLeadMaintainerPrApproval
   sig { void }
   def report
     branch = ENV.fetch("GITHUB_REF_NAME", REPORT_BRANCH)
-    query = URI.encode_www_form(state: "open", head: "Homebrew:#{branch}", per_page: 1)
+    query = URI.encode_www_form(state: "open", head: "CoffeeBrewery:#{branch}", per_page: 1)
     pull_requests = T.cast(rest("#{API_URL}/repos/#{@repository}/pulls?#{query}"), GitHubPayloads)
     raise "No open pull request found for branch #{branch}." if pull_requests.empty?
 
@@ -283,7 +283,7 @@ class StaleLeadMaintainerPrApproval
     data.approved_pr_url = approved_pr&.url.to_s
     if !exhaustive && !data.approved_another_pr
       return finish(data, [
-        "@#{data.author} has not approved another Homebrew/brew PR in the last 7 days.",
+        "@#{data.author} has not approved another CoffeeBrewery/coffee PR in the last 7 days.",
       ])
     end
 
@@ -326,11 +326,11 @@ class StaleLeadMaintainerPrApproval
     data.sensitive_files_checked = true
     data.changed_sensitive_files = changed_files.filter_map do |file|
       filename = T.cast(file.fetch("filename"), String)
-      # Homebrew's core extensions are not available in this standalone script.
-      # rubocop:disable Homebrew/NegateInclude
+      # CoffeeBrewery's core extensions are not available in this standalone script.
+      # rubocop:disable CoffeeBrewery/NegateInclude
       next if SENSITIVE_PATH_PREFIXES.none? { |prefix| filename.start_with?(prefix) } &&
               !SENSITIVE_PATHS.include?(filename)
-      # rubocop:enable Homebrew/NegateInclude
+      # rubocop:enable CoffeeBrewery/NegateInclude
 
       filename
     end
@@ -405,7 +405,7 @@ class StaleLeadMaintainerPrApproval
     lead_maintainer = data.lead_maintainer if data.lead_maintainer_checked
     puts "- Author listed as a lead maintainer in README.md: #{status_label(lead_maintainer)}"
     approved_another_pr = data.approved_another_pr if data.approved_another_pr_checked
-    puts "- Author approved another Homebrew/brew PR in the last 7 days: #{status_label(approved_another_pr)}"
+    puts "- Author approved another CoffeeBrewery/coffee PR in the last 7 days: #{status_label(approved_another_pr)}"
     no_human_review_since_creation = data.no_human_review_since_creation if data.reviews_checked
     puts "- No human review since creation: #{status_label(no_human_review_since_creation)}"
     if data.reviews_checked
@@ -459,7 +459,7 @@ class StaleLeadMaintainerPrApproval
     end
     failures << "@#{data.author} is not listed as a lead maintainer in README.md." unless data.lead_maintainer
     unless data.approved_another_pr
-      failures << "@#{data.author} has not approved another Homebrew/brew PR in the last 7 days."
+      failures << "@#{data.author} has not approved another CoffeeBrewery/coffee PR in the last 7 days."
     end
     unless data.old_enough_for_approval
       failures << "Pull request ##{data.number} was created less than #{HUMAN_REVIEW_WINDOW_HOURS} hours ago."
@@ -501,7 +501,7 @@ class StaleLeadMaintainerPrApproval
         summary.puts "- [@#{data.author}](#{data.author_url}) is listed as a lead maintainer in " \
                      "[README.md](#{@server_url}/#{@repository}/blob/HEAD/README.md): #{data.lead_maintainer}"
         summary.puts "- [@#{data.author}](#{data.author_url}) approved another " \
-                     "[Homebrew/brew PR](#{@server_url}/#{@repository}/pulls) in the last 7 days: " \
+                     "[CoffeeBrewery/coffee PR](#{@server_url}/#{@repository}/pulls) in the last 7 days: " \
                      "#{data.approved_another_pr} (#{approved_pr_link(data)})"
         summary.puts "- No human review on [##{data.number}](#{data.pr_url}) since creation: " \
                      "#{data.no_human_review_since_creation}"

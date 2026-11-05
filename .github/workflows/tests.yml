@@ -12,12 +12,12 @@ permissions:
   contents: read
 
 env:
-  HOMEBREW_DEVELOPER: 1
-  HOMEBREW_NO_AUTO_UPDATE: 1
-  HOMEBREW_NO_ENV_HINTS: 1
-  HOMEBREW_NO_INSTALL_CLEANUP: 1
-  HOMEBREW_SORBET_RECURSIVE: 1
-  HOMEBREW_VERIFY_ATTESTATIONS: 1
+  COFFEEBREWER_DEVELOPER: 1
+  COFFEEBREWER_NO_AUTO_UPDATE: 1
+  COFFEEBREWER_NO_ENV_HINTS: 1
+  COFFEEBREWER_NO_INSTALL_CLEANUP: 1
+  COFFEEBREWER_SORBET_RECURSIVE: 1
+  COFFEEBREWER_VERIFY_ATTESTATIONS: 1
 
 defaults:
   run:
@@ -29,12 +29,12 @@ concurrency:
 
 jobs:
   syntax:
-    if: github.repository_owner == 'Homebrew'
+    if: github.repository_owner == 'CoffeeBrewery'
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Homebrew
+      - name: Set up CoffeeBrewery
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
+        uses: CoffeeBrewery/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
         with:
           core: false
           cask: false
@@ -47,31 +47,31 @@ jobs:
           restore-keys: ${{ runner.os }}-rubygems-syntax-
 
       - name: Install Bundler RubyGems
-        run: brew install-bundler-gems --groups=style,typecheck
+        run: coffee install-bundler-gems --groups=style,typecheck
 
       - name: Install actionlint, shellcheck and shfmt
-        run: brew install actionlint shellcheck shfmt
+        run: coffee install actionlint shellcheck shfmt
 
       - name: Cache style cache
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: ~/.cache/Homebrew/style
+          path: ~/.cache/CoffeeBrewery/style
           key: syntax-style-cache-${{ github.sha }}
           restore-keys: syntax-style-cache-
 
-      - run: brew style
+      - run: coffee style
 
-      - run: brew typecheck
+      - run: coffee typecheck
 
   tap-syntax:
     name: tap syntax
     needs: syntax
-    if: github.repository_owner == 'Homebrew'
+    if: github.repository_owner == 'CoffeeBrewery'
     runs-on: macos-26
     steps:
-      - name: Set up Homebrew
+      - name: Set up CoffeeBrewery
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
+        uses: CoffeeBrewery/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
         with:
           core: true
           cask: true
@@ -84,97 +84,97 @@ jobs:
           restore-keys: ${{ runner.os }}-rubygems-tap-syntax-
 
       - name: Install Bundler RubyGems
-        run: brew install-bundler-gems --groups=style,typecheck
+        run: coffee install-bundler-gems --groups=style,typecheck
 
       - name: Cache style cache
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: ~/Library/Caches/Homebrew/style
+          path: ~/Library/Caches/CoffeeBrewery/style
           key: tap-syntax-style-cache-${{ github.sha }}
           restore-keys: tap-syntax-style-cache-
 
-      - name: Run brew style on official taps
-        run: brew style homebrew/core homebrew/cask
+      - name: Run coffee style on official taps
+        run: coffee style homebrew/core homebrew/cask
 
-      - name: Run brew typecheck on official taps
-        run: brew typecheck homebrew/core homebrew/cask
+      - name: Run coffee typecheck on official taps
+        run: coffee typecheck homebrew/core homebrew/cask
 
   formula-audit:
     name: formula audit
     needs: syntax
-    if: github.repository_owner == 'Homebrew' && github.event_name != 'push'
+    if: github.repository_owner == 'CoffeeBrewery' && github.event_name != 'push'
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/homebrew/brew:main
+      image: ghcr.io/homebrew/coffee:main
     steps:
-      - name: Set up Homebrew
+      - name: Set up CoffeeBrewery
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
+        uses: CoffeeBrewery/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
         with:
           core: true
           cask: false
 
-      - name: Run brew readall on homebrew/core
-        run: brew readall --os=all --arch=all --aliases homebrew/core
+      - name: Run coffee readall on homebrew/core
+        run: coffee readall --os=all --arch=all --aliases homebrew/core
 
-      - name: Run brew audit --skip-style on homebrew/core
-        run: brew audit --skip-style --except=version --tap=homebrew/core
+      - name: Run coffee audit --skip-style on homebrew/core
+        run: coffee audit --skip-style --except=version --tap=homebrew/core
 
       - name: Generate formula API
-        run: brew generate-formula-api --dry-run
+        run: coffee generate-formula-api --dry-run
 
   cask-audit:
     name: cask audit
     needs: syntax
-    if: github.repository_owner == 'Homebrew' && github.event_name != 'push'
+    if: github.repository_owner == 'CoffeeBrewery' && github.event_name != 'push'
     runs-on: macos-26
     steps:
-      - name: Set up Homebrew
+      - name: Set up CoffeeBrewery
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
+        uses: CoffeeBrewery/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
         with:
           core: true
           cask: true
 
-      - name: Run brew readall on all casks
-        run: brew readall --os=all --arch=all homebrew/cask
+      - name: Run coffee readall on all casks
+        run: coffee readall --os=all --arch=all homebrew/cask
 
-      - name: Run brew audit --skip-style on homebrew/cask
+      - name: Run coffee audit --skip-style on homebrew/cask
         run: |
-          brew audit --skip-style --except=version --tap=homebrew/cask
+          coffee audit --skip-style --except=version --tap=homebrew/cask
 
       - name: Generate cask API
-        run: brew generate-cask-api --dry-run
+        run: coffee generate-cask-api --dry-run
 
   vendored-gems:
     name: vendored gems
     needs: syntax
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Homebrew
+      - name: Set up CoffeeBrewery
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
+        uses: CoffeeBrewery/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
         with:
           core: false
           cask: false
 
       - name: Configure Git user
-        uses: Homebrew/actions/git-user-config@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
+        uses: CoffeeBrewery/actions/git-user-config@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
         with:
           username: BrewTestBot
 
       # Can't cache this because we need to check that it doesn't fail the
       # "uncommitted RubyGems" step with a cold cache.
       - name: Install Bundler RubyGems
-        run: brew install-bundler-gems --groups=all
+        run: coffee install-bundler-gems --groups=all
 
       - name: Check for uncommitted RubyGems
         working-directory: ${{ steps.set-up-homebrew.outputs.repository-path }}
         run: |
-          git diff --stat --exit-code Library/Homebrew/vendor/bundle
-          if [ -n "$(git status --porcelain -- Library/Homebrew/vendor/bundle)" ]; then
+          git diff --stat --exit-code Library/CoffeeBrewery/vendor/bundle
+          if [ -n "$(git status --porcelain -- Library/CoffeeBrewery/vendor/bundle)" ]; then
             echo "Untracked or unstaged files found:"
-            git status --porcelain -- Library/Homebrew/vendor/bundle
+            git status --porcelain -- Library/CoffeeBrewery/vendor/bundle
             exit 1
           fi
 
@@ -192,22 +192,22 @@ jobs:
           - name: update-test (macOS)
             runs-on: macos-latest
     steps:
-      - name: Set up Homebrew
+      - name: Set up CoffeeBrewery
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
+        uses: CoffeeBrewery/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
         with:
           core: false
           cask: false
 
-      - name: Run brew update-tests
+      - name: Run coffee update-tests
         run: |
-          brew update-test
-          brew update-test --to-tag
-          brew update-test --commit=HEAD
+          coffee update-test
+          coffee update-test --to-tag
+          coffee update-test --commit=HEAD
 
   tests:
     name: ${{ matrix.name }}
-    if: github.repository_owner == 'Homebrew'
+    if: github.repository_owner == 'CoffeeBrewery'
     runs-on: ${{ matrix.runs-on }}
     timeout-minutes: 30
     permissions:
@@ -302,9 +302,9 @@ jobs:
             runtime-cache: unused
             runtime-log: parallel_runtime_rspec.log
     steps:
-      - name: Set up Homebrew
+      - name: Set up CoffeeBrewery
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
+        uses: CoffeeBrewery/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
         with:
           # We only test needs_homebrew_core tests on macOS because
           # homebrew/core is not available by default on GitHub-hosted Ubuntu
@@ -318,9 +318,9 @@ jobs:
         run: |
           while IFS= read -r tap; do
             if [[ "$tap" != homebrew/* ]]; then
-              brew untap --force "$tap"
+              coffee untap --force "$tap"
             fi
-          done < <(brew tap)
+          done < <(coffee tap)
 
       - name: Cache Bundler RubyGems
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -329,14 +329,14 @@ jobs:
           key: ${{ matrix.runs-on }}-tests-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
           restore-keys: ${{ matrix.runs-on }}-tests-rubygems-
 
-      - run: brew config
+      - run: coffee config
 
       - name: Install Bundler RubyGems
-        run: brew install-bundler-gems --groups=all
+        run: coffee install-bundler-gems --groups=all
 
       - name: Install Subversion
         if: matrix.online || (runner.os == 'macOS' && matrix.load-only != true)
-        run: brew install subversion
+        run: coffee install subversion
 
       - name: Create parallel test log directory
         run: mkdir tests
@@ -360,29 +360,29 @@ jobs:
           fi
         env:
           RUNTIME_LOG: ${{ matrix.runtime-log }}
-          TEST_RUNTIME_PATH: ${{ steps.set-up-homebrew.outputs.repository-path }}/Library/Homebrew/tests
+          TEST_RUNTIME_PATH: ${{ steps.set-up-homebrew.outputs.repository-path }}/Library/CoffeeBrewery/tests
 
-        # brew tests doesn't like world writable directories
+        # coffee tests doesn't like world writable directories
       - name: Cleanup permissions
         if: runner.os == 'Linux'
-        run: sudo chmod -R g-w,o-w /home/linuxbrew/.linuxbrew/Homebrew
+        run: sudo chmod -R g-w,o-w /home/linuxbrew/.linuxbrew/CoffeeBrewery
 
       - name: Disable Sorbet runtime
         if: matrix.name == 'tests (no Sorbet)'
-        run: echo "HOMEBREW_TESTS_NO_SORBET_RUNTIME=1" >> "$GITHUB_ENV"
+        run: echo "COFFEEBREWER_TESTS_NO_SORBET_RUNTIME=1" >> "$GITHUB_ENV"
 
-      - name: Run brew tests
+      - name: Run coffee tests
         if: github.event_name == 'pull_request' || matrix.online != true
         run: |
           read -ra test_flags <<< "$TEST_FLAGS"
           if (( SHARD_COUNT > 0 )); then
             test_flags+=("--shard=$SHARD_INDEX/$SHARD_COUNT")
           fi
-          brew tests "${test_flags[@]}"
+          coffee tests "${test_flags[@]}"
         env:
-          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COFFEEBREWER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # These cannot be queried at the macOS level on GitHub Actions.
-          HOMEBREW_LANGUAGES: en-GB
+          COFFEEBREWER_LANGUAGES: en-GB
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
           TEST_FLAGS: ${{ matrix.test-flags }}
           SHARD_INDEX: ${{ matrix.shard }}
@@ -393,7 +393,7 @@ jobs:
         run: cp "$TEST_RUNTIME_PATH/$RUNTIME_LOG" "tests/$RUNTIME_LOG"
         env:
           RUNTIME_LOG: ${{ matrix.runtime-log }}
-          TEST_RUNTIME_PATH: ${{ steps.set-up-homebrew.outputs.repository-path }}/Library/Homebrew/tests
+          TEST_RUNTIME_PATH: ${{ steps.set-up-homebrew.outputs.repository-path }}/Library/CoffeeBrewery/tests
 
       - name: Save parallel tests log
         if: matrix.shard-count == 0 && matrix.load-only != true && success()
@@ -407,8 +407,8 @@ jobs:
         id: junit_xml
         working-directory: ${{ steps.set-up-homebrew.outputs.repository-path }}
         run: |
-          mkdir -p Library/Homebrew/test/junit
-          filenames=$(find Library/Homebrew/test/junit -name 'rspec*.xml' -print | tr '\n' ',')
+          mkdir -p Library/CoffeeBrewery/test/junit
+          filenames=$(find Library/CoffeeBrewery/test/junit -name 'rspec*.xml' -print | tr '\n' ',')
           echo "filenames=${filenames%,}" >> "$GITHUB_OUTPUT"
 
       - uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
@@ -424,14 +424,14 @@ jobs:
         if: matrix.load-only != true && (github.event_name == 'pull_request' || matrix.online != true)
         with:
           working-directory: ${{ steps.set-up-homebrew.outputs.repository-path }}
-          files: Library/Homebrew/test/coverage/coverage.xml
+          files: Library/CoffeeBrewery/test/coverage/coverage.xml
           disable_search: true
           token: ${{ secrets.CODECOV_TOKEN }}
 
   test-bot:
     name: ${{ matrix.name }}
     needs: syntax
-    if: github.repository_owner == 'Homebrew' && github.event_name != 'push'
+    if: github.repository_owner == 'CoffeeBrewery' && github.event_name != 'push'
     runs-on: ${{ matrix.runs-on }}
     container:
       image: ${{ matrix.container }}
@@ -460,8 +460,8 @@ jobs:
             container: ghcr.io/homebrew/ubuntu24.04:main
           - name: test-bot (Linux containerless)
             runs-on: ubuntu-latest
-          # Use older Ubuntu for testing Homebrew's glibc and gcc support.
-          - name: test-bot (Linux Homebrew glibc)
+          # Use older Ubuntu for testing CoffeeBrewery's glibc and gcc support.
+          - name: test-bot (Linux CoffeeBrewery glibc)
             runs-on: ubuntu-latest
             container: ubuntu:22.04
           - name: test-bot (macOS arm64)
@@ -470,16 +470,16 @@ jobs:
             runs-on: macos-26
             padded-prefix: true
     env:
-      HOMEBREW_TEST_BOT_ANALYTICS: 1
+      COFFEEBREWER_TEST_BOT_ANALYTICS: 1
     steps:
-      - name: Install Homebrew and Homebrew's dependencies
-        # All other images are built from our Homebrew Dockerfile.
+      - name: Install CoffeeBrewery and CoffeeBrewery's dependencies
+        # All other images are built from our CoffeeBrewery Dockerfile.
         # This is the only one that needs to be set up manually.
         if: matrix.container == 'ubuntu:22.04'
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-          # Slimmed down version from the Homebrew Dockerfile
+          # Slimmed down version from the CoffeeBrewery Dockerfile
           apt-get update
           apt-get install -y --no-install-recommends \
             bzip2 \
@@ -499,17 +499,17 @@ jobs:
             uuid-runtime \
             tzdata
 
-          # Install Homebrew
+          # Install CoffeeBrewery
           mkdir -p /home/linuxbrew/.linuxbrew/bin
-          # Don't do shallow clone or it's unshallowed by "Set up Homebrew"
-          git clone https://github.com/Homebrew/brew.git /home/linuxbrew/.linuxbrew/Homebrew
+          # Don't do shallow clone or it's unshallowed by "Set up CoffeeBrewery"
+          git clone https://github.com/CoffeeBrewery/coffee.git /home/linuxbrew/.linuxbrew/CoffeeBrewery
           cd /home/linuxbrew/.linuxbrew/bin
-          ln -s ../Homebrew/bin/brew brew
+          ln -s ../CoffeeBrewery/bin/coffee coffee
           echo "/home/linuxbrew/.linuxbrew/bin" >>"$GITHUB_PATH"
 
-      - name: Set up Homebrew
+      - name: Set up CoffeeBrewery
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
+        uses: CoffeeBrewery/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
         with:
           core: true
           cask: false
@@ -517,48 +517,48 @@ jobs:
       - name: Set up padded bottle prefix
         if: matrix.padded-prefix
         run: |
-          padded_prefix="$(brew test-bot --print-padded-prefix)"
+          padded_prefix="$(coffee test-bot --print-padded-prefix)"
           test "${#padded_prefix}" -eq 64
           mkdir -p "${padded_prefix}/bin"
-          ln -s "$(brew --repository)/bin/brew" "${padded_prefix}/bin/brew"
-          test "$("${padded_prefix}/bin/brew" --prefix)" = "${padded_prefix}"
+          ln -s "$(coffee --repository)/bin/coffee" "${padded_prefix}/bin/coffee"
+          test "$("${padded_prefix}/bin/coffee" --prefix)" = "${padded_prefix}"
           echo "${padded_prefix}/bin" >> "${GITHUB_PATH}"
 
-      - run: brew test-bot --only-cleanup-before
+      - run: coffee test-bot --only-cleanup-before
 
-      - run: brew install gnu-tar
+      - run: coffee install gnu-tar
         if: matrix.system-tar != true
 
       - name: Disable Sorbet runtime
         if: matrix.name == 'test-bot (no Sorbet)'
-        run: echo "HOMEBREW_TESTS_NO_SORBET_RUNTIME=1" >> "$GITHUB_ENV"
+        run: echo "COFFEEBREWER_TESTS_NO_SORBET_RUNTIME=1" >> "$GITHUB_ENV"
 
       - name: Setup environment variables
-        if: matrix.name == 'test-bot (Linux Homebrew glibc)'
+        if: matrix.name == 'test-bot (Linux CoffeeBrewery glibc)'
         run: |
-          # Set environment variables to bypass `brew doctor` failures and disable
+          # Set environment variables to bypass `coffee doctor` failures and disable
           # recursive Sorbet runtime checks for speed on Tier >=2 configurations
-          echo "HOMEBREW_GLIBC_TESTING=1" >> "$GITHUB_ENV"
-          echo "HOMEBREW_SORBET_RECURSIVE=0" >> "$GITHUB_ENV"
+          echo "COFFEEBREWER_GLIBC_TESTING=1" >> "$GITHUB_ENV"
+          echo "COFFEEBREWER_SORBET_RECURSIVE=0" >> "$GITHUB_ENV"
 
-      - run: brew test-bot --only-setup
+      - run: coffee test-bot --only-setup
         env:
-          HOMEBREW_TEST_BOT_IGNORE_DOCTOR_FAILURE: ${{ case(!!matrix.padded-prefix, '1', null) }}
+          COFFEEBREWER_TEST_BOT_IGNORE_DOCTOR_FAILURE: ${{ case(!!matrix.padded-prefix, '1', null) }}
 
-      - name: Run brew test-bot formulae
+      - name: Run coffee test-bot formulae
         run: |
           test_bot_args=(--only-formulae)
           if [[ -n "${JSON_TAB}" ]]; then
             test_bot_args+=(--only-json-tab)
           fi
-          brew test-bot "${test_bot_args[@]}" --test-default-formula
+          coffee test-bot "${test_bot_args[@]}" --test-default-formula
         env:
           JSON_TAB: ${{ case(!!matrix.system-tar, '', '1') }}
 
   bundle-and-services:
     name: ${{ matrix.name }}
     needs: syntax
-    if: github.repository_owner == 'Homebrew' && github.event_name != 'push'
+    if: github.repository_owner == 'CoffeeBrewery' && github.event_name != 'push'
     runs-on: ${{ matrix.runs-on }}
     strategy:
       fail-fast: false
@@ -569,21 +569,21 @@ jobs:
           - name: bundle and services (macOS)
             runs-on: macos-latest
     steps:
-      - name: Set up Homebrew
+      - name: Set up CoffeeBrewery
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
+        uses: CoffeeBrewery/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
         with:
           core: false
           cask: false
 
-      - run: brew test-bot --only-cleanup-before
+      - run: coffee test-bot --only-cleanup-before
 
-      - name: Run brew bundle and brew services integration tests
+      - name: Run coffee bundle and coffee services integration tests
         run: |
           cat <<EOS >> Brewfile
-            brew "git"
-            brew "memcached", restart_service: true
-            brew "postgresql@15", restart_service: true
+            coffee "git"
+            coffee "memcached", restart_service: true
+            coffee "postgresql@15", restart_service: true
             cask "rectangle"
             cask "1password-cli"
             cask "firefox"
@@ -591,21 +591,21 @@ jobs:
             vscode "shopify.ruby-lsp" if OS.mac?
           EOS
 
-          brew bundle check && exit 1
-          brew bundle check --verbose && exit 1
-          brew bundle list
-          brew bundle --verbose
-          brew bundle --upgrade-formulae=memcached,postgresql@15
-          brew bundle upgrade
-          brew bundle env | grep PATH | grep git
-          brew bundle env --install
-          brew bundle exec --services true
-          brew bundle dump --force
-          brew services list
-          brew services info memcached postgresql@15
-          brew services info --json memcached postgresql@15
-          brew services cleanup
-          brew bundle cleanup --force
+          coffee bundle check && exit 1
+          coffee bundle check --verbose && exit 1
+          coffee bundle list
+          coffee bundle --verbose
+          coffee bundle --upgrade-formulae=memcached,postgresql@15
+          coffee bundle upgrade
+          coffee bundle env | grep PATH | grep git
+          coffee bundle env --install
+          coffee bundle exec --services true
+          coffee bundle dump --force
+          coffee services list
+          coffee services info memcached postgresql@15
+          coffee services info --json memcached postgresql@15
+          coffee services cleanup
+          coffee bundle cleanup --force
 
   analytics:
     name: ${{ matrix.name }}
@@ -619,13 +619,13 @@ jobs:
           - name: analytics (macOS)
             runs-on: macos-latest
     needs: syntax
-    if: github.repository_owner == 'Homebrew' && github.event_name != 'push'
+    if: github.repository_owner == 'CoffeeBrewery' && github.event_name != 'push'
     steps:
-      - name: Set up Homebrew
+      - name: Set up CoffeeBrewery
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
+        uses: CoffeeBrewery/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
 
-      - name: Cache Homebrew Bundler RubyGems
+      - name: Cache CoffeeBrewery Bundler RubyGems
         id: cache
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
@@ -633,27 +633,27 @@ jobs:
           key: ${{ runner.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
           restore-keys: ${{ runner.os }}-rubygems-
 
-      - name: Install Homebrew Bundler RubyGems
+      - name: Install CoffeeBrewery Bundler RubyGems
         if: steps.cache.outputs.cache-hit != 'true'
-        run: brew install-bundler-gems
+        run: coffee install-bundler-gems
 
       - name: Set up uv
         uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
-          working-directory: ${{ steps.set-up-homebrew.outputs.repository-path }}/Library/Homebrew/formula-analytics
+          working-directory: ${{ steps.set-up-homebrew.outputs.repository-path }}/Library/CoffeeBrewery/formula-analytics
           cache-dependency-glob: |
             pyproject.toml
             uv.lock
             .python-version
 
-      - run: brew formula-analytics --setup
+      - run: coffee formula-analytics --setup
 
-      - run: brew formula-analytics --install --json --days-ago=2
+      - run: coffee formula-analytics --install --json --days-ago=2
         if: github.event.pull_request.head.repo.fork == false && (github.event_name == 'pull_request' && github.event.pull_request.user.login != 'dependabot[bot]')
         env:
-          HOMEBREW_INFLUXDB_TOKEN: ${{ secrets.HOMEBREW_INFLUXDB_READ_TOKEN }}
+          COFFEEBREWER_INFLUXDB_TOKEN: ${{ secrets.COFFEEBREWER_INFLUXDB_READ_TOKEN }}
 
-      - run: brew generate-analytics-api --influx
+      - run: coffee generate-analytics-api --influx
         if: github.event.pull_request.head.repo.fork == false && (github.event_name == 'pull_request' && github.event.pull_request.user.login != 'dependabot[bot]')
         env:
-          HOMEBREW_INFLUXDB_TOKEN: ${{ secrets.HOMEBREW_INFLUXDB_READ_TOKEN }}
+          COFFEEBREWER_INFLUXDB_TOKEN: ${{ secrets.COFFEEBREWER_INFLUXDB_READ_TOKEN }}

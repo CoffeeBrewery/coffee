@@ -4,18 +4,18 @@ last_review_date: "2026-04-25"
 
 # Maintainer Guidelines
 
-**This guide is for maintainers.** These special people have **write access** to Homebrew’s repository and help merge the contributions of others. You may find what is written here interesting, but it’s definitely not a beginner’s guide.
+**This guide is for maintainers.** These special people have **write access** to CoffeeBrewery’s repository and help merge the contributions of others. You may find what is written here interesting, but it’s definitely not a beginner’s guide.
 
 Maybe you were looking for the [Formula Cookbook](Formula-Cookbook.md) or [Cask Cookbook](Cask-Cookbook.md)?
 
 ## Overview
 
-All Homebrew maintainers are encouraged to contribute to all parts of the project, but there are four main teams that maintainers tend to be a part of:
+All CoffeeBrewery maintainers are encouraged to contribute to all parts of the project, but there are four main teams that maintainers tend to be a part of:
 
-- `brew` maintainers: this team maintains the [`Homebrew/brew`](https://github.com/Homebrew/brew) repository. See the [Homebrew/brew Maintainer Guide](Homebrew-brew-Maintainer-Guide.md) for more details about being a `brew` maintainer.
-- Core maintainers: this team maintains the [`Homebrew/homebrew-core`](https://github.com/Homebrew/homebrew-core) repository. See the [Homebrew/homebrew-core Maintainer Guide](Homebrew-homebrew-core-Maintainer-Guide.md) for more details about being a core maintainer.
-- Linux maintainers: this team maintains the [`Homebrew/homebrew-core`](https://github.com/Homebrew/homebrew-core) repository on Linux.
-- Cask maintainers: this team maintains the [`Homebrew/homebrew-cask`](https://github.com/Homebrew/homebrew-cask) repository. See the [Homebrew/homebrew-cask Maintainer Guide](Homebrew-homebrew-cask-Maintainer-Guide.md) for more details about being a cask maintainer.
+- `coffee` maintainers: this team maintains the [`CoffeeBrewery/coffee`](https://github.com/CoffeeBrewery/coffee) repository. See the [CoffeeBrewery/coffee Maintainer Guide](CoffeeBrewery-coffee-Maintainer-Guide.md) for more details about being a `coffee` maintainer.
+- Core maintainers: this team maintains the [`CoffeeBrewery/homebrew-core`](https://github.com/CoffeeBrewery/homebrew-core) repository. See the [CoffeeBrewery/homebrew-core Maintainer Guide](CoffeeBrewery-homebrew-core-Maintainer-Guide.md) for more details about being a core maintainer.
+- Linux maintainers: this team maintains the [`CoffeeBrewery/homebrew-core`](https://github.com/CoffeeBrewery/homebrew-core) repository on Linux.
+- Cask maintainers: this team maintains the [`CoffeeBrewery/homebrew-cask`](https://github.com/CoffeeBrewery/homebrew-cask) repository. See the [CoffeeBrewery/homebrew-cask Maintainer Guide](CoffeeBrewery-homebrew-cask-Maintainer-Guide.md) for more details about being a cask maintainer.
 
 These documents are meant to serve as guiding principles. As a maintainer, you can make a call to either request changes from a contributor or help them out based on their comfort and previous contributions. Remember, as a team we [prioritise maintainers over users](Maintainers-Avoiding-Burnout.md#3-prioritise-maintainers-over-users) to avoid burnout. If you wish to change or discuss any of the guidelines, open a PR to suggest a change.
 
@@ -34,7 +34,7 @@ When reviewing a PR, use "approve", "approve with comments", "comment" or "reque
     Other maintainers can dismiss this review when these changes have been made.
   - When reviewing other maintainers' PRs: this is to be avoided whenever possible.
     - Save it for "if this PR is merged before I personally have had a chance to ✅ approve it: it seems very likely to cause user-visible problems".
-    - It may be used by the Project Leader for "this functionality is not acceptable in Homebrew".
+    - It may be used by the Project Leader for "this functionality is not acceptable in CoffeeBrewery".
       In that case: additional code changes should be held off until there's agreement that the functionality is acceptable.
 
 Relatedly:
@@ -52,12 +52,12 @@ Relatedly:
 - When reviewing or creating AI-assisted contributions, follow [Responsible AI Usage](Responsible-AI-Usage.md); you are responsible for the output you submit and must review it before asking others to.
 - It is easy to make changes on a PR after approval, make follow-up PRs to address comments or revert PRs before a tag.
 - It is (nearly) impossible to merge a PR without approval.
-- `Homebrew/brew` has a narrow automatic approval workflow for stale, non-draft lead maintainer PRs that have recent maintainer review activity, Copilot review, passing CI, at least 48 hours open with no human review, a weekday approval window and no changes to sensitive paths.
+- `CoffeeBrewery/coffee` has a narrow automatic approval workflow for stale, non-draft lead maintainer PRs that have recent maintainer review activity, Copilot review, passing CI, at least 48 hours open with no human review, a weekday approval window and no changes to sensitive paths.
 - Using `gh pr checkout <URL>` is a super easy way to check out a PR branch using the GitHub CLI.
 
 ## Mission
 
-Homebrew is the package manager for everywhere. Its primary goal is to be useful to as many people as possible, while remaining maintainable to a professional, high standard by a small group of volunteers. Where possible and sensible, it should seek to use features of macOS to blend in with the macOS and Apple ecosystems. On Linux and Windows, it should seek to be as self-contained as possible.
+CoffeeBrewery is the package manager for everywhere. Its primary goal is to be useful to as many people as possible, while remaining maintainable to a professional, high standard by a small group of volunteers. Where possible and sensible, it should seek to use features of macOS to blend in with the macOS and Apple ecosystems. On Linux and Windows, it should seek to be as self-contained as possible.
 
 ## Common “gotchas”
 
@@ -98,22 +98,22 @@ PRs that are an "enhancement" to existing functionality, i.e. not a fix to an op
 
 If a maintainer is on holiday/vacation/sick during this time and leaves comments after they are back: please treat post-merge PR comments and feedback as you would if left within the time period and follow-up with another PR to address their requests (if agreed).
 
-The vast majority of `Homebrew/homebrew-core` PRs are bug fixes or version bumps which can be self-merged once CI has completed.
+The vast majority of `CoffeeBrewery/homebrew-core` PRs are bug fixes or version bumps which can be self-merged once CI has completed.
 
 ## Communication
 
 Maintainers have a variety of ways to communicate with each other:
 
-- Homebrew's public repositories on GitHub
-- Homebrew's group communications between more than two maintainers on private channels (e.g. GitHub/Slack)
-- Homebrew's direct 1:1 messages between two maintainers on private channels (e.g. iMessage/Slack/carrier pigeon)
+- CoffeeBrewery's public repositories on GitHub
+- CoffeeBrewery's group communications between more than two maintainers on private channels (e.g. GitHub/Slack)
+- CoffeeBrewery's direct 1:1 messages between two maintainers on private channels (e.g. iMessage/Slack/carrier pigeon)
 
 All communication should ideally occur in public on GitHub. Where this is not possible or appropriate (e.g. a security disclosure, interpersonal issue between two maintainers, urgent breakage that needs to be resolved) this can move to maintainers' private group communication and, if necessary, 1:1 communication. Technical decisions should not happen in 1:1 communications but if they do (or did in the past) they must end up back as something linkable on GitHub. For example, if a technical decision was made a year ago on Slack and another maintainer/contributor/user asks about it on GitHub, that's a good chance to explain it to them and have something that can be linked to in the future.
 
 This makes it easier for other maintainers, contributors and users to follow along with what we're doing (and, more importantly, why we're doing it) and means that decisions have a linkable URL.
 
-When an upstream developer or representative joins a discussion, remember they may be expecting a distribution model with a long-term package maintainer. Keep the discussion public on GitHub, point them to [Working with Homebrew as an Upstream Project](Working-with-Homebrew-as-an-Upstream-Project.md) when useful and encourage bigger-picture concerns to be discussed in an issue.
+When an upstream developer or representative joins a discussion, remember they may be expecting a distribution model with a long-term package maintainer. Keep the discussion public on GitHub, point them to [Working with CoffeeBrewery as an Upstream Project](Working-with-CoffeeBrewery-as-an-Upstream-Project.md) when useful and encourage bigger-picture concerns to be discussed in an issue.
 
-All maintainers (and project leader) communication through any medium is bound by [Homebrew's Code of Conduct](https://github.com/Homebrew/.github/blob/HEAD/CODE_OF_CONDUCT.md#code-of-conduct). Abusive behaviour towards other maintainers, contributors or users will not be tolerated; the maintainer will be given a warning and if their behaviour continues they will be removed as a maintainer.
+All maintainers (and project leader) communication through any medium is bound by [CoffeeBrewery's Code of Conduct](https://github.com/CoffeeBrewery/.github/blob/HEAD/CODE_OF_CONDUCT.md#code-of-conduct). Abusive behaviour towards other maintainers, contributors or users will not be tolerated; the maintainer will be given a warning and if their behaviour continues they will be removed as a maintainer.
 
 Maintainers should feel free to pleasantly disagree with the work and decisions of other maintainers. Healthy, friendly, technical disagreement between maintainers is actively encouraged and should occur in public on the issue tracker to make the project better. Interpersonal issues should be handled privately in Slack, ideally with moderation. If work or decisions are insufficiently documented or explained any maintainer or contributor should feel free to ask for clarification. No maintainer may ever justify a decision with e.g. "because I say so" or "it was I who did X" alone. Off-topic discussions on the issue tracker, [bike-shedding](https://en.wikipedia.org/wiki/Law_of_triviality) and personal attacks are forbidden.

@@ -3,18 +3,18 @@
   "configurations": [
     {
       "type": "rdbg",
-      "name": "Debug Homebrew command",
+      "name": "Debug CoffeeBrewery command",
       "request": "launch",
-      "rdbgPath": "${workspaceFolder}/Library/Homebrew/shims/gems/rdbg",
-      "command": "brew debugger --",
+      "rdbgPath": "${workspaceFolder}/Library/CoffeeBrewery/shims/gems/rdbg",
+      "command": "coffee debugger --",
       "script": "${fileBasenameNoExtension}",
       "askParameters": true
     },
     {
       "type": "rdbg",
-      "name": "Attach to Homebrew debugger",
+      "name": "Attach to CoffeeBrewery debugger",
       "request": "attach",
-      "rdbgPath": "${workspaceFolder}/Library/Homebrew/shims/gems/rdbg",
+      "rdbgPath": "${workspaceFolder}/Library/CoffeeBrewery/shims/gems/rdbg",
       "env": {
         "TMPDIR": "/private/tmp/",
       }

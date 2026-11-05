@@ -9,20 +9,20 @@ elif [[ -n "${ZSH_VERSION}" ]]; then
 else
     SCRIPT_PATH="$0"
 fi
-HOMEBREW_PREFIX="$(cd "$(dirname "${SCRIPT_PATH}")"/../ && pwd)"
+COFFEEBREWER_PREFIX="$(cd "$(dirname "${SCRIPT_PATH}")"/../ && pwd)"
 
 # These are used by the functions needed from utils/ruby.sh
-export HOMEBREW_BREW_FILE="${HOMEBREW_PREFIX}/bin/brew"
-export HOMEBREW_LIBRARY="${HOMEBREW_PREFIX}/Library"
+export COFFEEBREWER_BREW_FILE="${COFFEEBREWER_PREFIX}/bin/coffee"
+export COFFEEBREWER_LIBRARY="${COFFEEBREWER_PREFIX}/Library"
 export BUNDLE_WITH="style:typecheck:vscode"
 
-# shellcheck source=../Library/Homebrew/utils/ruby.sh
-source "${HOMEBREW_PREFIX}/Library/Homebrew/utils/ruby.sh"
+# shellcheck source=../Library/CoffeeBrewery/utils/ruby.sh
+source "${COFFEEBREWER_PREFIX}/Library/CoffeeBrewery/utils/ruby.sh"
 
 setup-ruby-path
 setup-gem-home-bundle-gemfile
 ensure-bundle-dependencies
 
-# setup-ruby-path doesn't add Homebrew's ruby to PATH
-homebrew_ruby_bin="$(dirname "${HOMEBREW_RUBY_PATH}")"
+# setup-ruby-path doesn't add CoffeeBrewery's ruby to PATH
+homebrew_ruby_bin="$(dirname "${COFFEEBREWER_RUBY_PATH}")"
 export PATH="${homebrew_ruby_bin}:${PATH}"

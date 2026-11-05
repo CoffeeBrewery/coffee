@@ -53,7 +53,7 @@ do
   jq -er --arg key "${config_file}" '.[$key]' <<<"${jitconfig_json}" | base64 -d | install -m 600 /dev/stdin "${config_file}"
 done <<<"${config_files}"
 
-echo "GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED=1" >.env
+echo "GITHUB_ACTIONS_COFFEEBREWER_SELF_HOSTED=1" >.env
 
 echo "Runner configured."
 

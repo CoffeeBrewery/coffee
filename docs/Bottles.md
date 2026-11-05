@@ -4,14 +4,14 @@ last_review_date: "2026-10-25"
 
 # Bottles (Binary Packages)
 
-Bottles are produced by installing a formula with `brew install --build-bottle <formula>` and then bottling it with `brew bottle <formula>`. This generates a bottle file in the current directory and outputs the bottle DSL for insertion into the formula file.
+Bottles are produced by installing a formula with `coffee install --build-bottle <formula>` and then bottling it with `coffee bottle <formula>`. This generates a bottle file in the current directory and outputs the bottle DSL for insertion into the formula file.
 
-For private bottle distribution across a team, see [internal software delivery](Homebrew-Fleet-Management.md#publish-internal-tools-through-private-taps) and [download mirror policy](Homebrew-Package-Policies.md#use-mirrors-without-weakening-verification).
-For installed build evidence, see [SBOM discovery and collection](Homebrew-Inventory-and-SBOM.md#collect-formula-software-bills-of-materials).
+For private bottle distribution across a team, see [internal software delivery](CoffeeBrewery-Fleet-Management.md#publish-internal-tools-through-private-taps) and [download mirror policy](CoffeeBrewery-Package-Policies.md#use-mirrors-without-weakening-verification).
+For installed build evidence, see [SBOM discovery and collection](CoffeeBrewery-Inventory-and-SBOM.md#collect-formula-software-bills-of-materials).
 
 ## Usage
 
-When the formula being installed defines a bottle matching your system, it will be downloaded and installed automatically when you run `brew install <formula>`.
+When the formula being installed defines a bottle matching your system, it will be downloaded and installed automatically when you run `coffee install <formula>`.
 
 Bottles are not used when:
 
@@ -19,13 +19,13 @@ Bottles are not used when:
 - the formula requests it (with `pour_bottle?`),
 - any options are specified during installation (bottles are all compiled with default options),
 - the bottle is not up to date (e.g. missing or mismatched checksum),
-- the bottle's `cellar` is neither relocatable nor compatible with the current `HOMEBREW_PREFIX` and `HOMEBREW_CELLAR`.
+- the bottle's `cellar` is neither relocatable nor compatible with the current `COFFEEBREWER_PREFIX` and `COFFEEBREWER_CELLAR`.
 
 ## Creation
 
-Bottles for `homebrew/core` formulae are created by [BrewTestBot](BrewTestBot.md) when a pull request is submitted. If the formula builds successfully on each supported platform and a maintainer approves the change, BrewTestBot updates its `bottle do` block and uploads each bottle to [GitHub Packages](https://github.com/orgs/Homebrew/packages).
+Bottles for `homebrew/core` formulae are created by [BrewTestBot](BrewTestBot.md) when a pull request is submitted. If the formula builds successfully on each supported platform and a maintainer approves the change, BrewTestBot updates its `bottle do` block and uploads each bottle to [GitHub Packages](https://github.com/orgs/CoffeeBrewery/packages).
 
-By default, Homebrew targets the oldest CPU generation supported for the operating system and architecture being bottled.
+By default, CoffeeBrewery targets the oldest CPU generation supported for the operating system and architecture being bottled.
 For 64-bit x86 builds, the baseline is Core 2 unless the platform definition specifies a newer minimum.
 This makes the bottle usable across the supported hardware range.
 
@@ -36,7 +36,7 @@ A bottle built for a newer CPU can fail with an illegal-instruction error on old
 
 Bottles are simple gzipped tarballs of compiled binaries.
 The formula name, version, target operating system and rebuild version are stored in the filename.
-Other metadata is in the formula's bottle DSL, and the formula definition is located within the bottle at `<formula>/<version>/.brew/<formula>.rb`.
+Other metadata is in the formula's bottle DSL, and the formula definition is located within the bottle at `<formula>/<version>/.coffee/<formula>.rb`.
 
 ## Bottle DSL (domain specific language)
 
@@ -70,13 +70,13 @@ Use the `all:` tag for a platform-independent bottle whose contents are identica
 
 Optionally contains the URL root used to determine bottle URLs.
 
-By default this is omitted and Homebrew's default bottle URL root is used. This may be useful for taps that wish to provide bottles for their formulae or cater to a non-default `HOMEBREW_CELLAR`.
+By default this is omitted and CoffeeBrewery's default bottle URL root is used. This may be useful for taps that wish to provide bottles for their formulae or cater to a non-default `COFFEEBREWER_CELLAR`.
 
 ### Cellar (`cellar`)
 
-Optionally contains the value of `HOMEBREW_CELLAR` in which the bottles were built.
+Optionally contains the value of `COFFEEBREWER_CELLAR` in which the bottles were built.
 
-Most compiled software contains references to its compiled location, preventing it from being simply relocated anywhere on disk. A value of `:any` or `:any_skip_relocation` means that the bottle can be safely installed in any Cellar as it did not contain any references to the Cellar in which it was originally built. This can be omitted if the bottle was compiled for the given OS/architecture's default `HOMEBREW_CELLAR`, as is done for all bottles built by BrewTestBot.
+Most compiled software contains references to its compiled location, preventing it from being simply relocated anywhere on disk. A value of `:any` or `:any_skip_relocation` means that the bottle can be safely installed in any Cellar as it did not contain any references to the Cellar in which it was originally built. This can be omitted if the bottle was compiled for the given OS/architecture's default `COFFEEBREWER_CELLAR`, as is done for all bottles built by BrewTestBot.
 
 ### Rebuild version (`rebuild`)
 
@@ -103,8 +103,8 @@ A full example:
 
 ```ruby
 pour_bottle? do
-  reason "The bottle needs to be installed into #{Homebrew::DEFAULT_PREFIX}."
-  satisfy { HOMEBREW_PREFIX.to_s == Homebrew::DEFAULT_PREFIX }
+  reason "The bottle needs to be installed into #{CoffeeBrewery::DEFAULT_PREFIX}."
+  satisfy { COFFEEBREWER_PREFIX.to_s == CoffeeBrewery::DEFAULT_PREFIX }
 end
 ```
 

@@ -4,11 +4,11 @@ last_review_date: "2025-08-06"
 
 # Autobump
 
-In official repositories, [BrewTestBot](BrewTestBot.md) automatically checks for available updates to packages that are in Homebrew's "autobump list". These packages do not need to be bumped (i.e. have their version number increased) manually by a contributor. Instead, every 3 hours, a GitHub Action opens a new pull request to upgrade them to the latest version, if needed.
+In official repositories, [BrewTestBot](BrewTestBot.md) automatically checks for available updates to packages that are in CoffeeBrewery's "autobump list". These packages do not need to be bumped (i.e. have their version number increased) manually by a contributor. Instead, every 3 hours, a GitHub Action opens a new pull request to upgrade them to the latest version, if needed.
 
 ## Excluding packages from autobumping
 
-By default, all new formulae and casks from the [Homebrew/core](https://github.com/Homebrew/homebrew-core) and [Homebrew/cask](https://github.com/Homebrew/homebrew-cask) repositories are autobumped. To exclude a package from the autobump list, it must have one of the following:
+By default, all new formulae and casks from the [CoffeeBrewery/core](https://github.com/CoffeeBrewery/homebrew-core) and [CoffeeBrewery/cask](https://github.com/CoffeeBrewery/homebrew-cask) repositories are autobumped. To exclude a package from the autobump list, it must have one of the following:
 
 * an active `deprecate!` or `disable!` call
 * a `livecheck do` block containing a `skip` call

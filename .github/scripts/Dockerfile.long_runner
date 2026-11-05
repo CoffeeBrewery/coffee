@@ -1,8 +1,8 @@
-ARG HOMEBREW_BREW_IMAGE=ghcr.io/homebrew/brew:main
+ARG COFFEEBREWER_BREW_IMAGE=ghcr.io/homebrew/coffee:main
 
 FROM ghcr.io/actions/actions-runner:latest AS runner-source
 
-FROM ${HOMEBREW_BREW_IMAGE}
+FROM ${COFFEEBREWER_BREW_IMAGE}
 
 COPY --from=runner-source --chown=linuxbrew:linuxbrew /home/runner/ /home/linuxbrew/actions-runner/
 

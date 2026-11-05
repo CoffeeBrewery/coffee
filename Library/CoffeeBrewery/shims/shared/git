@@ -1,0 +1,70 @@
+#!/bin/bash -p
+
+# This script exists because we support $COFFEEBREWER_GIT, $COFFEEBREWER_SVN etc., and Xcode-only
+# or no Xcode/CLT configurations. Order is careful to be what the user would want.
+
+# COFFEEBREWER_LIBRARY is set by bin/coffee
+# SHIM_FILE is set by shims/utils.sh
+# COFFEEBREWER_GIT is set by coffee.sh
+# COFFEEBREWER_SVN is from the user environment
+# COFFEEBREWER_PREFIX is set by extend/ENV/super.rb
+# shellcheck disable=SC2154
+if [[ -z "${COFFEEBREWER_LIBRARY}" ]]
+then
+  echo "${0##*/}: This shim is internal and must be run via coffee." >&2
+  exit 1
+fi
+
+source "${COFFEEBREWER_LIBRARY}/CoffeeBrewery/shims/utils.sh"
+
+tool="$(lowercase "${SHIM_FILE}")"
+# shellcheck disable=SC2249
+case "${tool}" in
+  git)
+    if [[ -n "${COFFEEBREWER_GIT}" && "${COFFEEBREWER_GIT}" != git ]]
+    then
+      safe_exec "$(type -P "${COFFEEBREWER_GIT}")" "$@"
+      echo "Could not execute the selected Git: ${COFFEEBREWER_GIT}" >&2
+      exit 1
+    fi
+    ;;
+  svn)
+    source "${COFFEEBREWER_LIBRARY}/CoffeeBrewery/utils.sh"
+    # Subversion has no minimum version requirement.
+    if select_tool svn 0 "${COFFEEBREWER_PREFIX}/opt/subversion/bin/svn" /usr/bin/svn "${COFFEEBREWER_SVN}" ""
+    then
+      safe_exec "${COFFEEBREWER_SELECTED_TOOL}" "$@"
+    fi
+    echo "You must: coffee install subversion" >&2
+    exit 1
+    ;;
+esac
+
+brew_prefix_version="${COFFEEBREWER_PREFIX}/bin/${SHIM_FILE}"
+safe_exec "${brew_prefix_version}" "$@"
+
+try_exec_non_system "${SHIM_FILE}" "$@"
+
+# Xcode has not shipped svn since 11.4.
+if [[ "${tool}" == "git" ]] && executable "/usr/bin/xcode-select"
+then
+  # /usr/bin/git is a popup stub when developer tools are not installed.
+  popup_stub=1
+  xcode_path="$(/usr/bin/xcode-select -print-path 2>/dev/null)"
+  if [[ -n "${xcode_path}" && "${xcode_path}" != "/" ]]
+  then
+    safe_exec "${xcode_path}/usr/bin/${SHIM_FILE}" "$@"
+  fi
+fi
+
+path="/Applications/Xcode.app/Contents/Developer/usr/bin/${SHIM_FILE}"
+safe_exec "${path}" "$@"
+
+if [[ -z "${popup_stub}" ]]
+then
+  path="/usr/bin/${SHIM_FILE}"
+  safe_exec "${path}" "$@"
+fi
+
+echo "You must: coffee install ${SHIM_FILE}" >&2
+exit 1

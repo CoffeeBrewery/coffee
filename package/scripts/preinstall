@@ -10,7 +10,7 @@ then
 else
   # This fallback keeps direct local execution from the repository working.
   # shellcheck disable=SC1091
-  source "${script_dir}/../../Library/Homebrew/utils/macos_user.sh"
+  source "${script_dir}/../../Library/CoffeeBrewery/utils/macos_user.sh"
 fi
 
 if homebrew-package-user &>/dev/null
@@ -18,5 +18,5 @@ then
   exit 0
 fi
 
-echo "No valid user for Homebrew installation. Log in before install or specify an install user."
+echo "No valid user for CoffeeBrewery installation. Log in before install or specify an install user."
 exit 1

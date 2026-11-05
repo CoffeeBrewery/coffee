@@ -22,7 +22,7 @@ defaults:
 
 jobs:
   approve:
-    if: github.repository == 'Homebrew/brew'
+    if: github.repository == 'CoffeeBrewery/coffee'
     runs-on: ubuntu-latest
     permissions:
       checks: read
@@ -39,13 +39,13 @@ jobs:
           persist-credentials: false
 
       - name: Set up Ruby
-        uses: Homebrew/actions/setup-ruby@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
+        uses: CoffeeBrewery/actions/setup-ruby@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
         with:
           setup-homebrew: true
           portable-ruby: true
-          working-directory: Library/Homebrew
+          working-directory: Library/CoffeeBrewery
 
       - name: Evaluate stale lead maintainer PRs
         run: bundle exec ruby .github/scripts/approve_stale_lead_maintainer_prs.rb
         env:
-          BUNDLE_GEMFILE: Library/Homebrew/Gemfile
+          BUNDLE_GEMFILE: Library/CoffeeBrewery/Gemfile

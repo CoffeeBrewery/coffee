@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "./bin/brew lgtm",
+            "command": "./bin/coffee lgtm",
             "timeout": 360
           }
         ]

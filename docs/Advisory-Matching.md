@@ -4,11 +4,11 @@ last_review_date: "2026-10-25"
 
 # Advisory Matching
 
-`brew advisory-match` prepares candidate records for the [Homebrew advisory database](https://github.com/Homebrew/advisory-database).
-It is an authoring tool, not the installed-package scanner provided by `brew vulns`.
-Candidates still need [human review](https://github.com/Homebrew/advisory-database/blob/HEAD/CONTRIBUTING.md#reviewing-matched-candidates) before publication.
+`coffee advisory-match` prepares candidate records for the [CoffeeBrewery advisory database](https://github.com/CoffeeBrewery/advisory-database).
+It is an authoring tool, not the installed-package scanner provided by `coffee vulns`.
+Candidates still need [human review](https://github.com/CoffeeBrewery/advisory-database/blob/HEAD/CONTRIBUTING.md#reviewing-matched-candidates) before publication.
 
-For operational scanning and remediation, see [Homebrew vulnerability management](Homebrew-Vulnerability-Management.md).
+For operational scanning and remediation, see [CoffeeBrewery vulnerability management](CoffeeBrewery-Vulnerability-Management.md).
 
 ## Range accuracy and coverage
 
@@ -81,11 +81,11 @@ The fresh results must reproduce the stored upstream family and range basis, and
 Stored subject versions only reproduce the range basis; historical decisions use versions from the formula sources.
 A missing historical resource holds the record as `resource_not_found`; a stored family absent from the fresh query results is `resource_not_rediscovered`.
 Mixed, incomplete or non-resource provenance still requires current discovery.
-These fallback queries cannot create records and respect formula skips and preserved Homebrew ranges.
+These fallback queries cannot create records and respect formula skips and preserved CoffeeBrewery ranges.
 When a prerelease suffix changes a subject’s `SEMVER` range state compared with its release version, `prerelease_boundary` holds the record for review.
 The command reports skip reasons and the number of matched records it did not revisit; success does not establish complete coverage.
 
-Before running this mode, protect hand-reviewed Homebrew boundaries with `preserve_homebrew_ranges: true` under the formula and advisory in `overrides.yml`.
+Before running this mode, protect hand-reviewed CoffeeBrewery boundaries with `preserve_homebrew_ranges: true` under the formula and advisory in `overrides.yml`.
 The pin applies across advisory aliases and is separate from `upstream_fixed_in`, which describes the upstream fix.
 Unavailable history or upstream records, changed subjects, unresolved platform results and advisory-specific patches require review.
 A failed upstream lookup holds every record for that formula with `upstream_unavailable`; a failed batch query holds its entire formula batch.

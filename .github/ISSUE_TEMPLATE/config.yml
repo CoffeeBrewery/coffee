@@ -2,17 +2,17 @@ blank_issues_enabled: false
 
 contact_links:
   - name: Get help in GitHub Discussions
-    url: https://github.com/orgs/Homebrew/discussions
-    about: Have a question, or unsure whether your issue is reproducible for everyone? The quickest way to get help is on Homebrew's GitHub Discussions!
-  - name: New issue on Homebrew/homebrew-core
-    url: https://github.com/Homebrew/homebrew-core/issues/new/choose
-    about: Having a `brew install` or `brew upgrade` problem with a single formula/package? Report it to Homebrew/homebrew-core (the core tap/repository).
-  - name: New issue on Homebrew/homebrew-cask
-    url: https://github.com/Homebrew/homebrew-cask/issues/new/choose
-    about: Having a `brew --cask` problem? Report it to Homebrew/homebrew-cask (the cask tap/repository).
-  - name: New issue on Homebrew/install
-    url: https://github.com/Homebrew/install/issues/new/choose
-    about: Having a problem installing Homebrew? Report it to Homebrew/install (the installer repository).
-  - name: Get help from Homebrew mirror maintainers
-    url: https://github.com/orgs/Homebrew/discussions/1917
+    url: https://github.com/orgs/CoffeeBrewery/discussions
+    about: Have a question, or unsure whether your issue is reproducible for everyone? The quickest way to get help is on CoffeeBrewery's GitHub Discussions!
+  - name: New issue on CoffeeBrewery/homebrew-core
+    url: https://github.com/CoffeeBrewery/homebrew-core/issues/new/choose
+    about: Having a `coffee install` or `coffee upgrade` problem with a single formula/package? Report it to CoffeeBrewery/homebrew-core (the core tap/repository).
+  - name: New issue on CoffeeBrewery/homebrew-cask
+    url: https://github.com/CoffeeBrewery/homebrew-cask/issues/new/choose
+    about: Having a `coffee --cask` problem? Report it to CoffeeBrewery/homebrew-cask (the cask tap/repository).
+  - name: New issue on CoffeeBrewery/install
+    url: https://github.com/CoffeeBrewery/install/issues/new/choose
+    about: Having a problem installing CoffeeBrewery? Report it to CoffeeBrewery/install (the installer repository).
+  - name: Get help from CoffeeBrewery mirror maintainers
+    url: https://github.com/orgs/CoffeeBrewery/discussions/1917
     about: Slow downloads or a mirror not working as expected? Check the mirror list and contact the respective mirror maintainers.

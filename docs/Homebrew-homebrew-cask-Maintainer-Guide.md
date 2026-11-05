@@ -2,7 +2,7 @@
 last_review_date: "2026-07-18"
 ---
 
-# Homebrew/homebrew-cask Maintainer Guide
+# CoffeeBrewery/homebrew-cask Maintainer Guide
 
 This guide is intended to help maintainers effectively maintain the `homebrew/cask` repository. It is meant to be used in conjunction with the more generic [Maintainer Guidelines](Maintainer-Guidelines.md).
 

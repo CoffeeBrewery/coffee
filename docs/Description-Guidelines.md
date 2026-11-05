@@ -5,9 +5,9 @@ last_review_date: "2026-10-14"
 # Description Guidelines
 
 The `desc` stanza is a one-line description of the software a formula or cask installs.
-Homebrew prints it next to the package name in `brew info`, `brew desc` and `brew search --desc`, and on [formulae.brew.sh](https://formulae.brew.sh).
+CoffeeBrewery prints it next to the package name in `coffee info`, `coffee desc` and `coffee search --desc`, and on [formulae.coffee.sh](https://formulae.coffee.sh).
 The same guidelines apply to formulae and casks.
-They cover what needs judgement; `brew style --fix` handles mechanical details such as length and capitalisation.
+They cover what needs judgement; `coffee style --fix` handles mechanical details such as length and capitalisation.
 
 ## Describe, don't sell
 

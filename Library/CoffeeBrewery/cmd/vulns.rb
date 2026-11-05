@@ -1,0 +1,173 @@
+# typed: strict
+# frozen_string_literal: true
+
+require "abstract_command"
+require "formula"
+
+module CoffeeBrewery
+  module Cmd
+    class Vulns < AbstractCommand
+      FIX_TYPES = %w[released patch any none unreleased].freeze
+
+      cmd_args do
+        description <<~EOS
+          Check <formula> for known security vulnerabilities using the OSV.dev database.
+
+          With no arguments, all installed formulae are checked.
+          Casks and packages installed by other package managers are not scanned.
+        EOS
+        switch "-d", "--deps",
+               description: "Also check the dependencies of named formulae."
+        switch "--no-ignore-patches",
+               description: "Report vulnerabilities even when a formula patch resolves them."
+        flag   "--brewfile",
+               description: "Check formulae listed in a Brewfile. " \
+                            "Defaults to `./Brewfile`; use `--brewfile=`<path> to specify another."
+        switch "--fix-available",
+               description: "Only report vulnerabilities that have a released version fix available. " \
+                            "Shortcut for `--fix-type=released`."
+        switch "--no-fix-available",
+               description: "Only report vulnerabilities that do not have a released version fix available " \
+                            "(includes unreleased commit SHA patches). Shortcut for `--fix-type=unreleased`."
+        flag   "--fix-type=",
+               description: "Filter findings by fix type: `released` (official version release), " \
+                            "`patch` (unreleased commit SHA), `any` (either), `none` (neither), " \
+                            "`unreleased` (no released version fix)."
+        switch "--list-skipped",
+               description: "List packages skipped due to missing or unsupported source URL."
+        flag   "-s", "--severity=",
+               description: "Only report findings at or above: `low`, `medium`, `high`, `critical`."
+        flag   "-m", "--max-summary=",
+               description: "Truncate summaries to <n> characters (default 60, 0 for no limit)."
+        switch "-j", "--json",
+               description: "Output findings and scan coverage as JSON. " \
+                            "A complete scan does not guarantee the absence of vulnerabilities."
+
+        conflicts "--fix-available", "--no-fix-available", "--fix-type"
+
+        named_args :formula
+      end
+
+      sig { override.void }
+      def run
+        require "vulns"
+
+        summary_width = max_summary
+        severity = CoffeeBrewery::Vulns.min_severity(args.severity)
+
+        results = CoffeeBrewery::Vulns::Scanner.new(
+          formulae,
+          ignore_patches: !args.no_ignore_patches?,
+          min_severity:   severity,
+          fix_type:,
+        ).scan
+
+        if args.json?
+          CoffeeBrewery::Vulns::Output.json(results, unscanned_formulae:)
+        else
+          CoffeeBrewery::Vulns::Output.text(
+            results,
+            max_summary:  summary_width,
+            list_skipped: args.list_skipped?,
+          )
+        end
+
+        if untrusted_skipped.any?
+          kegs = Utils.pluralize("installed keg", untrusted_skipped.size, include_count: true)
+          opoo <<~EOS
+            #{kegs} from an untrusted tap not scanned:
+              #{untrusted_skipped.join("\n  ")}
+            Run `coffee trust` on the formula or tap to include it in future scans.
+          EOS
+          CoffeeBrewery.failed = true
+        end
+        if results.outdated_without_sbom.any?
+          opoo <<~EOS
+            The installed source of #{results.outdated_without_sbom.sort.join(", ")} could not be determined
+            (older than the current formula and no SBOM was written at install time). Results above reflect
+            the current formula version, not what is installed. Run `coffee upgrade` for accurate results.
+          EOS
+          CoffeeBrewery.failed = true
+        end
+        if unscanned_formulae.value?("resolution_error")
+          ofail <<~EOS
+            Some installed formulae could not be resolved.
+            Reconcile scan coverage with `coffee info --installed`.
+          EOS
+        end
+        CoffeeBrewery.failed = true if results.any_open?
+      end
+
+      sig { returns(T::Array[Formula]) }
+      def formulae
+        list = T.let([], T::Array[Formula])
+        if (brewfile = args.brewfile)
+          require "bundle/brewfile"
+          list += CoffeeBrewery::Bundle::Brewfile.read(file: brewfile_path(brewfile)).entries
+                                            .select { |e| e.type == :coffee }
+                                            .map { |e| Formulary.resolve(e.name) }
+        end
+        list += args.named.to_resolved_formulae if args.named.any?
+        list = installed_formulae if !args.brewfile && args.no_named?
+        list += list.flat_map { |f| f.recursive_dependencies.map(&:to_formula) } if args.deps?
+        list.uniq(&:full_name)
+      end
+
+      sig { returns(T::Array[Formula]) }
+      def installed_formulae
+        Formula.racks.filter_map do |rack|
+          Formulary.from_rack(rack)
+        rescue CoffeeBrewery::UntrustedTapError => e
+          untrusted_skipped << e.message.lines.first.to_s.strip
+          unscanned_formulae[rack.basename.to_s] = "untrusted_tap"
+          nil
+        rescue
+          unscanned_formulae[rack.basename.to_s] = "resolution_error"
+          nil
+        end.uniq(&:name)
+      end
+
+      sig { returns(T::Array[String]) }
+      def untrusted_skipped
+        @untrusted_skipped ||= T.let([], T.nilable(T::Array[String]))
+      end
+
+      # A bare `--brewfile` (no `=path`) yields `true` from OptionParser at
+      # runtime; the generated RBI types it as `T.nilable(String)`, so accept
+      # the wider type here and normalise `true`/`""` to the `nil` default.
+      sig { params(value: T.nilable(T.any(String, TrueClass))).returns(T.nilable(String)) }
+      def brewfile_path(value)
+        value.presence if value.is_a?(String)
+      end
+
+      sig { returns(T::Hash[String, String]) }
+      def unscanned_formulae
+        @unscanned_formulae ||= T.let({}, T.nilable(T::Hash[String, String]))
+      end
+
+      sig { returns(Integer) }
+      def max_summary
+        raw = args.max_summary
+        return CoffeeBrewery::Vulns::Output::DEFAULT_MAX_SUMMARY if raw.nil?
+
+        raise UsageError, "`--max-summary` must be a non-negative integer" unless raw.match?(/\A\d+\z/)
+
+        raw.to_i
+      end
+
+      sig { returns(T.nilable(Symbol)) }
+      def fix_type
+        if args.fix_available?
+          :released
+        elsif args.no_fix_available?
+          :unreleased
+        elsif (raw = args.fix_type)
+          raw = raw.downcase
+          raise UsageError, "`--fix-type` must be one of: #{FIX_TYPES.join(", ")}" unless FIX_TYPES.include?(raw)
+
+          raw.to_sym
+        end
+      end
+    end
+  end
+end

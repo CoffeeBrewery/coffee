@@ -22,7 +22,7 @@ env:
 
 jobs:
   generate-tags:
-    if: github.repository_owner == 'Homebrew'
+    if: github.repository_owner == 'CoffeeBrewery'
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.attributes.outputs.matrix }}
@@ -46,14 +46,14 @@ jobs:
         run: |
           date="$(date --rfc-3339=seconds --utc)"
           brew_version="$(git describe --tags --dirty --abbrev=7)"
-          core_revision="$(git ls-remote https://github.com/Homebrew/homebrew-core refs/heads/main | cut -f1)"
+          core_revision="$(git ls-remote https://github.com/CoffeeBrewery/homebrew-core refs/heads/main | cut -f1)"
 
           DELIMITER="END_LABELS_$(uuidgen)"
           cat <<EOS | tee -a "${GITHUB_OUTPUT}"
           labels<<${DELIMITER}
           org.opencontainers.image.created=${date}
-          org.opencontainers.image.url=https://brew.sh
-          org.opencontainers.image.documentation=https://docs.brew.sh
+          org.opencontainers.image.url=https://coffee.sh
+          org.opencontainers.image.documentation=https://docs.coffee.sh
           org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY}
           org.opencontainers.image.version=${brew_version}
           org.opencontainers.image.revision=${GITHUB_SHA}
@@ -75,14 +75,14 @@ jobs:
               )
               if [[ "${version}" == "24.04" ]]; then
                 tags+=(
-                  "ghcr.io/homebrew/brew:${brew_version}"
-                  "ghcr.io/homebrew/brew:latest"
+                  "ghcr.io/homebrew/coffee:${brew_version}"
+                  "ghcr.io/homebrew/coffee:latest"
                 )
               fi
             elif [[ "${GITHUB_EVENT_NAME}" == "push" &&
                     ("${GITHUB_REF}" == "refs/heads/main") ]]; then
               if [[ "${version}" == "24.04" ]]; then
-                tags+=("ghcr.io/homebrew/brew:main")
+                tags+=("ghcr.io/homebrew/coffee:main")
               fi
               tags+=("ghcr.io/homebrew/ubuntu${version}:main")
             fi
@@ -137,7 +137,7 @@ jobs:
 
   build:
     needs: generate-tags
-    if: github.repository_owner == 'Homebrew'
+    if: github.repository_owner == 'CoffeeBrewery'
     name: docker (${{ matrix.arch }} Ubuntu ${{ matrix.version }})
     runs-on: ${{ case(matrix.arch == 'arm64', 'ubuntu-24.04-arm', 'ubuntu-latest') }}
     strategy:
@@ -182,15 +182,15 @@ jobs:
         with:
           context: .
           load: true
-          tags: brew
+          tags: coffee
           cache-from: type=registry,ref=ghcr.io/homebrew/ubuntu${{ matrix.version }}:cache-${{ matrix.arch }}
           build-args: |
             version=${{ matrix.version }}
-            HOMEBREW_CORE_REVISION=${{ needs.generate-tags.outputs.core_revision }}
+            COFFEEBREWER_CORE_REVISION=${{ needs.generate-tags.outputs.core_revision }}
           labels: ${{ needs.generate-tags.outputs.labels }}
 
-      - name: Run brew test-bot --only-setup
-        run: docker run --env HOMEBREW_DEVELOPER=1 --env HOMEBREW_GLIBC_TESTING --rm brew brew test-bot --only-setup
+      - name: Run coffee test-bot --only-setup
+        run: docker run --env COFFEEBREWER_DEVELOPER=1 --env COFFEEBREWER_GLIBC_TESTING --rm coffee coffee test-bot --only-setup
 
       - name: Log in to GitHub Packages (BrewTestBot)
         if: fromJSON(steps.attributes.outputs.push)
@@ -198,7 +198,7 @@ jobs:
         with:
           registry: ghcr.io
           username: BrewTestBot
-          password: ${{ secrets.HOMEBREW_BREW_GITHUB_PACKAGES_TOKEN }}
+          password: ${{ secrets.COFFEEBREWER_BREW_GITHUB_PACKAGES_TOKEN }}
 
       - name: Deploy the Docker image by digest
         id: digest
@@ -210,7 +210,7 @@ jobs:
           cache-to: type=registry,ref=ghcr.io/homebrew/ubuntu${{ matrix.version }}:cache-${{ matrix.arch }},mode=max
           build-args: |
             version=${{ matrix.version }}
-            HOMEBREW_CORE_REVISION=${{ needs.generate-tags.outputs.core_revision }}
+            COFFEEBREWER_CORE_REVISION=${{ needs.generate-tags.outputs.core_revision }}
           labels: ${{ needs.generate-tags.outputs.labels }}
           outputs: type=image,name=ghcr.io/homebrew/ubuntu${{ matrix.version }},name-canonical=true,push=true,push-by-digest=true
 
@@ -234,7 +234,7 @@ jobs:
         run: |
           mkdir -p "${RUNNER_TEMP}/long-runner-base"
           image_name="long-runner-base:${VERSION}-${ARCH}"
-          docker tag brew "${image_name}"
+          docker tag coffee "${image_name}"
           docker save "${image_name}" | gzip >"${RUNNER_TEMP}/long-runner-base/image-${VERSION}-${ARCH}.tar.gz"
         env:
           VERSION: ${{ matrix.version }}
@@ -250,7 +250,7 @@ jobs:
 
   merge:
     needs: [generate-tags, build]
-    if: github.repository_owner == 'Homebrew' && fromJSON(needs.generate-tags.outputs.merge)
+    if: github.repository_owner == 'CoffeeBrewery' && fromJSON(needs.generate-tags.outputs.merge)
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -274,7 +274,7 @@ jobs:
         with:
           registry: ghcr.io
           username: BrewTestBot
-          password: ${{ secrets.HOMEBREW_BREW_GITHUB_PACKAGES_TOKEN }}
+          password: ${{ secrets.COFFEEBREWER_BREW_GITHUB_PACKAGES_TOKEN }}
 
       - name: Merge and push Docker image
         env:
@@ -307,7 +307,7 @@ jobs:
   build-and-publish-long-runner:
     name: Build runner Docker image (${{ matrix.platform }})
     needs: [generate-tags, build]
-    if: github.repository_owner == 'Homebrew'
+    if: github.repository_owner == 'CoffeeBrewery'
     runs-on: ${{ matrix.runner }}
     permissions:
       contents: read
@@ -357,7 +357,7 @@ jobs:
           artifact_dir="${{ runner.temp }}/long-runner-base"
           image_archive="${artifact_dir}/image-24.04-${ARCH}.tar.gz"
           [[ -f "${image_archive}" ]] || {
-            echo "Missing brew image archive: ${image_archive}" >&2
+            echo "Missing coffee image archive: ${image_archive}" >&2
             exit 1
           }
           base_image="long-runner-base:24.04-${ARCH}"
@@ -381,7 +381,7 @@ jobs:
           context: .
           file: .github/scripts/Dockerfile.long_runner
           platforms: ${{ matrix.platform }}
-          build-args: HOMEBREW_BREW_IMAGE=${{ steps.base_image.outputs.image }}
+          build-args: COFFEEBREWER_BREW_IMAGE=${{ steps.base_image.outputs.image }}
           tags: runner:build-${{ matrix.platform_tag }}
 
       - name: Verify AWS deployment secrets
@@ -432,7 +432,7 @@ jobs:
           context: .
           file: .github/scripts/Dockerfile.long_runner
           platforms: ${{ matrix.platform }}
-          build-args: HOMEBREW_BREW_IMAGE=${{ steps.base_image.outputs.image }}
+          build-args: COFFEEBREWER_BREW_IMAGE=${{ steps.base_image.outputs.image }}
           push: true
           tags: |
             ${{ steps.aws_image.outputs.image }}
@@ -441,7 +441,7 @@ jobs:
   publish-long-runner-manifest:
     name: Publish multi-platform runner Docker image
     needs: [generate-tags, build-and-publish-long-runner]
-    if: github.repository_owner == 'Homebrew' && fromJSON(needs.generate-tags.outputs.push)['24.04']
+    if: github.repository_owner == 'CoffeeBrewery' && fromJSON(needs.generate-tags.outputs.push)['24.04']
     runs-on: ubuntu-24.04
     permissions:
       contents: read

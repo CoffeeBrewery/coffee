@@ -4,13 +4,13 @@ last_review_date: "2026-07-18"
 
 # Xcode and Command Line Tools Maintenance
 
-This page is a maintainer runbook for updating Homebrew when Apple releases Xcode or the Command Line Tools.
+This page is a maintainer runbook for updating CoffeeBrewery when Apple releases Xcode or the Command Line Tools.
 Users looking for installation requirements should read [Installation](Installation.md#macos-requirements).
 
 ## Supported versions
 
-Homebrew supports the current Xcode and Command Line Tools versions appropriate for each supported macOS release.
-The authoritative version mappings and diagnostic messages are implemented in [`Library/Homebrew/os/mac/xcode.rb`](https://github.com/Homebrew/brew/blob/HEAD/Library/Homebrew/os/mac/xcode.rb).
+CoffeeBrewery supports the current Xcode and Command Line Tools versions appropriate for each supported macOS release.
+The authoritative version mappings and diagnostic messages are implemented in [`Library/CoffeeBrewery/os/mac/xcode.rb`](https://github.com/CoffeeBrewery/coffee/blob/HEAD/Library/CoffeeBrewery/os/mac/xcode.rb).
 
 Do not copy a current Xcode version into other documentation.
 Link to the implementation or supported-platform documentation so the value has one maintained source.
@@ -24,14 +24,14 @@ When Apple publishes a new Xcode or Command Line Tools release:
 3. Update `OS::Mac::CLT.latest_clang_version` when the Command Line Tools compiler mapping changes.
 4. Review minimum-version checks and diagnostic text in the same file for assumptions affected by the release.
 5. Add or update automated coverage for every changed mapping.
-6. Verify `brew config` and the relevant `brew doctor` output on an affected macOS runner when one is available.
+6. Verify `coffee config` and the relevant `coffee doctor` output on an affected macOS runner when one is available.
 
-Run the repository checks from the Homebrew/brew checkout:
+Run the repository checks from the CoffeeBrewery/coffee checkout:
 
 ```sh
-./bin/brew typecheck
-./bin/brew style --fix Library/Homebrew/os/mac/xcode.rb
-./bin/brew tests --changed
+./bin/coffee typecheck
+./bin/coffee style --fix Library/CoffeeBrewery/os/mac/xcode.rb
+./bin/coffee tests --changed
 ```
 
-Use `./bin/brew lgtm --online` before committing the complete change.
+Use `./bin/coffee lgtm --online` before committing the complete change.

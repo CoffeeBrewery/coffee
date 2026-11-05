@@ -1,8 +1,8 @@
 {
   "servers": {
-    "Homebrew": {
+    "CoffeeBrewery": {
       "type": "stdio",
-      "command": "brew",
+      "command": "coffee",
       "args": [
         "mcp-server"
       ]

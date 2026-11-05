@@ -12,10 +12,10 @@ permissions:
   pages: read
 
 env:
-  HOMEBREW_DEVELOPER: 1
-  HOMEBREW_NO_AUTO_UPDATE: 1
-  HOMEBREW_NO_ENV_HINTS: 1
-  HOMEBREW_NO_INSTALL_CLEANUP: 1
+  COFFEEBREWER_DEVELOPER: 1
+  COFFEEBREWER_NO_AUTO_UPDATE: 1
+  COFFEEBREWER_NO_ENV_HINTS: 1
+  COFFEEBREWER_NO_INSTALL_CLEANUP: 1
 
 defaults:
   run:
@@ -25,9 +25,9 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Homebrew
+      - name: Set up CoffeeBrewery
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
+        uses: CoffeeBrewery/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
         with:
           core: false
           cask: false
@@ -39,22 +39,22 @@ jobs:
           persist-credentials: false
 
       - name: Install Vale
-        run: brew install vale
+        run: coffee install vale
 
-      - name: Cleanup Homebrew/brew docs
-        if: github.repository == 'Homebrew/brew'
+      - name: Cleanup CoffeeBrewery/coffee docs
+        if: github.repository == 'CoffeeBrewery/coffee'
         run: |
           # No ignore support (https://github.com/errata-ai/vale/issues/131).
-          rm -r Library/Homebrew/vendor
+          rm -r Library/CoffeeBrewery/vendor
 
           # Generate latest manpage
-          brew generate-man-completions --no-exit-code
+          coffee generate-man-completions --no-exit-code
 
       - name: Run Vale
         run: vale docs/
 
       - name: Setup Ruby
-        uses: Homebrew/actions/setup-ruby@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
+        uses: CoffeeBrewery/actions/setup-ruby@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
         with:
           bundler-cache: true
           portable-ruby: true
@@ -65,10 +65,10 @@ jobs:
         run: bundle exec rake lint
 
       - name: Check code blocks conform to our Ruby style guide
-        run: brew style docs
+        run: coffee style docs
 
-      - name: Generate formulae.brew.sh API samples
-        if: github.repository == 'Homebrew/formulae.brew.sh'
+      - name: Generate formulae.coffee.sh API samples
+        if: github.repository == 'CoffeeBrewery/formulae.coffee.sh'
         working-directory: docs
         run: ../script/generate-api-samples.rb --template
 
@@ -88,19 +88,19 @@ jobs:
         run: bundle exec rake test || bundle exec rake test
 
       - name: Rebuild the site with YARD
-        if: github.repository == 'Homebrew/brew'
+        if: github.repository == 'CoffeeBrewery/coffee'
         working-directory: docs
         run: bundle exec rake yard build
 
       - name: Upload pages artifact
-        if: github.repository == 'Homebrew/brew'
+        if: github.repository == 'CoffeeBrewery/coffee'
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: docs/_site/
 
   deploy:
     needs: docs
-    if: ${{ github.repository == 'Homebrew/brew' && github.ref_name == 'main' }}
+    if: ${{ github.repository == 'CoffeeBrewery/coffee' && github.ref_name == 'main' }}
     permissions:
       pages: write
       id-token: write
@@ -119,23 +119,23 @@ jobs:
   deploy-issue:
     name: Open/close deploy issue
     needs: [docs, deploy]
-    if: ${{ github.repository == 'Homebrew/brew' && always() && github.ref_name == 'main' }}
+    if: ${{ github.repository == 'CoffeeBrewery/coffee' && always() && github.ref_name == 'main' }}
     env:
       RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
     runs-on: ubuntu-slim
     timeout-minutes: 5
     permissions:
-      issues: write # for Homebrew/actions/create-or-update-issue
+      issues: write # for CoffeeBrewery/actions/create-or-update-issue
     steps:
       - name: Open, update, or close deploy issue
-        uses: Homebrew/actions/create-or-update-issue@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
+        uses: CoffeeBrewery/actions/create-or-update-issue@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
         with:
           token: ${{ github.token }}
           repository: ${{ github.repository }}
-          title: docs.brew.sh deployment failed!
-          body: The most recent [docs.brew.sh deployment failed](${{ env.RUN_URL }}).
+          title: docs.coffee.sh deployment failed!
+          body: The most recent [docs.coffee.sh deployment failed](${{ env.RUN_URL }}).
           labels: deploy failure
           update-existing: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') || contains(needs.*.result, 'skipped') }}
           close-existing: ${{ needs.deploy.result == 'success' }}
           close-from-author: github-actions[bot]
-          close-comment: The most recent [docs.brew.sh deployment succeeded](${{ env.RUN_URL }}). Closing issue.
+          close-comment: The most recent [docs.coffee.sh deployment succeeded](${{ env.RUN_URL }}). Closing issue.

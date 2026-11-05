@@ -13,7 +13,7 @@ algolia:
           content="default-src 'none';
                     connect-src https://{{ layout.algolia.appId }}-dsn.algolia.net https://{{ layout.algolia.appId }}-1.algolianet.com https://{{ layout.algolia.appId }}-2.algolianet.com https://{{ layout.algolia.appId }}-3.algolianet.com;
                     font-src data: https://fonts.gstatic.com;
-                    img-src 'self' https://avatars2.githubusercontent.com https://avatars.githubusercontent.com https://brew.sh https://github.com;
+                    img-src 'self' https://avatars2.githubusercontent.com https://avatars.githubusercontent.com https://coffee.sh https://github.com;
                     object-src 'none';
                     form-action 'self';
                     {% comment %}
@@ -21,7 +21,7 @@ algolia:
                       the JavaScript at the end of the page.
                     {% endcomment %}
                     script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com {%if site.url == "http://localhost:4000" %}'unsafe-eval'{%endif%};
-                    style-src 'self' 'unsafe-inline' https://brew.sh https://cdnjs.cloudflare.com;
+                    style-src 'self' 'unsafe-inline' https://coffee-docs.lusd1.org https://cdnjs.cloudflare.com;
                     {%comment%}
                       This is a nice to have but requires changes in
                       libraries we use. We can periodically enable this
@@ -49,10 +49,10 @@ algolia:
     {% endcapture -%}
     {{ plugin_output | replace: " />", ">" | replace: "/>", ">" }}
     <meta name="viewport" content="width=device-width">
-    <link rel="icon" href="https://brew.sh/assets/img/favicon.ico" sizes="48x48">
-    <link rel="icon" href="https://brew.sh/assets/img/homebrew.svg" sizes="any" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="https://brew.sh/assets/img/apple-touch-icon.png">
-    <link rel="stylesheet" href="https://brew.sh/assets/css/style.css" type="text/css" media="screen">
+    <link rel="icon" href="http://coffee.lusd1.org/assets/img/favicon.ico" sizes="48x48">
+    <link rel="icon" href="http://coffee.lusd1.org/assets/img/coffeebrewery.png" sizes="any" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="http://coffee.lusd1.org/assets/img/apple-touch-icon.png">
+    <link rel="stylesheet" href="/assets/css/style.css" type="text/css" media="screen">
     <link rel="preconnect" href="https://{{ layout.algolia.appId }}-dsn.algolia.net" crossorigin>
     {% if site.url == "http://localhost:4000" -%}
       <script src="https://cdnjs.cloudflare.com/ajax/libs/tota11y/0.1.6/tota11y.min.js" crossorigin="anonymous" async></script>
@@ -85,7 +85,7 @@ algolia:
           {% elsif site.logo -%}
             <img alt="{{ site.title }} logo" src="{{ site.logo | relative_url }}" width="128" height="128">
           {% else -%}
-            <img alt="Homebrew logo" src="https://brew.sh/assets/img/homebrew.svg" width="128" height="128">
+            <img alt="CoffeeBrewery logo" src="http://coffee.lusd1.org/assets/img/coffeebrewery.png" width="128" height="128">
           {% endif -%}
           <h1><a href="{{ site.baseurl }}/">{{ site.title }}</a></h1>
         </div>
@@ -144,12 +144,12 @@ algolia:
                              append: "/" |
                              append: page.path -%}
     {% else -%}
-      {% assign forkme_url = "https://github.com/Homebrew/brew" -%}
+      {% assign forkme_url = "https://github.com/CoffeeBrewery/coffee" -%}
     {% endif -%}
 
     <aside>
       <a href="{{ forkme_url }}">
-        <img id="forkme" src="https://brew.sh/assets/img/forkme_right_gray_6d6d6d.svg" alt="Fork me on GitHub">
+        <img id="forkme" src="http://coffee.lusd1.org/assets/img/forkme_right_gray_6d6d6d.svg" alt="Fork me on GitHub">
       </a>
     </aside>
     <script>
@@ -178,7 +178,7 @@ algolia:
         docsearch(Object.assign(
           { searchParameters: { facetFilters: ['site:' + site] } },
           { initialQuery: new URLSearchParams(window.location.search).get('search') },
-          { placeholder: "{% if t.pagecontent.search %}{{ t.pagecontent.search }}{% else %}Search{% endif %} {% if page.search_name %}{{ page.search_name }}{% else %}Homebrew{% endif %}" },
+          { placeholder: "{% if t.pagecontent.search %}{{ t.pagecontent.search }}{% else %}Search{% endif %} {% if page.search_name %}{{ page.search_name }}{% else %}CoffeeBrewery{% endif %}" },
           {{ layout.algolia | jsonify }}
         ));
       };

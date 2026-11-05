@@ -12,7 +12,7 @@ plugins:
       plugin_class_name: RuboCop::TestProf::Plugin
 
 require:
-  - ./Homebrew/rubocops.rb
+  - ./CoffeeBrewery/rubocops.rb
 
 inherit_mode:
   merge:
@@ -20,7 +20,7 @@ inherit_mode:
     - Exclude
 
 AllCops:
-  # Only bump this after the first tagged brew release with a new Ruby version,
+  # Only bump this after the first tagged coffee release with a new Ruby version,
   # otherwise taps will be prompted to use newer Ruby syntax too early.
   TargetRubyVersion: 4.0
   NewCops: enable
@@ -28,10 +28,10 @@ AllCops:
   Include:
     - "**/*.rbi"
   Exclude:
-    - "Homebrew/sorbet/rbi/{annotations,dsl,gems}/**/*.rbi"
-    - "Homebrew/sorbet/rbi/parser*.rbi"
-    - "Homebrew/bin/*"
-    - "Homebrew/vendor/**/*"
+    - "CoffeeBrewery/sorbet/rbi/{annotations,dsl,gems}/**/*.rbi"
+    - "CoffeeBrewery/sorbet/rbi/parser*.rbi"
+    - "CoffeeBrewery/bin/*"
+    - "CoffeeBrewery/vendor/**/*"
     - "Taps/*/*/vendor/**/*"
     - "**/.github/copilot-instructions.md" # This should be treated the same as the `docs/` files.
   SuggestExtensions:
@@ -46,11 +46,11 @@ Cask/HomepageUrlStyling:
   Enabled: true
 
 Cask/StanzaGrouping:
-  Description: "Ensure that cask stanzas are grouped correctly. More info at https://docs.brew.sh/Cask-Cookbook#stanza-order"
+  Description: "Ensure that cask stanzas are grouped correctly. More info at https://docs.coffee.sh/Cask-Cookbook#stanza-order"
   Enabled: true
 
 Cask/StanzaOrder:
-  Description: "Ensure that cask stanzas are sorted correctly. More info at https://docs.brew.sh/Cask-Cookbook#stanza-order"
+  Description: "Ensure that cask stanzas are sorted correctly. More info at https://docs.coffee.sh/Cask-Cookbook#stanza-order"
   Enabled: true
 
 FormulaAudit:
@@ -59,78 +59,78 @@ FormulaAudit:
 FormulaAuditStrict:
   Enabled: true
 
-Homebrew:
+CoffeeBrewery:
   Enabled: true
 
-Homebrew/Blank:
+CoffeeBrewery/Blank:
   Exclude:
     # Core extensions are not available here:
-    - "Homebrew/startup/bootsnap.rb"
+    - "CoffeeBrewery/startup/bootsnap.rb"
 
-Homebrew/CompactBlank:
+CoffeeBrewery/CompactBlank:
   Exclude:
     # `blank?` is not necessarily available here:
-    - "Homebrew/extend/enumerable.rb"
+    - "CoffeeBrewery/extend/enumerable.rb"
 
-Homebrew/InstallStepsSourceIndependence:
+CoffeeBrewery/InstallStepsSourceIndependence:
   Include:
-    - "Homebrew/install_steps.rb"
-    - "Homebrew/install_steps/**/*.rb"
+    - "CoffeeBrewery/install_steps.rb"
+    - "CoffeeBrewery/install_steps/**/*.rb"
 
-Homebrew/NoBase64:
+CoffeeBrewery/NoBase64:
   Description: "Use `String#unpack1` or `Array#pack` instead of the `base64` gem."
   Include:
     - "/**/{Formula,Casks}/**/*.rb"
     - "**/{Formula,Casks}/**/*.rb"
   Exclude:
-    - "Homebrew/test/**/*.rb"
+    - "CoffeeBrewery/test/**/*.rb"
 
-Homebrew/NoCommandLiteral:
+CoffeeBrewery/NoCommandLiteral:
   Description: "Use explicit process APIs instead of backticks or `%x`."
   Include:
-    - "Homebrew/**/*.rb"
+    - "CoffeeBrewery/**/*.rb"
 
-Homebrew/NoFileutilsRmrf:
+CoffeeBrewery/NoFileutilsRmrf:
   Include:
     - "/**/{Formula,Casks}/**/*.rb"
     - "**/{Formula,Casks}/**/*.rb"
 
-Homebrew/OSDependsOn:
+CoffeeBrewery/OSDependsOn:
   Include:
     - "/**/{Formula,Casks}/**/*.rb"
     - "**/{Formula,Casks}/**/*.rb"
   Exclude:
-    - "Homebrew/test/**/*.rb"
+    - "CoffeeBrewery/test/**/*.rb"
 
 # only used internally
-Homebrew/MoveToExtendOS:
+CoffeeBrewery/MoveToExtendOS:
   Enabled: false
 
-Homebrew/NegateInclude:
+CoffeeBrewery/NegateInclude:
   Exclude:
     # `exclude?` is not available here:
-    - "Homebrew/standalone/init.rb"
-    - "Homebrew/rubocops/**/*"
-    - "Homebrew/sorbet/tapioca/**/*"
+    - "CoffeeBrewery/standalone/init.rb"
+    - "CoffeeBrewery/rubocops/**/*"
+    - "CoffeeBrewery/sorbet/tapioca/**/*"
 
-Homebrew/NoInstanceVariableAccessInTests:
+CoffeeBrewery/NoInstanceVariableAccessInTests:
   Description: "Use public `attr_*` accessors instead of `instance_variable_get`/`instance_variable_set` in tests."
   Include:
-    - "Homebrew/test/**/*.rb"
+    - "CoffeeBrewery/test/**/*.rb"
   Exclude:
-    - "Homebrew/test/support/fixtures/**/*"
+    - "CoffeeBrewery/test/support/fixtures/**/*"
 
-Homebrew/NoSendInTests:
+CoffeeBrewery/NoSendInTests:
   Description: "Make the target method public and call it directly instead of using `send` in tests."
   Include:
-    - "Homebrew/test/**/*.rb"
+    - "CoffeeBrewery/test/**/*.rb"
   Exclude:
-    - "Homebrew/test/support/fixtures/**/*"
+    - "CoffeeBrewery/test/support/fixtures/**/*"
 
-Homebrew/UnreferencedLet:
+CoffeeBrewery/UnreferencedLet:
   Description: "Removes a lazy `let` whose name is never referenced (its block never runs)."
   Include:
-    - "Homebrew/test/**/*_spec.rb"
+    - "CoffeeBrewery/test/**/*_spec.rb"
   # Deletion is unsafe (explicit -A required, never applied on a plain run): the cop is heuristic
   # and cannot see references made across files via shared examples or included harnesses.
   SafeAutoCorrect: false
@@ -207,10 +207,10 @@ Layout/SpaceBeforeBrackets:
     - "/**/{Formula,Casks}/**/*.rb"
     - "**/{Formula,Casks}/**/*.rb"
 
-# Homebrew/NoCommandLiteral prohibits both command-literal styles in brew's own source.
+# CoffeeBrewery/NoCommandLiteral prohibits both command-literal styles in coffee's own source.
 Style/CommandLiteral:
   Exclude:
-    - "Homebrew/**/*.rb"
+    - "CoffeeBrewery/**/*.rb"
 
 # favour parens-less DSL-style arguments
 Lint/AmbiguousBlockAssociation:
@@ -328,7 +328,7 @@ Performance/MethodObjectAsBlock:
 
 RSpec:
   Include:
-    - "Homebrew/test/**/*"
+    - "CoffeeBrewery/test/**/*"
 
 # Intentionally disabled as it doesn't fit with our code style.
 RSpec/AnyInstance:
@@ -378,7 +378,7 @@ Sorbet/ForbidTMust:
     - "Taps/**/*"
     - "/**/{Formula,Casks}/**/*.rb"
     - "**/{Formula,Casks}/**/*.rb"
-    - "Homebrew/test/support/fixtures/**/*"
+    - "CoffeeBrewery/test/support/fixtures/**/*"
 
 Sorbet/ForbidTUnsafe:
   Enabled: true
@@ -386,7 +386,7 @@ Sorbet/ForbidTUnsafe:
     - "Taps/**/*"
     - "/**/{Formula,Casks}/**/*.rb"
     - "**/{Formula,Casks}/**/*.rb"
-    - "Homebrew/test/support/fixtures/**/*"
+    - "CoffeeBrewery/test/support/fixtures/**/*"
 
 # T::Sig is monkey-patched into Module
 Sorbet/RedundantExtendTSig:
@@ -398,12 +398,12 @@ Sorbet/StrictSigil:
     - "Taps/**/*"
     - "/**/{Formula,Casks}/**/*.rb"
     - "**/{Formula,Casks}/**/*.rb"
-    - "Homebrew/bundle/{formula_dumper,checker,commands/exec}.rb" # These aren't typed: true yet.
-    - "Homebrew/ignorable.rbi" # Workaround for Sorbet to allow aliasing `raise`.
-    - "Homebrew/{standalone,startup}/*.rb" # These are loaded before sorbet-runtime
-    - "Homebrew/test/**/*.rb"
-    - "Homebrew/test/support/fixtures/rubocop@x.x.x.rbi" # Autogenerated test fixture for RuboCop types.
-    - "Homebrew/utils/ruby_check_version_script.rb" # A standalone script.
+    - "CoffeeBrewery/bundle/{formula_dumper,checker,commands/exec}.rb" # These aren't typed: true yet.
+    - "CoffeeBrewery/ignorable.rbi" # Workaround for Sorbet to allow aliasing `raise`.
+    - "CoffeeBrewery/{standalone,startup}/*.rb" # These are loaded before sorbet-runtime
+    - "CoffeeBrewery/test/**/*.rb"
+    - "CoffeeBrewery/test/support/fixtures/rubocop@x.x.x.rbi" # Autogenerated test fixture for RuboCop types.
+    - "CoffeeBrewery/utils/ruby_check_version_script.rb" # A standalone script.
 
 Sorbet/TrueSigil:
   Enabled: true
@@ -411,7 +411,7 @@ Sorbet/TrueSigil:
     - "Taps/**/*"
     - "/**/{Formula,Casks}/**/*.rb"
     - "**/{Formula,Casks}/**/*.rb"
-    - "Homebrew/test/**/*.rb"
+    - "CoffeeBrewery/test/**/*.rb"
 
 # Require &&/|| instead of and/or
 Style/AndOr:
@@ -454,7 +454,7 @@ Style/DisableCopsWithinSourceCodeDirective:
     - "/**/{Formula,Casks}/**/*.rb"
     - "**/{Formula,Casks}/**/*.rb"
 
-# The files actually scanned in this cop are in `Library/Homebrew/.rubocop.yml`.
+# The files actually scanned in this cop are in `Library/CoffeeBrewery/.rubocop.yml`.
 Style/Documentation:
   Exclude:
     - "Taps/**/*"
@@ -494,7 +494,7 @@ Style/FrozenStringLiteralComment:
     - "Taps/*/*/*.rb"
     - "/**/{Formula,Casks}/**/*.rb"
     - "**/{Formula,Casks}/**/*.rb"
-    - "Homebrew/test/**/Casks/**/*.rb"
+    - "CoffeeBrewery/test/**/Casks/**/*.rb"
     - "**/*.rbi"
     - "**/Brewfile"
 

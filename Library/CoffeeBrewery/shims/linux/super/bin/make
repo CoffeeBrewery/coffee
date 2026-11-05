@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# COFFEEBREWER_CCCFG is set by extend/ENV/super.rb
+# COFFEEBREWER_LIBRARY is set by bin/coffee
+# shellcheck disable=SC2154,SC2250
+pathremove() {
+  local IFS=':'
+  local NEWPATH=""
+  local DIR=""
+  local PATHVARIABLE="${2:-PATH}"
+
+  for DIR in ${!PATHVARIABLE}
+  do
+    if [[ "${DIR}" != "$1" ]]
+    then
+      NEWPATH="${NEWPATH:+$NEWPATH:}${DIR}"
+    fi
+  done
+  export "${PATHVARIABLE}"="${NEWPATH}"
+}
+
+SAVED_PATH="${PATH}"
+pathremove "${COFFEEBREWER_LIBRARY}/CoffeeBrewery/shims/linux/super/bin"
+MAKE="$(command -v make)"
+export MAKE
+export PATH="${SAVED_PATH}"
+
+export COFFEEBREWER_CCCFG="O${COFFEEBREWER_CCCFG}"
+
+exec "${MAKE}" "$@"

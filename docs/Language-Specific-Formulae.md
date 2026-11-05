@@ -29,7 +29,7 @@ Python applications provide user-facing behaviour and are good formula candidate
 Users should not need to know that an application is implemented in Python or manually add its modules to `sys.path`.
 
 Ordinary importable libraries should normally be installed in a project environment with pip rather than packaged as formulae.
-A library may be appropriate when it has a substantial native build, is required by other formulae or needs Homebrew-specific integration.
+A library may be appropriate when it has a substantial native build, is required by other formulae or needs CoffeeBrewery-specific integration.
 Bindings supplied by a non-Python project may be installed with that project when they are useful and maintainable.
 
 ### Python dependency and resources
@@ -38,12 +38,12 @@ Python applications in `homebrew/core` use its current versioned Python formula.
 Update the dependency when `homebrew/core` moves to a new supported Python minor version.
 
 All Python module dependencies and their recursive dependencies that are not provided by another formula must be declared as [`resource`](/rubydoc/Formula.html#resource-class_method)s.
-This keeps every source version and SHA-256 checksum in the formula, and Homebrew's pip helper installs with dependency resolution disabled.
+This keeps every source version and SHA-256 checksum in the formula, and CoffeeBrewery's pip helper installs with dependency resolution disabled.
 
-Use `brew update-python-resources <formula>` to generate or update the resource blocks.
+Use `coffee update-python-resources <formula>` to generate or update the resource blocks.
 Use `--print-only` to inspect the result without changing the formula.
 For third-party taps, `--ignore-errors` records every discovered resource and leaves a `RESOURCE-ERROR` comment for each one that cannot be resolved.
-This option is disabled for all official Homebrew taps, which require complete resolution.
+This option is disabled for all official CoffeeBrewery taps, which require complete resolution.
 Verify the generated URLs and checksums.
 
 The `pypi_packages` stanza records resolver configuration that should remain with the formula.
@@ -96,13 +96,13 @@ Use `virtualenv_create` directly when additional installation steps require expl
 ### Installing Python bindings
 
 Declare the same versioned Python dependency used by other current `homebrew/core` formulae.
-For a standard `pyproject.toml` or `setup.py` package, install through the declared interpreter and Homebrew's pip arguments:
+For a standard `pyproject.toml` or `setup.py` package, install through the declared interpreter and CoffeeBrewery's pip arguments:
 
 ```ruby
 system "python3.y", "-m", "pip", "install", *std_pip_args(build_isolation: true), "./source/python"
 ```
 
-`std_pip_args` delays packages published within Homebrew's release-cooldown period, disables automatic dependency resolution and binary wheels and installs only under the requested prefix.
+`std_pip_args` delays packages published within CoffeeBrewery's release-cooldown period, disables automatic dependency resolution and binary wheels and installs only under the requested prefix.
 Match the executable to the declared dependency whenever the Python minor version changes.
 Use upstream build-system options to direct bindings into the formula prefix rather than patching global Python paths.
 
@@ -112,7 +112,7 @@ When more than one Python is available in the dependency graph, pass the declare
 
 - For CMake, use the variable recognised by upstream's discovery module, commonly `Python3_EXECUTABLE`, `Python_EXECUTABLE` or the older `PYTHON_EXECUTABLE`.
 - For Meson, check how upstream calls `find_installation()` and use its supported options to select the interpreter.
-  - If Meson cannot infer Homebrew's installation directories, set `python.purelibdir` or `python.platlibdir` to a path inside the formula prefix.
+  - If Meson cannot infer CoffeeBrewery's installation directories, set `python.purelibdir` or `python.platlibdir` to a path inside the formula prefix.
 - For Autotools projects, use an upstream `--with-python` option when available or disable the build-system installation and install the bindings with the declared interpreter and `std_pip_args`.
 
 ## Node.js
@@ -145,7 +145,7 @@ class Foo < Formula
 end
 ```
 
-`std_npm_args` uses Homebrew's npm cache, applies the package release cooldown, builds native dependencies from source and installs in npm's global layout under `libexec`.
+`std_npm_args` uses CoffeeBrewery's npm cache, applies the package release cooldown, builds native dependencies from source and installs in npm's global layout under `libexec`.
 It ignores lifecycle scripts by default to reduce the amount of package code executed during installation.
 
 If the package requires an install-phase lifecycle script such as `postinstall`, review every enabled script and dependency before using:

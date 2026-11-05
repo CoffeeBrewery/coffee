@@ -1,0 +1,64 @@
+# typed: strict
+# frozen_string_literal: true
+
+require "utils/text"
+
+require "abstract_command"
+require "utils/github"
+require "manpages"
+require "system_command"
+
+module CoffeeBrewery
+  module DevCmd
+    class UpdateMaintainers < AbstractCommand
+      include SystemCommand::Mixin
+
+      cmd_args do
+        description <<~EOS
+          Update the list of maintainers in the `CoffeeBrewery/coffee` README.
+        EOS
+
+        named_args :none
+
+        hide_from_man_page!
+      end
+
+      sig { override.void }
+      def run
+        # Needed for Manpages.regenerate_man_pages below
+        Utils::GemSetup.install_bundler_gems!(groups: ["man"])
+
+        lead_maintainers = GitHub.members_by_team("CoffeeBrewery", "lead-maintainers")
+        maintainers = GitHub.members_by_team("CoffeeBrewery", "maintainers")
+                            .reject { |login, _| lead_maintainers.key?(login) }
+        members = { lead_maintainers:, maintainers: }
+
+        sentences = {}
+        members.each do |group, hash|
+          hash.each { |login, name| hash[login] = "[#{name}](https://github.com/#{login})" }
+          sentences[group] = Utils::Text.to_sentence(
+            hash.values.sort_by { |s| s.unicode_normalize(:nfd).gsub(/\P{L}+/, "") },
+          )
+        end
+
+        readme = COFFEEBREWER_REPOSITORY/"README.md"
+
+        content = readme.read
+        content.gsub!(/(CoffeeBrewery's \[Lead Maintainers.* (?:are|is)) .*\./,
+                      "\\1 #{sentences[:lead_maintainers]}.")
+        content.gsub!(/(CoffeeBrewery's other Maintainers (?:are|is)) .*\./,
+                      "\\1 #{sentences[:maintainers]}.")
+
+        File.write(readme, content)
+
+        diff = system_command "git", args: ["-C", COFFEEBREWER_REPOSITORY, "diff", "--exit-code", "README.md"]
+        if diff.status.success?
+          ofail "No changes to list of maintainers."
+        else
+          Manpages.regenerate_man_pages(quiet: true)
+          puts "List of maintainers updated in the README and the generated man pages."
+        end
+      end
+    end
+  end
+end

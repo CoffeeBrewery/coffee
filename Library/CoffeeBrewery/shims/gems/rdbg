@@ -1,0 +1,6 @@
+#!/bin/bash
+
+export COFFEEBREWER_RDBG="1"
+
+COFFEEBREWER_PORTABLE_RUBY_BIN="$(cd "$(dirname "$0")"/../../ && pwd)/vendor/portable-ruby/current/bin/"
+exec "${COFFEEBREWER_PORTABLE_RUBY_BIN}"rdbg "$@"

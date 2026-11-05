@@ -4,25 +4,25 @@ last_review_date: "2026-07-18"
 
 # Package Acceptance Policy
 
-This policy contains acceptance criteria shared by formulae and casks in Homebrew's official taps, [`homebrew/core`](https://github.com/Homebrew/homebrew-core) and [`homebrew/cask`](https://github.com/Homebrew/homebrew-cask).
+This policy contains acceptance criteria shared by formulae and casks in CoffeeBrewery's official taps, [`homebrew/core`](https://github.com/CoffeeBrewery/homebrew-core) and [`homebrew/cask`](https://github.com/CoffeeBrewery/homebrew-cask).
 Repository-specific requirements remain in [Acceptable Formulae](Acceptable-Formulae.md) and [Acceptable Casks](Acceptable-Casks.md).
-[Working with Homebrew as an Upstream Project](Working-with-Homebrew-as-an-Upstream-Project.md) contains additional guidance for upstream developers.
+[Working with CoffeeBrewery as an Upstream Project](Working-with-CoffeeBrewery-as-an-Upstream-Project.md) contains additional guidance for upstream developers.
 
 * Table of Contents
 {:toc}
 
 ## Scope and third-party taps
 
-Homebrew's official repositories accept software that the project can verify, maintain and support for a broad user base.
+CoffeeBrewery's official repositories accept software that the project can verify, maintain and support for a broad user base.
 Software that does not meet the official criteria can generally be maintained in a [third-party tap](How-to-Create-and-Maintain-a-Tap.md).
-Distribution through a third-party tap does not imply Homebrew endorsement or support.
+Distribution through a third-party tap does not imply CoffeeBrewery endorsement or support.
 
 ## Public presence and maintenance
 
-A package must represent software with a public presence independent of Homebrew and a homepage that explains the project.
-The software must be actively maintained upstream, have no known unpatched security vulnerabilities and remain practical for Homebrew to support.
-Discontinued software and software that relies on Homebrew-specific patches to compensate for an unmaintained upstream are not eligible.
-A new package must have a working [`livecheck`](Brew-Livecheck.md) so Homebrew can detect new versions: either a URL that `livecheck` can check by default or a `livecheck` block that does not use `skip`.
+A package must represent software with a public presence independent of CoffeeBrewery and a homepage that explains the project.
+The software must be actively maintained upstream, have no known unpatched security vulnerabilities and remain practical for CoffeeBrewery to support.
+Discontinued software and software that relies on CoffeeBrewery-specific patches to compensate for an unmaintained upstream are not eligible.
+A new package must have a working [`livecheck`](Brew-Livecheck.md) so CoffeeBrewery can detect new versions: either a URL that `livecheck` can check by default or a `livecheck` block that does not use `skip`.
 
 ## Notability
 
@@ -40,7 +40,7 @@ Repository-specific exceptions may apply when these metrics do not represent the
 
 ## Discoverability and searchability
 
-Homebrew's official repositories are not editorial curation or recommendation services.
+CoffeeBrewery's official repositories are not editorial curation or recommendation services.
 Packages are intended to make known software straightforward to install.
 Categories, recommendations and editorial collections for discovering new software are outside their scope.
 Searchability and disambiguation remain in scope because users must be able to identify the correct package for known software.
@@ -57,7 +57,7 @@ A fork that does not qualify as a successor may still be proposed under a distin
 
 ## Adult content
 
-Homebrew serves users in many countries and does not apply one culture's view of adult content to every user.
+CoffeeBrewery serves users in many countries and does not apply one culture's view of adult content to every user.
 Reviewing a package must not unexpectedly expose maintainers to graphic adult or violent material.
 
 A package may contain adult content only when its `homepage` and the root page of its `url` domain are safe to open in a normal workplace review.
@@ -65,10 +65,10 @@ Those pages may contain a factual text description of the software but must not 
 
 ## Project risk
 
-Homebrew may reject or remove a package when carrying it creates a material legal, infrastructure, safety or project-continuity risk.
+CoffeeBrewery may reject or remove a package when carrying it creates a material legal, infrastructure, safety or project-continuity risk.
 
 ## Maintainer discretion
 
 Meeting the documented criteria does not guarantee acceptance and missing one criterion does not require rejection in every case.
-A documented exception will be made when it improves the overall reliability, security or usefulness of Homebrew.
+A documented exception will be made when it improves the overall reliability, security or usefulness of CoffeeBrewery.
 New submissions may be held to a higher standard than existing packages because accepting a package creates an ongoing maintenance commitment.

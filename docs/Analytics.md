@@ -4,8 +4,8 @@ last_review_date: "2026-07-18"
 
 # Anonymous Analytics
 
-Homebrew collects aggregate, anonymous usage analytics in InfluxDB.
-Homebrew displays a notice before analytics are enabled so a user can opt out before sending an event.
+CoffeeBrewery collects aggregate, anonymous usage analytics in InfluxDB.
+CoffeeBrewery displays a notice before analytics are enabled so a user can opt out before sending an event.
 
 ## Purpose
 
@@ -17,7 +17,7 @@ Low usage alone does not establish that removing a command or package is safe.
 
 ## Retention
 
-Homebrew retains analytics events in InfluxDB for 365 days.
+CoffeeBrewery retains analytics events in InfluxDB for 365 days.
 Public aggregate reports may cover shorter periods.
 
 ## Data sent
@@ -27,59 +27,59 @@ Formula, cask and build-error events can include:
 - the package and non-private GitHub tap names
 - selected install options
 - whether the install was explicitly requested rather than installed as a dependency
-- whether Homebrew is running in CI, developer mode or after a developer command has been used
+- whether CoffeeBrewery is running in CI, developer mode or after a developer command has been used
 - CPU architecture and operating system name or major version
-- Homebrew version
-- whether Homebrew uses its default prefix, with every other prefix reported only as `custom-prefix`
+- CoffeeBrewery version
+- whether CoffeeBrewery uses its default prefix, with every other prefix reported only as `custom-prefix`
 
 Command events include the command and option names after option values have been removed.
-For selected common commands, Homebrew randomly samples one supported configuration variable and records its name and whether the user left it unset, set it to its default or set it to a non-default value; variables Homebrew exports itself (e.g. `HOMEBREW_EDITOR` from `EDITOR`) count as unset.
+For selected common commands, CoffeeBrewery randomly samples one supported configuration variable and records its name and whether the user left it unset, set it to its default or set it to a non-default value; variables CoffeeBrewery exports itself (e.g. `COFFEEBREWER_EDITOR` from `EDITOR`) count as unset.
 It does not record the variable's value.
 
 BrewTestBot can send CI-only test-step results when its analytics setting is enabled.
 Build-error events do not include build logs or exception details.
 
 The analytics payload does not contain a user identifier or an IP-address field.
-Homebrew does not use the payload to build a history for an individual user.
+CoffeeBrewery does not use the payload to build a history for an individual user.
 
-The current implementation is in [`analytics.rb`](https://github.com/Homebrew/brew/blob/HEAD/Library/Homebrew/utils/analytics.rb) and [`analytics.sh`](https://github.com/Homebrew/brew/blob/HEAD/Library/Homebrew/utils/analytics.sh).
+The current implementation is in [`analytics.rb`](https://github.com/CoffeeBrewery/coffee/blob/HEAD/Library/CoffeeBrewery/utils/analytics.rb) and [`analytics.sh`](https://github.com/CoffeeBrewery/coffee/blob/HEAD/Library/CoffeeBrewery/utils/analytics.sh).
 These files are the authoritative source when this page and the implementation differ.
 
 ## Inspecting analytics
 
-Set `HOMEBREW_ANALYTICS_DEBUG=1` for one command to print the analytics request and send it synchronously.
+Set `COFFEEBREWER_ANALYTICS_DEBUG=1` for one command to print the analytics request and send it synchronously.
 The server response is discarded, so no response output is shown.
 Debug mode is not an opt-out mechanism; use one of the settings below when the request must not be sent.
 
-Aggregate reports and their JSON representations are available from the [Homebrew analytics site](https://formulae.brew.sh/analytics/).
-Most Homebrew maintainers have access only to these public aggregates.
+Aggregate reports and their JSON representations are available from the [CoffeeBrewery analytics site](https://formulae.coffee.sh/analytics/).
+Most CoffeeBrewery maintainers have access only to these public aggregates.
 
-[Analytics reports](https://formulae.brew.sh/analytics/) describe sources, periods, column definitions and limitations.
+[Analytics reports](https://formulae.coffee.sh/analytics/) describe sources, periods, column definitions and limitations.
 
-`brew generate-analytics-api` generates these reports; `--repositories`, `--releases`, `--formula-history` and `--github-packages` run individual collections without InfluxDB.
+`coffee generate-analytics-api` generates these reports; `--repositories`, `--releases`, `--formula-history` and `--github-packages` run individual collections without InfluxDB.
 `--influx` generates only InfluxDB reports without local Git histories or GitHub queries.
 Regenerating analytics preserves security reports produced by the formula and advisory generators.
 Git reports require complete local repository histories; formula history resumes a persistent checkpoint.
-`--history=/path/to/history.json` reuses completed-year aggregates committed in formulae.brew.sh.
+`--history=/path/to/history.json` reuses completed-year aggregates committed in formulae.coffee.sh.
 `--github-packages-limit=1000` selects up to 1000 formulae using an existing 30-day install report.
 
 ## Transport and failure behaviour
 
-Homebrew sends analytics to InfluxDB over HTTPS in a detached background process.
-The request has a short timeout and failures are silent so analytics do not delay or prevent the requested Homebrew operation.
+CoffeeBrewery sends analytics to InfluxDB over HTTPS in a detached background process.
+The request has a short timeout and failures are silent so analytics do not delay or prevent the requested CoffeeBrewery operation.
 
 ## Opting out
 
 Disable analytics persistently with:
 
 ```sh
-brew analytics off
+coffee analytics off
 ```
 
 Alternatively, set the environment variable:
 
 ```sh
-export HOMEBREW_NO_ANALYTICS=1
+export COFFEEBREWER_NO_ANALYTICS=1
 ```
 
-Run `brew analytics state` to inspect the current setting.
+Run `coffee analytics state` to inspect the current setting.

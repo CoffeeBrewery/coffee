@@ -1,20 +1,20 @@
-name: brew doctor
+name: coffee doctor
 on:
   pull_request:
     paths:
       - .github/workflows/doctor.yml
-      - Library/Homebrew/cmd/doctor.rb
-      - Library/Homebrew/diagnostic.rb
-      - Library/Homebrew/extend/os/diagnostic.rb
-      - Library/Homebrew/extend/os/mac/diagnostic.rb
-      - Library/Homebrew/os/mac/xcode.rb
+      - Library/CoffeeBrewery/cmd/doctor.rb
+      - Library/CoffeeBrewery/diagnostic.rb
+      - Library/CoffeeBrewery/extend/os/diagnostic.rb
+      - Library/CoffeeBrewery/extend/os/mac/diagnostic.rb
+      - Library/CoffeeBrewery/os/mac/xcode.rb
 
 permissions:
   contents: read
 
 env:
-  HOMEBREW_DEVELOPER: 1
-  HOMEBREW_NO_AUTO_UPDATE: 1
+  COFFEEBREWER_DEVELOPER: 1
+  COFFEEBREWER_NO_AUTO_UPDATE: 1
 
 defaults:
   run:
@@ -26,9 +26,9 @@ jobs:
     outputs:
       runners: ${{ steps.determine-runners.outputs.runners }}
     steps:
-      - name: Set up Homebrew
+      - name: Set up CoffeeBrewery
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
+        uses: CoffeeBrewery/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
         with:
           core: false
           cask: false
@@ -36,8 +36,8 @@ jobs:
       - name: Determine runners to use for this job
         id: determine-runners
         env:
-          HOMEBREW_MACOS_TIMEOUT: 30
-        run: brew determine-test-runners --all-supported
+          COFFEEBREWER_MACOS_TIMEOUT: 30
+        run: coffee determine-test-runners --all-supported
 
   tests:
     needs: determine-runners
@@ -52,17 +52,17 @@ jobs:
       run:
         working-directory: /tmp
     steps:
-      - name: Set up Homebrew
+      - name: Set up CoffeeBrewery
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
+        uses: CoffeeBrewery/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
         with:
           core: false
           cask: false
 
-      - run: brew test-bot --only-cleanup-before
+      - run: coffee test-bot --only-cleanup-before
         if: matrix.cleanup
 
-      - run: brew doctor
+      - run: coffee doctor
 
-      - run: brew test-bot --only-cleanup-after
+      - run: coffee test-bot --only-cleanup-after
         if: always() && matrix.cleanup

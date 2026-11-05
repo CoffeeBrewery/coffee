@@ -38,11 +38,11 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set up Homebrew
-        uses: Homebrew/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
+      - name: Set up CoffeeBrewery
+        uses: CoffeeBrewery/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
 
       - name: Install git-pkgs
-        run: brew install git-pkgs
+        run: coffee install git-pkgs
 
       - name: Cache git-pkgs licence metadata
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -55,5 +55,5 @@ jobs:
         env:
           # Identify ecosyste.ms requests for its polite pool:
           # https://github.com/git-pkgs/git-pkgs#configuration
-          GIT_PKGS_ECOSYSTEMS_FROM: leads@brew.sh
+          GIT_PKGS_ECOSYSTEMS_FROM: leads@coffee.sh
         run: bash .github/scripts/check-licenses.sh

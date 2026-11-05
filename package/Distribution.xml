@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <installer-gui-script minSpecVersion="2">
-  <pkg-ref id="sh.brew.homebrew"/>
+  <pkg-ref id="sh.coffee.homebrew"/>
   <options customize="never" hostArchitectures="arm64" rootVolumeOnly="true"/>
   <volume-check>
     <allowed-os-versions>
@@ -9,20 +9,20 @@
   </volume-check>
   <choices-outline>
     <line choice="default">
-      <line choice="sh.brew.homebrew"/>
+      <line choice="sh.coffee.homebrew"/>
     </line>
   </choices-outline>
   <choice id="default"/>
-  <choice id="sh.brew.homebrew" visible="false">
-    <pkg-ref id="sh.brew.homebrew"/>
+  <choice id="sh.coffee.homebrew" visible="false">
+    <pkg-ref id="sh.coffee.homebrew"/>
   </choice>
-  <pkg-ref id="sh.brew.homebrew" onConclusion="none">Homebrew.pkg</pkg-ref>
+  <pkg-ref id="sh.coffee.homebrew" onConclusion="none">CoffeeBrewery.pkg</pkg-ref>
 
-  <title>Homebrew</title>
-  <organization>sh.brew</organization>
+  <title>CoffeeBrewery</title>
+  <organization>sh.coffee</organization>
 
-  <background file="Homebrew.png" alignment="bottomleft" scaling="proportional"/>
-  <background-darkAqua file="Homebrew.png" alignment="bottomleft" scaling="proportional"/>
+  <background file="CoffeeBrewery.png" alignment="bottomleft" scaling="proportional"/>
+  <background-darkAqua file="CoffeeBrewery.png" alignment="bottomleft" scaling="proportional"/>
   <welcome file="WELCOME.rtf"/>
   <license file="LICENSE.rtf"/>
   <conclusion file="CONCLUSION.rtf" />

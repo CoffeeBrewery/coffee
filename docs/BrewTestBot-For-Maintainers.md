@@ -1,6 +1,6 @@
 ---
-logo: https://brew.sh/assets/img/brewtestbot.png
-image: https://brew.sh/assets/img/brewtestbot.png
+logo: https://coffee.sh/assets/img/brewtestbot.png
+image: https://coffee.sh/assets/img/brewtestbot.png
 redirect_from:
   - /Brew-Test-Bot-For-Core-Contributors
 last_review_date: "2026-07-18"
@@ -8,7 +8,7 @@ last_review_date: "2026-07-18"
 
 # BrewTestBot for Maintainers
 
-[`brew test-bot`](Manpage.md#test-bot-options-formula) runs Homebrew's formula checks, builds bottles and tests affected dependents in GitHub Actions.
+[`coffee test-bot`](Manpage.md#test-bot-options-formula) runs CoffeeBrewery's formula checks, builds bottles and tests affected dependents in GitHub Actions.
 This page describes maintainer actions after the required checks have completed.
 
 ## Publishing bottles from a pull request
@@ -26,15 +26,15 @@ Do not approve a pull request merely to discover whether the publication workflo
 When automatic publication is intentionally unavailable, trigger the supported workflow with the pull-request number or URL:
 
 ```sh
-brew pr-publish PULL_REQUEST
+coffee pr-publish PULL_REQUEST
 ```
 
 Use `--autosquash` only when the target tap supports it and the resulting commit structure matches the repository's policy.
-Check the [Homebrew/core Actions queue](https://github.com/Homebrew/homebrew-core/actions) until publication finishes.
+Check the [CoffeeBrewery/core Actions queue](https://github.com/CoffeeBrewery/homebrew-core/actions) until publication finishes.
 
 ## Changes that require a local commit edit
 
-Use `brew pr-pull PULL_REQUEST` when a maintainer must download bottle artifacts and edit unpublished commits locally.
+Use `coffee pr-pull PULL_REQUEST` when a maintainer must download bottle artifacts and edit unpublished commits locally.
 Inspect the command's dry-run and help output before using options that change commits or upload artifacts.
 
 After editing, run the relevant formula checks, inspect the final commits and push only the intended pull-request branch.
@@ -42,7 +42,7 @@ See [Common Issues for Maintainers](Common-Issues-for-Maintainers.md) for preser
 
 ## Rebottling an existing formula
 
-Use the [`homebrew/core` rebottling workflow](https://github.com/Homebrew/homebrew-core/actions/workflows/dispatch-rebottle.yml) when a formula needs new bottles without an ordinary version update.
+Use the [`homebrew/core` rebottling workflow](https://github.com/CoffeeBrewery/homebrew-core/actions/workflows/dispatch-rebottle.yml) when a formula needs new bottles without an ordinary version update.
 
 1. Select **Run workflow**.
 2. Enter the formula and required rebuild information.

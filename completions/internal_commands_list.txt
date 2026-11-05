@@ -8,7 +8,7 @@
 --version
 alias
 analytics
-as-brew-user
+as-coffee-user
 as-console-user
 audit
 autoremove

@@ -4,4 +4,4 @@ extensions:
       pack: codeql/actions-all
       extensible: trustedActionsOwnerDataModel
     data:
-      - ["Homebrew"]
+      - ["CoffeeBrewery"]

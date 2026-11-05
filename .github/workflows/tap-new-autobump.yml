@@ -1,4 +1,4 @@
-# brew tap-new uses this file to generate an autobump workflow for the new tap
+# coffee tap-new uses this file to generate an autobump workflow for the new tap
 name: tap-new autobump template
 
 on:
@@ -8,7 +8,7 @@ on:
     paths:
       - .github/workflows/autobump.yml
   schedule:
-    # this will be changed later and randomised by brew tap-new
+    # this will be changed later and randomised by coffee tap-new
     - cron: "1 1 1 1 1"
 
 permissions: {}
@@ -25,18 +25,18 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - name: Set up Homebrew
+      - name: Set up CoffeeBrewery
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
+        uses: CoffeeBrewery/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
 
       - name: Set up git
         id: git_setup
-        uses: Homebrew/actions/git-user-config@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
+        uses: CoffeeBrewery/actions/git-user-config@d482da0e602890d3160aade42e72c8556103bf04 # 2026.10.26.1
 
       - name: Bump formulae
         env:
-          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          HOMEBREW_GIT_COMMITTER_NAME: ${{ steps.git_setup.outputs.name }}
-          HOMEBREW_GIT_COMMITTER_EMAIL: ${{ steps.git_setup.outputs.email }}
+          COFFEEBREWER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COFFEEBREWER_GIT_COMMITTER_NAME: ${{ steps.git_setup.outputs.name }}
+          COFFEEBREWER_GIT_COMMITTER_EMAIL: ${{ steps.git_setup.outputs.email }}
           TAP_NAME: ${{ steps.set-up-homebrew.outputs.tap-name }}
-        run: brew bump --no-fork --open-pr --formulae --bump-synced --tap="$TAP_NAME"
+        run: coffee bump --no-fork --open-pr --formulae --bump-synced --tap="$TAP_NAME"

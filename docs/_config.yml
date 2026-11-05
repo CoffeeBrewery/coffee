@@ -1,6 +1,6 @@
-title: Homebrew Documentation
+title: CoffeeBrewery Documentation
 description: Documentation for the package manager for everywhere.
-url: https://docs.brew.sh
+url: https://coffee-docs.lusd1.org
 
 exclude:
   - AGENTS.md
@@ -31,7 +31,7 @@ defaults:
       path: ""
     values:
       layout: default
-      image: https://brew.sh/assets/img/homebrew-256x256.png
+      image: https://coffee.lusd1.org/assets/img/coffeebrewery.png
       search_name: Documentation
       search_site: docs
   - scope:
@@ -42,10 +42,10 @@ defaults:
 kramdown:
   toc_levels: 2..3
 
-logo: https://brew.sh/assets/img/homebrew.svg
+logo: https://coffee.lusd1.org/assets/img/coffeebrewery.png
 
 twitter:
-  username: MacHomebrew
+  username: MacCoffeeBrewery
 
 facebook:
   publisher: https://www.facebook.com/machomebrew/

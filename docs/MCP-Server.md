@@ -2,20 +2,20 @@
 last_review_date: "2026-04-10"
 ---
 
-# Homebrew's MCP Server
+# CoffeeBrewery's MCP Server
 
-Homebrew's MCP Server is the official MCP ([Model Context Protocol](https://modelcontextprotocol.io/)) server for Homebrew, enabling AI assistants like Cursor, VS Code or Claude Code to interact with Homebrew directly, providing tools for various Homebrew commands e.g. `brew search`, `brew install`, `brew uninstall`, `brew upgrade`. For contributors, developer commands like `brew style`, `brew typecheck`, and `brew tests` are also available for code quality checks.
+CoffeeBrewery's MCP Server is the official MCP ([Model Context Protocol](https://modelcontextprotocol.io/)) server for CoffeeBrewery, enabling AI assistants like Cursor, VS Code or Claude Code to interact with CoffeeBrewery directly, providing tools for various CoffeeBrewery commands e.g. `coffee search`, `coffee install`, `coffee uninstall`, `coffee upgrade`. For contributors, developer commands like `coffee style`, `coffee typecheck`, and `coffee tests` are also available for code quality checks.
 
 You don't need to do anything to install it.
-It's provided by default with Homebrew through the `brew mcp-server` command.
+It's provided by default with CoffeeBrewery through the `coffee mcp-server` command.
 
 ## Usage
 
-Run `brew mcp-server` to launch the Homebrew MCP Server.
+Run `coffee mcp-server` to launch the CoffeeBrewery MCP Server.
 
 ```bash
-$ brew mcp-server
-==> Started Homebrew MCP server...
+$ coffee mcp-server
+==> Started CoffeeBrewery MCP server...
 ```
 
 Press Ctrl-D or Ctrl-C to terminate it.
@@ -27,8 +27,8 @@ Press Ctrl-D or Ctrl-C to terminate it.
 ```json
 {
   "mcpServers": {
-    "Homebrew": {
-      "command": "brew mcp-server"
+    "CoffeeBrewery": {
+      "command": "coffee mcp-server"
     }
   }
 }
@@ -40,9 +40,9 @@ Press Ctrl-D or Ctrl-C to terminate it.
 {
   "mcp": {
     "servers": {
-      "Homebrew": {
+      "CoffeeBrewery": {
         "type": "stdio",
-        "command": "brew",
+        "command": "coffee",
         "args": ["mcp-server"]
       }
     }
@@ -55,9 +55,9 @@ Press Ctrl-D or Ctrl-C to terminate it.
 ```json
 {
   "context_servers": {
-    "Homebrew": {
+    "CoffeeBrewery": {
       "source": "custom",
-      "command": "brew",
+      "command": "coffee",
       "args": ["mcp-server"],
       "env": {}
     }
@@ -70,8 +70,8 @@ Press Ctrl-D or Ctrl-C to terminate it.
 ```json
 {
   "mcpServers": {
-    "Homebrew": {
-      "command": "brew",
+    "CoffeeBrewery": {
+      "command": "coffee",
       "args": ["mcp-server"]
     }
   }

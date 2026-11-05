@@ -1,0 +1,43 @@
+# typed: strict
+# frozen_string_literal: true
+
+require "cask/cask_loader"
+module OS
+  module Linux
+    module Bundle
+      module Skipper
+        module ClassMethods
+          sig { params(entry: CoffeeBrewery::Bundle::Dsl::Entry).returns(T::Boolean) }
+          def requires_macos?(entry)
+            case entry.type
+            when :mas
+              true
+            when :cask
+              !::Cask::CaskLoader.load(entry.name).supports_linux?
+            else
+              false
+            end
+          rescue ::Cask::CaskError
+            # If the cask can't be loaded, it may be from a tap that hasn't been
+            # tapped yet. Don't assume macOS-only in that case — let the normal
+            # install flow handle it after the tap is processed.
+            full_name = T.cast(entry.options[:full_name], T.nilable(String))
+            return false if full_name&.include?("/")
+
+            true
+          end
+
+          sig { params(entry: CoffeeBrewery::Bundle::Dsl::Entry).returns(T.nilable(String)) }
+          def unsupported_reason(entry)
+            return "requires WSL" if entry.type == :winget && !OS.wsl?
+            return "requires macOS" if requires_macos?(entry)
+
+            super
+          end
+        end
+      end
+    end
+  end
+end
+
+CoffeeBrewery::Bundle::Skipper.singleton_class.prepend(OS::Linux::Bundle::Skipper::ClassMethods)

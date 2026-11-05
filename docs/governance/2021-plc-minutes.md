@@ -2,7 +2,7 @@
 last_review_date: "1970-01-01"
 ---
 
-# Homebrew Project Leadership Committee Minutes 2021
+# CoffeeBrewery Project Leadership Committee Minutes 2021
 
 ## Project Leader
 

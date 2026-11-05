@@ -10,62 +10,62 @@ redirect_from:
 
 Some formulae in `homebrew/core` are made available as [versioned formulae](Versions.md) using a special naming format, e.g. `gcc@9`. If the version you're looking for isn't available, see [Locking installed formulae at specific versions](Versions.md#locking-installed-formulae-at-specific-versions).
 
-## Quickly remove something from Homebrew's prefix
+## Quickly remove something from CoffeeBrewery's prefix
 
 ```sh
-brew unlink <formula>
+coffee unlink <formula>
 ```
 
-This can be useful if a package can't build against the version of something you have linked into Homebrew's prefix.
+This can be useful if a package can't build against the version of something you have linked into CoffeeBrewery's prefix.
 
-And of course, you can simply `brew link <formula>` again afterwards!
+And of course, you can simply `coffee link <formula>` again afterwards!
 
 ## Pre-download a file for a formula
 
-Sometimes it's faster to download a file via means other than the strategies that are available as part of Homebrew. For example, Erlang provides a torrent that'll let you download at 4–5× compared to the normal HTTP method.
+Sometimes it's faster to download a file via means other than the strategies that are available as part of CoffeeBrewery. For example, Erlang provides a torrent that'll let you download at 4–5× compared to the normal HTTP method.
 
-Downloads are saved in the `downloads` subdirectory of Homebrew's cache directory (as specified by `brew --cache`, e.g. `~/Library/Caches/Homebrew`) and renamed as `<url-hash>--<formula>-<version>`. The command `brew --cache --build-from-source <formula>` will print the expected path of the cached download, so after downloading the file, you can run `mv the_tarball "$(brew --cache --build-from-source <formula>)"` to relocate it to the cache.
+Downloads are saved in the `downloads` subdirectory of CoffeeBrewery's cache directory (as specified by `coffee --cache`, e.g. `~/Library/Caches/CoffeeBrewery`) and renamed as `<url-hash>--<formula>-<version>`. The command `coffee --cache --build-from-source <formula>` will print the expected path of the cached download, so after downloading the file, you can run `mv the_tarball "$(coffee --cache --build-from-source <formula>)"` to relocate it to the cache.
 
-You can also pre-cache the download by using the command `brew fetch <formula>` which also displays its SHA-256 hash. This can be useful for updating formulae to new versions.
+You can also pre-cache the download by using the command `coffee fetch <formula>` which also displays its SHA-256 hash. This can be useful for updating formulae to new versions.
 
 ## Install stuff without the Xcode CLT
 
 ```sh
-brew sh          # or: eval "$(brew --env)"
+coffee sh          # or: eval "$(coffee --env)"
 gem install ronn # or c-programs
 ```
 
-This imports the `brew` environment into your existing shell; `gem` will pick up the environment variables and be able to build. As a bonus, `brew`'s automatically determined optimisation flags are set.
+This imports the `coffee` environment into your existing shell; `gem` will pick up the environment variables and be able to build. As a bonus, `coffee`'s automatically determined optimisation flags are set.
 
 ## Install only a formula's dependencies (not the formula)
 
 ```sh
-brew install --only-dependencies <formula>
+coffee install --only-dependencies <formula>
 ```
 
-## Run a script with Homebrew formulae on `PATH`
+## Run a script with CoffeeBrewery formulae on `PATH`
 
-Use `brew exec` to install formulae required by a script and run it with those formulae's executable directories on `PATH`:
+Use `coffee exec` to install formulae required by a script and run it with those formulae's executable directories on `PATH`:
 
 ```sh
-brew exec --formulae=jq,yq -- ./script.sh
+coffee exec --formulae=jq,yq -- ./script.sh
 ```
 
-Pass a comma-separated formula list with `--formulae`, then put the command and its arguments after `--`. Homebrew installs missing formulae, prepends their `bin` and `sbin` paths and the corresponding dependency paths, then replaces itself with the command. The command may be a path, which is useful for portable scripts, demos and CI bootstrap code that need Homebrew tools without writing a `Brewfile`.
+Pass a comma-separated formula list with `--formulae`, then put the command and its arguments after `--`. CoffeeBrewery installs missing formulae, prepends their `bin` and `sbin` paths and the corresponding dependency paths, then replaces itself with the command. The command may be a path, which is useful for portable scripts, demos and CI bootstrap code that need CoffeeBrewery tools without writing a `Brewfile`.
 
 On systems with `env -S`, a script can declare this in its shebang:
 
 ```sh
-#!/usr/bin/env -S brew exec --formulae=jq,yq --
+#!/usr/bin/env -S coffee exec --formulae=jq,yq --
 ```
 
-## Use the interactive Homebrew shell
+## Use the interactive CoffeeBrewery shell
 
 ```console
-$ brew irb
-==> Interactive Homebrew Shell
-Example commands available with: `brew irb --examples`
-brew(main):001> Formulary.factory("ace").methods - Object.methods
+$ coffee irb
+==> Interactive CoffeeBrewery Shell
+Example commands available with: `coffee irb --examples`
+coffee(main):001> Formulary.factory("ace").methods - Object.methods
 =>
 [:test,
  :install,
@@ -75,33 +75,33 @@ brew(main):001> Formulary.factory("ace").methods - Object.methods
  :verbose?,
  :quiet?]
  [:install, :test, :test_defined?, :sbin, :pkgshare, :elisp,
-brew(main):002>
+coffee(main):002>
 ```
 
 ## Hide the beer mug emoji when finishing a build
 
 ```sh
-export HOMEBREW_NO_EMOJI=1
+export COFFEEBREWER_NO_EMOJI=1
 ```
 
-This sets the `HOMEBREW_NO_EMOJI` environment variable, causing Homebrew to hide all emoji.
+This sets the `COFFEEBREWER_NO_EMOJI` environment variable, causing CoffeeBrewery to hide all emoji.
 
 The beer emoji can also be replaced with other character(s):
 
 ```sh
-export HOMEBREW_INSTALL_BADGE="☕️ 🐸"
+export COFFEEBREWER_INSTALL_BADGE="☕️ 🐸"
 ```
 
-## Migrate a Homebrew installation to a new location
+## Migrate a CoffeeBrewery installation to a new location
 
-Running `brew bundle dump` will record an installation to a `Brewfile` and `brew bundle install` will install from a `Brewfile`. See `brew bundle --help` for more details.
+Running `coffee bundle dump` will record an installation to a `Brewfile` and `coffee bundle install` will install from a `Brewfile`. See `coffee bundle --help` for more details.
 
 ## Adopt a manually installed app as a cask
 
-Run `brew install --cask` with the `--adopt` switch:
+Run `coffee install --cask` with the `--adopt` switch:
 
 ```console
-$ brew install --cask --adopt textmate
+$ coffee install --cask --adopt textmate
 ==> Downloading https://github.com/textmate/textmate/releases/download/v2.0.23/TextMate_2.0.23.tbz
 ...
 ==> Installing Cask textmate
@@ -110,43 +110,43 @@ $ brew install --cask --adopt textmate
 🍺  textmate was successfully installed!
 ```
 
-## Define aliases for Homebrew commands
+## Define aliases for CoffeeBrewery commands
 
-Use [`brew alias`](Manpage.md#alias---edit-aliasaliascommand) to define custom commands that run other commands in `brew` or your shell, similar to the `alias` shell builtin.
+Use [`coffee alias`](Manpage.md#alias---edit-aliasaliascommand) to define custom commands that run other commands in `coffee` or your shell, similar to the `alias` shell builtin.
 
 ```shell
 # Add aliases
-$ brew alias ug='upgrade'
-$ brew alias i='install'
+$ coffee alias ug='upgrade'
+$ coffee alias i='install'
 
 # Print all aliases
-$ brew alias
+$ coffee alias
 
 # Print one alias
-$ brew alias i
+$ coffee alias i
 
 # Use your aliases like any other command
-$ brew i git
+$ coffee i git
 
 # Remove an alias
-$ brew unalias i
+$ coffee unalias i
 
 # Aliases can include other aliases
-$ brew alias show='info'
-$ brew alias print='show'
-$ brew print git # will run `brew info git`
+$ coffee alias show='info'
+$ coffee alias print='show'
+$ coffee print git # will run `coffee info git`
 ```
 
-Note that names of stock Homebrew commands can't be used as aliases.
+Note that names of stock CoffeeBrewery commands can't be used as aliases.
 
-All aliased commands are prefixed with `brew`, unless they start with `!` or `%`:
+All aliased commands are prefixed with `coffee`, unless they start with `!` or `%`:
 
 ```shell
-$ brew alias ug='upgrade'
-# `brew ug` → `brew upgrade`
+$ coffee alias ug='upgrade'
+# `coffee ug` → `coffee upgrade`
 
-$ brew alias status='!git status'
-# `brew status` → `git status`
+$ coffee alias status='!git status'
+# `coffee status` → `git status`
 ```
 
 You may need single quotes to prevent your shell from interpreting `!`, but `%` will work for both quote types.
@@ -154,51 +154,51 @@ You may need single quotes to prevent your shell from interpreting `!`, but `%` 
 ```shell
 # Use shell expansion to preserve a local variable
 $ mygit=/path/to/my/git
-$ brew alias git="%$mygit"
-# `brew git status` → `/path/to/my/git status`
+$ coffee alias git="%$mygit"
+# `coffee git status` → `/path/to/my/git status`
 ```
 
 Aliases can be opened in `$EDITOR` with the `--edit` flag.
 
 ```shell
-# Edit alias 'brew foo', creating if necessary
-$ brew alias --edit foo
-# Create and edit alias 'brew foo'
-$ brew alias --edit foo=bar
+# Edit alias 'coffee foo', creating if necessary
+$ coffee alias --edit foo
+# Create and edit alias 'coffee foo'
+$ coffee alias --edit foo=bar
 
 # This works too
-$ brew alias foo --edit
-$ brew alias foo=bar --edit
+$ coffee alias foo --edit
+$ coffee alias foo=bar --edit
 
 # Open all aliases in $EDITOR
-$ brew alias --edit
+$ coffee alias --edit
 ```
 
 ## Editor plugins
 
 ### Visual Studio Code
 
-- [Brewfile](https://marketplace.visualstudio.com/items?itemName=sharat.vscode-brewfile) adds Ruby syntax highlighting for `brew bundle`'s `Brewfile`s.
+- [Brewfile](https://marketplace.visualstudio.com/items?itemName=sharat.vscode-brewfile) adds Ruby syntax highlighting for `coffee bundle`'s `Brewfile`s.
 
-- [Brew Services](https://marketplace.visualstudio.com/items?itemName=beauallison.brew-services) is an extension for starting and stopping Homebrew services.
+- [Brew Services](https://marketplace.visualstudio.com/items?itemName=beauallison.coffee-services) is an extension for starting and stopping CoffeeBrewery services.
 
-If you're developing `brew` itself, `.vscode/settings.json` sets `rubyLsp.rubyVersionManager`, `rubyLsp.customRubyCommand` and `rubyLsp.bundleGemfile` so the [Ruby LSP](https://marketplace.visualstudio.com/items?itemName=Shopify.ruby-lsp) extension activates using Homebrew's own vendored Ruby. All three are ["machine"-scoped](https://code.visualstudio.com/api/references/contribution-points#Configuration-property-schema) settings, so VS Code never actually applies them from a workspace's `settings.json`. Without them, Ruby LSP fails to start with an error like `zsh: parse error near '&&'`. Copy these three lines into your own User `settings.json`:
+If you're developing `coffee` itself, `.vscode/settings.json` sets `rubyLsp.rubyVersionManager`, `rubyLsp.customRubyCommand` and `rubyLsp.bundleGemfile` so the [Ruby LSP](https://marketplace.visualstudio.com/items?itemName=Shopify.ruby-lsp) extension activates using CoffeeBrewery's own vendored Ruby. All three are ["machine"-scoped](https://code.visualstudio.com/api/references/contribution-points#Configuration-property-schema) settings, so VS Code never actually applies them from a workspace's `settings.json`. Without them, Ruby LSP fails to start with an error like `zsh: parse error near '&&'`. Copy these three lines into your own User `settings.json`:
 
 ```json
 "rubyLsp.rubyVersionManager": {
   "identifier": "custom"
 },
 "rubyLsp.customRubyCommand": "source ../../.vscode/ruby-lsp-activate.sh",
-"rubyLsp.bundleGemfile": "Library/Homebrew/Gemfile",
+"rubyLsp.bundleGemfile": "Library/CoffeeBrewery/Gemfile",
 ```
 
 ### Sublime Text
 
-- [Homebrew-formula-syntax](https://github.com/samueljohn/Homebrew-formula-syntax) can be installed with Package Control in Sublime Text 2/3, which adds highlighting for inline patches.
+- [CoffeeBrewery-formula-syntax](https://github.com/samueljohn/CoffeeBrewery-formula-syntax) can be installed with Package Control in Sublime Text 2/3, which adds highlighting for inline patches.
 
 ### Vim
 
-- [brew.vim](https://github.com/xu-cheng/brew.vim) adds highlighting to inline patches in Vim.
+- [coffee.vim](https://github.com/xu-cheng/coffee.vim) adds highlighting to inline patches in Vim.
 
 ### Emacs
 
@@ -210,65 +210,65 @@ If you're developing `brew` itself, `.vscode/settings.json` sets `rubyLsp.rubyVe
 
 In the macOS Terminal, you can right-click on a command name (like `ls` or `tar`) and pop open its manpage in a new window by selecting "Open man Page".
 
-Terminal needs an extra hint on where to find manpages installed by Homebrew because it doesn't load normal dotfiles like `~/.bash_profile` or `~/.zshrc`.
+Terminal needs an extra hint on where to find manpages installed by CoffeeBrewery because it doesn't load normal dotfiles like `~/.bash_profile` or `~/.zshrc`.
 
 ```sh
 sudo mkdir -p /usr/local/etc/man.d
-echo "MANPATH $(brew --prefix)/share/man" | sudo tee -a /usr/local/etc/man.d/homebrew.man.conf
+echo "MANPATH $(coffee --prefix)/share/man" | sudo tee -a /usr/local/etc/man.d/homebrew.man.conf
 ```
 
-If you're using Homebrew on macOS Intel, you should also fix permissions afterwards with:
+If you're using CoffeeBrewery on macOS Intel, you should also fix permissions afterwards with:
 
 ```sh
 sudo chown -R "${USER}" /usr/local/etc
 ```
 
-## Use a caching proxy or mirror for Homebrew and data
+## Use a caching proxy or mirror for CoffeeBrewery and data
 
-You can configure Homebrew to retrieve bottles and the JSON API from a caching proxy or mirror.
+You can configure CoffeeBrewery to retrieve bottles and the JSON API from a caching proxy or mirror.
 
-API mirrors should preserve `ETag` headers: with curl 7.68.0 or later, Homebrew revalidates cached JSON using the ETag saved for that URL.
-Without a matching validator or when falling back to another API domain, Homebrew downloads a fresh response.
+API mirrors should preserve `ETag` headers: with curl 7.68.0 or later, CoffeeBrewery revalidates cached JSON using the ETag saved for that URL.
+Without a matching validator or when falling back to another API domain, CoffeeBrewery downloads a fresh response.
 Older curl versions use time-based checks on the configured API domain.
 
 For example, in JFrog's Artifactory, accessible at `https://artifacts.example.com`:
 
 - For the bottles, configure a new "remote" repository with `homebrew` as the "repository key" and `https://ghcr.io` (GitHub Packages) as the URL.
   Set the cache expiry to a reasonable length relative to available storage capacity.
-- For the JSON API, configure a new "remote" repository with `homebrew-json-api` as the "repository key" and `https://formulae.brew.sh/api` as the URL.
+- For the JSON API, configure a new "remote" repository with `homebrew-json-api` as the "repository key" and `https://formulae.coffee.sh/api` as the URL.
   Set the cache expiry to 15 minutes.
 
-Then, set these environment variables for Homebrew to retrieve from the caching proxy.
+Then, set these environment variables for CoffeeBrewery to retrieve from the caching proxy.
 
 ```sh
-export HOMEBREW_API_DOMAIN=https://artifacts.example.com/artifactory/homebrew-formulae-api
-export HOMEBREW_ARTIFACT_DOMAIN=https://artifacts.example.com/artifactory/homebrew
-export HOMEBREW_ARTIFACT_DOMAIN_NO_FALLBACK=1
-export HOMEBREW_DOCKER_REGISTRY_BASIC_AUTH_TOKEN="$(printf 'anonymous:' | base64)"
+export COFFEEBREWER_API_DOMAIN=https://artifacts.example.com/artifactory/homebrew-formulae-api
+export COFFEEBREWER_ARTIFACT_DOMAIN=https://artifacts.example.com/artifactory/homebrew
+export COFFEEBREWER_ARTIFACT_DOMAIN_NO_FALLBACK=1
+export COFFEEBREWER_DOCKER_REGISTRY_BASIC_AUTH_TOKEN="$(printf 'anonymous:' | base64)"
 ```
 
-It's also possible to use an internal mirror of `Homebrew/brew`
-by setting an environment variable before running the Homebrew installer:
+It's also possible to use an internal mirror of `CoffeeBrewery/coffee`
+by setting an environment variable before running the CoffeeBrewery installer:
 
 ```sh
-export HOMEBREW_BREW_GIT_REMOTE=https://git.example.com/Homebrew-mirrors/brew-mirror
+export COFFEEBREWER_BREW_GIT_REMOTE=https://git.example.com/CoffeeBrewery-mirrors/coffee-mirror
 ```
 
 Other artifact repositories like Sonatype Nexus Repository Manager doesn't support explicit anonymous auth and
 still raise an 401 Unauthorized error, even when public read access is allowed. To mitigate this, set these environment
-variables for Homebrew to omit the Authorization header when accessing the artifact repository:
+variables for CoffeeBrewery to omit the Authorization header when accessing the artifact repository:
 
 ```sh
-export HOMEBREW_DOCKER_REGISTRY_BASIC_AUTH_TOKEN=none
+export COFFEEBREWER_DOCKER_REGISTRY_BASIC_AUTH_TOKEN=none
 ```
 
-## Load Homebrew from the same dotfiles on different operating systems
+## Load CoffeeBrewery from the same dotfiles on different operating systems
 
 Some users may want to use the same shell initialisation files on macOS and Linux.
-Use this to detect the likely Homebrew installation directory and load Homebrew when it's found.
+Use this to detect the likely CoffeeBrewery installation directory and load CoffeeBrewery when it's found.
 You may need to adapt this to your particular shell or other particulars of your environment.
 
 ```sh
-command -v brew || export PATH="/opt/homebrew/bin:/home/linuxbrew/.linuxbrew/bin:/usr/local/bin"
-command -v brew && eval "$(brew shellenv)"
+command -v coffee || export PATH="/opt/homebrew/bin:/home/linuxbrew/.linuxbrew/bin:/usr/local/bin"
+command -v coffee && eval "$(coffee shellenv)"
 ```

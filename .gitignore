@@ -8,26 +8,26 @@
 !/Library
 
 # Ignore files within `Library` (again).
-/Library/Homebrew/.npmignore
-/Library/Homebrew/bin
-/Library/Homebrew/doc
-/Library/Homebrew/prof
-/Library/Homebrew/test/.gem
-/Library/Homebrew/test/.cargo/
-/Library/Homebrew/test/.homebrew/
-/Library/Homebrew/test/.local/share/
-/Library/Homebrew/test/.subversion
-/Library/Homebrew/test/coverage
-/Library/Homebrew/test/junit
-/Library/Homebrew/test/fs_leak_log
-/Library/Homebrew/vendor/portable-ruby
-/Library/Homebrew/vendor/brew-rs/
-/Library/Homebrew/rust/brew-rs
+/Library/CoffeeBrewery/.npmignore
+/Library/CoffeeBrewery/bin
+/Library/CoffeeBrewery/doc
+/Library/CoffeeBrewery/prof
+/Library/CoffeeBrewery/test/.gem
+/Library/CoffeeBrewery/test/.cargo/
+/Library/CoffeeBrewery/test/.homebrew/
+/Library/CoffeeBrewery/test/.local/share/
+/Library/CoffeeBrewery/test/.subversion
+/Library/CoffeeBrewery/test/coverage
+/Library/CoffeeBrewery/test/junit
+/Library/CoffeeBrewery/test/fs_leak_log
+/Library/CoffeeBrewery/vendor/portable-ruby
+/Library/CoffeeBrewery/vendor/coffee-rs/
+/Library/CoffeeBrewery/rust/coffee-rs
 /Library/Taps
 /Library/PinnedTaps
-/Library/Homebrew/.byebug_history
-/Library/Homebrew/test/.npm/
-/Library/Homebrew/test/.rdbg_history
+/Library/CoffeeBrewery/.byebug_history
+/Library/CoffeeBrewery/test/.npm/
+/Library/CoffeeBrewery/test/.rdbg_history
 
 # Ignore Bundler files
 **/.bundle/bin
@@ -171,8 +171,8 @@
 # Ignore `bin` contents (again).
 /bin
 
-# Unignore our `brew` script.
-!/bin/brew
+# Unignore our `coffee` script.
+!/bin/coffee
 
 # Unignore our configuration/completions/documentation.
 !/.devcontainer
@@ -210,7 +210,7 @@
 !/README.md
 
 # Unignore tests' bundle config
-!/Library/Homebrew/test/.bundle/config
+!/Library/CoffeeBrewery/test/.bundle/config
 
 # Unignore editor configuration
 !/.sublime

@@ -1,0 +1,627 @@
+# typed: strict
+# frozen_string_literal: true
+
+require "release_cooldown"
+require "resource"
+require "utils/output"
+require "utils/ast"
+require "utils/path"
+require "time"
+require "sandbox"
+
+# Helper functions for updating PyPI resources.
+module PyPI
+  extend Utils::Output::Mixin
+
+  PYTHONHOSTED_URL_PREFIX = "https://files.pythonhosted.org/packages/"
+  private_constant :PYTHONHOSTED_URL_PREFIX
+
+  # Represents a Python package.
+  # This package can be a PyPI package (either by name/version or PyPI distribution URL),
+  # or it can be a non-PyPI URL.
+  class Package
+    include Utils::Output::Mixin
+
+    sig { params(package_string: String, is_url: T::Boolean, python_name: String, resource: T.nilable(Resource)).void }
+    def initialize(package_string, is_url: false, python_name: "python", resource: nil)
+      @pypi_info = T.let(nil, T.nilable(T::Array[String]))
+      @package_string = package_string
+      @is_url = is_url
+      @is_pypi_url = T.let(package_string.start_with?(PYTHONHOSTED_URL_PREFIX), T::Boolean)
+      @python_name = python_name
+      @resource = resource
+    end
+
+    sig { returns(T.nilable(String)) }
+    def name
+      basic_metadata if @name.blank?
+      @name
+    end
+
+    sig { returns(T.nilable(T::Array[String])) }
+    def extras
+      basic_metadata if @extras.blank?
+      @extras
+    end
+
+    sig { returns(T.nilable(String)) }
+    def version
+      basic_metadata if @version.blank?
+      @version
+    end
+
+    sig { params(new_version: String).void }
+    def version=(new_version)
+      raise ArgumentError, "can't update version for non-PyPI packages" unless valid_pypi_package?
+
+      @version = T.let(new_version, T.nilable(String))
+    end
+
+    sig { returns(T::Boolean) }
+    def valid_pypi_package?
+      @is_pypi_url || !@is_url
+    end
+
+    # Get name, URL, SHA-256 checksum and latest version for a given package.
+    # This only works for packages from PyPI or from a PyPI URL; packages
+    # derived from non-PyPI URLs will produce `nil` here.
+    sig {
+      params(new_version: T.nilable(T.any(String, Version)), ignore_errors: T::Boolean)
+        .returns(T.nilable(T::Array[String]))
+    }
+    def pypi_info(new_version: nil, ignore_errors: false)
+      return unless valid_pypi_package?
+      return @pypi_info if @pypi_info.present? && new_version.blank?
+
+      new_version ||= version
+      metadata_url = if new_version.present?
+        "https://pypi.org/pypi/#{name}/#{new_version}/json"
+      else
+        "https://pypi.org/pypi/#{name}/json"
+      end
+      result = Utils::Curl.curl_output(metadata_url, "--location", "--fail")
+
+      return unless result.status.success?
+
+      begin
+        json = JSON.parse(result.stdout)
+      rescue JSON::ParserError
+        return
+      end
+
+      dist = json["urls"].find do |url|
+        url["packagetype"] == "sdist"
+      end
+
+      # If there isn't an sdist, we use the first pure Python3 or universal wheel
+      if dist.nil?
+        dist = json["urls"].find do |url|
+          url["filename"].match?("[.-]py3[^-]*-none-any.whl$")
+        end
+      end
+
+      if dist.nil?
+        return ["", "", "", "", "no suitable source distribution on PyPI"] if ignore_errors
+
+        onoe "#{name} exists on PyPI but lacks a suitable source distribution"
+        return
+      end
+
+      @pypi_info = [
+        PyPI.normalize_python_package(json["info"]["name"]), dist["url"],
+        dist["digests"]["sha256"], json["info"]["version"]
+      ]
+    end
+
+    sig { returns(String) }
+    def to_s
+      if valid_pypi_package? && (out = name)
+        if (pypi_extras = extras.presence)
+          out += "[#{pypi_extras.join(",")}]"
+        end
+        out += "==#{version}" if version.present?
+        out
+      else
+        @package_string
+      end
+    end
+
+    # The source resource or package requirement to inspect with pip.
+    sig { returns(T.any(String, Resource)) }
+    def requirement
+      return to_s if valid_pypi_package?
+
+      @resource || @package_string
+    end
+
+    sig { params(other: Package).returns(T::Boolean) }
+    def same_package?(other)
+      # These names are pre-normalized, so we can compare them directly.
+      name == other.name
+    end
+
+    # Compare only names so we can use .include? and .uniq on a Package array
+    sig { params(other: T.anything).returns(T::Boolean) }
+    def ==(other)
+      case other
+      when Package
+        same_package?(other)
+      else
+        false
+      end
+    end
+    alias eql? ==
+
+    sig { returns(Integer) }
+    def hash
+      name.hash
+    end
+
+    sig { params(other: Package).returns(T.nilable(Integer)) }
+    def <=>(other)
+      name <=> other.name
+    end
+
+    private
+
+    # Returns [name, [extras], version] for this package.
+    sig { returns(T.nilable(T.any(String, T::Array[String]))) }
+    def basic_metadata
+      if @is_pypi_url
+        if (match = File.basename(@package_string).match(/^(.+)-([a-z\d.]+?)(?:.tar.gz|.zip)$/))
+          name = match[1]
+          version = match[2]
+        end
+        raise ArgumentError, "Package should be a valid PyPI URL" if name.nil? || version.nil?
+
+        @name ||= T.let(PyPI.normalize_python_package(name), T.nilable(String))
+        @extras ||= T.let([], T.nilable(T::Array[String]))
+        @version ||= T.let(version, T.nilable(String))
+      elsif @is_url
+        require "formula"
+        Formula[@python_name].ensure_installed!
+
+        # The URL might be a source distribution hosted somewhere;
+        # try and use `pip install -q --no-deps --dry-run --report ...` to get its
+        # name and version.
+        # Note that this is different from the (similar) `pip install --report` we
+        # do below, in that it uses `--no-deps` because we only care about resolving
+        # this specific URL's project metadata.
+        command =
+          [Utils::Path.formula_opt_libexec(@python_name)/"bin/python", "-m", "pip", "install", "-q", "--no-deps",
+           "--dry-run", "--ignore-installed", "--report", "/dev/stdout", requirement]
+        pip_output = begin
+          PyPI.pip_output(command)
+        rescue ErrorDuringExecution
+          raise ArgumentError, <<~EOS
+            Unable to determine metadata for "#{@package_string}" because of a failure when running
+            `#{PyPI.format_pip_command(command)}`.
+          EOS
+        end
+
+        metadata = JSON.parse(pip_output)["install"].first["metadata"]
+
+        @name ||= T.let(PyPI.normalize_python_package(metadata["name"]), T.nilable(String))
+        @extras ||= T.let([], T.nilable(T::Array[String]))
+        @version ||= T.let(metadata["version"], T.nilable(String))
+      else
+        name, _, version = @package_string.partition("==")
+        extras = name[/\[(.+)\]$/, 1]&.split(",") || []
+        name = name.sub(/\[.+\]$/, "")
+
+        @name ||= T.let(PyPI.normalize_python_package(name), T.nilable(String))
+        @extras ||= extras
+        @version ||= version.presence
+      end
+    end
+  end
+
+  sig { params(url: String, version: T.any(String, Version)).returns(T.nilable(String)) }
+  def self.update_pypi_url(url, version)
+    package = Package.new url, is_url: true
+
+    return unless package.valid_pypi_package?
+
+    _, url = package.pypi_info(new_version: version)
+    url
+  rescue ArgumentError
+    nil
+  end
+
+  # Return true if resources were checked (even if no change).
+  sig {
+    params(
+      formula:                      Formula,
+      version:                      T.nilable(String),
+      package_name:                 T.nilable(String),
+      extra_packages:               T.nilable(T::Array[String]),
+      exclude_packages:             T.nilable(T::Array[String]),
+      dependencies:                 T.nilable(T::Array[String]),
+      install_dependencies:         T::Boolean,
+      print_only:                   T::Boolean,
+      quiet:                        T::Boolean,
+      verbose:                      T::Boolean,
+      ignore_errors:                T::Boolean,
+      ignore_non_pypi_packages:     T::Boolean,
+      ignore_main_package_cooldown: T::Boolean,
+    ).returns(T::Boolean)
+  }
+  def self.update_python_resources!(formula, version: nil, package_name: nil, extra_packages: nil,
+                                    exclude_packages: nil, dependencies: nil, install_dependencies: false,
+                                    print_only: false, quiet: false, verbose: false,
+                                    ignore_errors: false, ignore_non_pypi_packages: false,
+                                    ignore_main_package_cooldown: false)
+    if [package_name, extra_packages, exclude_packages, dependencies].all?(&:blank?)
+      list_entry = formula.pypi_packages_info
+
+      package_name = list_entry.package_name
+      extra_packages = list_entry.extra_packages
+      exclude_packages = list_entry.exclude_packages
+      dependencies = list_entry.dependencies
+    end
+
+    missing_dependencies = Array(dependencies).reject do |dependency|
+      Formula[dependency].any_version_installed?
+    rescue FormulaUnavailableError
+      odie "Formula \"#{dependency}\" not found but it is a dependency to update \"#{formula.name}\" resources."
+    end
+    if missing_dependencies.present?
+      missing_msg = "formulae required to update \"#{formula.name}\" resources: #{missing_dependencies.join(", ")}"
+      odie "Missing #{missing_msg}" unless install_dependencies
+      ohai "Installing #{missing_msg}"
+      require "formula"
+      missing_dependencies.each { |dep| Formula[dep].ensure_installed! }
+    end
+
+    python_deps = formula.deps
+                         .select { |d| d.name.match?(/^python(@.+)?$/) }
+                         .map(&:to_formula)
+                         .sort_by(&:version)
+                         .reverse
+    python_name = if python_deps.empty?
+      "python"
+    else
+      (python_deps.find(&:any_version_installed?) || python_deps.first).name
+    end
+
+    stable = formula.stable
+    stable_url = stable&.url
+    main_package = if package_name.present?
+      package_string = package_name
+      package_string += "==#{formula.version}" if version.blank? && formula.version.present?
+      package = Package.new(package_string, python_name:)
+      if stable && stable_url && package_string != package_name &&
+         !stable_url.start_with?(PYTHONHOSTED_URL_PREFIX) && !stable.downloader.is_a?(VCSDownloadStrategy) &&
+         package.pypi_info(ignore_errors: true).nil?
+        Package.new("#{package_name} @ #{stable_url}", is_url: true, python_name:)
+      else
+        package
+      end
+    elsif package_name == ""
+      nil
+    else
+      if stable.nil? || stable_url.nil?
+        odie "#{formula.full_name} has no stable URL to determine the main Python package from."
+      end
+
+      Package.new(stable_url, is_url: true, python_name:,
+                  resource: (stable.resource if stable.downloader.is_a?(VCSDownloadStrategy)))
+    end
+
+    if main_package.nil?
+      odie "The main package was skipped but no PyPI `extra_packages` were provided." if extra_packages.blank?
+    elsif version.present?
+      if main_package.valid_pypi_package?
+        main_package.version = version
+      else
+        return false if ignore_non_pypi_packages
+
+        odie "The main package is not a PyPI package, meaning that version-only updates cannot be \
+          performed. Please update its URL manually."
+      end
+    end
+
+    extra_packages = (extra_packages || []).map { |p| Package.new p }
+    exclude_packages = (exclude_packages || []).map { |p| Package.new p }
+    exclude_packages += %w[argparse pip wsgiref].map { |p| Package.new p }
+    if (newest_python = python_deps.first) && newest_python.version < Version.new("3.12")
+      exclude_packages.append(Package.new("setuptools"))
+    end
+    # remove packages from the exclude list if we've explicitly requested them as an extra package
+    exclude_packages.delete_if { |package| extra_packages.include?(package) }
+
+    input_packages = Array(main_package)
+    extra_packages.each do |extra_package|
+      if !extra_package.valid_pypi_package? && !ignore_non_pypi_packages
+        odie "\"#{extra_package}\" is not available on PyPI."
+      end
+
+      input_packages.each do |existing_package|
+        if existing_package.same_package?(extra_package) && existing_package.version != extra_package.version
+          odie "Conflicting versions specified for the `#{extra_package.name}` package: " \
+               "#{existing_package.version}, #{extra_package.version}"
+        end
+      end
+
+      input_packages << extra_package unless input_packages.include? extra_package
+    end
+
+    non_pypi_resource_names = formula.resources.filter_map do |resource|
+      next if resource.url.start_with?(PYTHONHOSTED_URL_PREFIX)
+      next if resource.livecheck_defined?
+
+      resource.name
+    end.to_set
+
+    test_resources = formula.resources.filter_map do |resource|
+      next unless resource.test?
+      next if resource.livecheck_defined?
+
+      resource.name
+    end.to_set
+
+    non_pypi_resource_names -= test_resources
+
+    existing_resources_by_name = formula.resources.to_h { |resource| [resource.name, resource] }
+    formula_contents = formula.path.read
+    existing_resource_blocks = resource_blocks_from_formula(formula_contents)
+
+    require "formula"
+    Formula[python_name].ensure_installed!
+
+    # Resolve the dependency tree of all input packages
+    show_info = !print_only && !quiet
+    ohai "Retrieving PyPI dependencies for \"#{input_packages.join(" ")}\"..." if show_info
+
+    print_stderr = verbose && show_info
+    print_stderr ||= false
+
+    ignore_cooldown_package = main_package if ignore_main_package_cooldown
+    found_packages = pip_report(input_packages, python_name:, print_stderr:,
+                                ignore_cooldown_package:)
+    # Resolve the dependency tree of excluded packages to prune the above
+    exclude_packages.delete_if { |package| found_packages.exclude? package }
+    if exclude_packages.present?
+      ohai "Retrieving PyPI dependencies for excluded \"#{exclude_packages.join(" ")}\"..." if show_info
+      exclude_packages = pip_report(exclude_packages, python_name:, print_stderr:)
+    end
+    # Keep extra_packages even if they are dependencies of exclude_packages
+    exclude_packages.delete_if { |package| extra_packages.include? package }
+    if (main_package_name = main_package&.name)
+      exclude_packages += [Package.new(main_package_name)]
+    end
+
+    new_resource_blocks = ""
+    package_errors = ""
+    found_packages.sort.each do |package|
+      if exclude_packages.include? package
+        ohai "Excluding \"#{package}\"" if show_info
+        exclude_packages.delete package
+        next
+      end
+      next if (package_name = package.name) && existing_resources_by_name[package_name]&.livecheck_defined?
+
+      ohai "Getting PyPI info for \"#{package}\"" if show_info
+      name, url, checksum, version, package_error = package.pypi_info(ignore_errors: ignore_errors)
+      if package_error.blank?
+        # Fail if unable to find name, url or checksum for any resource
+        if name.blank?
+          if ignore_errors
+            package_error = "unknown failure"
+          else
+            odie "Unable to resolve some dependencies. Please update the resources for \"#{formula.name}\" manually."
+          end
+        elsif url.blank? || checksum.blank?
+          if ignore_errors
+            package_error = "unable to find URL and/or sha256"
+          else
+            odie <<~EOS
+              Unable to find the URL and/or sha256 for the "#{name}" resource.
+              Please update the resources for "#{formula.name}" manually.
+            EOS
+          end
+        else
+          existing_is_non_pypi = !non_pypi_resource_names.delete?(name).nil?
+
+          if (existing_resource = existing_resources_by_name[name]) &&
+             (existing_block = existing_resource_blocks[name]) &&
+             ((existing_resource.url == url && existing_resource.checksum&.hexdigest == checksum) ||
+              (existing_is_non_pypi && existing_resource.version.to_s == version))
+            new_resource_blocks += <<-EOS
+  #{existing_block.dup}
+
+            EOS
+            next
+          end
+          # Append indented resource block
+          new_resource_blocks += <<-EOS
+  resource "#{name}" do
+    url "#{url}"
+    sha256 "#{checksum}"
+  end
+
+          EOS
+        end
+      end
+
+      if package_error.present?
+        # Leave a placeholder for formula author to investigate
+        package_errors += "  # RESOURCE-ERROR: Unable to resolve \"#{package}\" (#{package_error})\n"
+      end
+    end
+
+    test_resources.sort.each do |name|
+      new_resource_blocks += <<-EOS
+  #{existing_resource_blocks[name].dup}
+
+      EOS
+    end
+
+    package_errors += "\n" if package_errors.present?
+    resource_section = "#{package_errors}#{new_resource_blocks}"
+
+    odie "Excluded superfluous packages: #{exclude_packages.join(", ")}" if exclude_packages.any?
+
+    if print_only
+      puts resource_section.chomp
+      return true
+    end
+
+    odie <<~EOS unless non_pypi_resource_names.empty?
+      "#{formula.name}" contains non-PyPI resources: #{non_pypi_resource_names.sort.join(", ")}
+      Please update the resources manually.
+    EOS
+
+    ohai "Updating resource blocks" unless quiet
+    formula_ast = Utils::AST::FormulaAST.new(formula.path.read)
+    if formula_ast.replace_resource_stanzas(
+      resource_section,
+      replace_existing:   formula.resources.any? { |resource| !resource.name.start_with?("homebrew-") },
+      preserve_livecheck: true,
+    ) == :multiple_groups
+      odie "Unable to update resource blocks for \"#{formula.name}\" automatically. Please update them manually."
+    end
+    formula.path.atomic_write(formula_ast.process)
+
+    if package_errors.present?
+      ofail "Unable to resolve some dependencies. Please check #{formula.path} for RESOURCE-ERROR comments."
+    end
+
+    true
+  end
+
+  sig { params(contents: String).returns(T::Hash[String, String]) }
+  def self.resource_blocks_from_formula(contents)
+    blocks = {}
+    _processed_source, root_node = Utils::AST.process_source(contents)
+    return blocks if root_node.nil?
+
+    root_node.each_node(:block) do |node|
+      next unless Utils::AST.call_node_match?(node, name: :resource, type: :block_call)
+
+      send_node = node.send_node
+      name_node = send_node.arguments.first
+      next if name_node.blank? || !name_node.str_type?
+
+      resource_name = name_node.str_content
+      blocks[resource_name] = node.location.expression.source
+    end
+
+    blocks
+  end
+
+  sig { params(name: String).returns(String) }
+  def self.normalize_python_package(name)
+    # This normalization is defined in the PyPA packaging specifications;
+    # https://packaging.python.org/en/latest/specifications/name-normalization/#name-normalization
+    name.gsub(/[-_.]+/, "-").downcase
+  end
+
+  # Render source resources as URLs in pip command diagnostics.
+  sig { params(command: T::Array[T.any(String, Pathname, Resource)]).returns(String) }
+  def self.format_pip_command(command)
+    command.map { |argument| argument.is_a?(Resource) ? argument.url : argument }.join(" ")
+  end
+
+  sig { params(command: T::Array[T.any(String, Pathname, Resource)], print_stderr: T::Boolean).returns(String) }
+  def self.pip_output(command, print_stderr: false)
+    Sandbox.ensure_sandbox_available!
+    if Sandbox.avoid_nested_sandboxing?
+      raise "Python metadata inspection needs CoffeeBrewery's sandbox, which cannot run inside another sandbox."
+    end
+
+    unless Sandbox.full_write_isolation?
+      opoo <<~EOS
+        The sandbox cannot restrict file permissions or ownership.
+        Python metadata inspection uses the available sandbox protections.
+      EOS
+    end
+
+    Dir.mktmpdir("homebrew-pypi", COFFEEBREWER_TEMP) do |directory|
+      directory = Pathname(directory)
+      command = command.each_with_index.map do |argument, index|
+        next argument unless argument.is_a?(Resource)
+
+        argument.fetch(quiet: !print_stderr, skip_patches: true)
+        source = directory/"source-#{index}"
+        source.mkpath
+        source.cd { argument.downloader.stage { source = Pathname.pwd } }
+        source
+      end
+
+      sandbox_env = ENV.to_h.select do |key, _value|
+        key.match?(/\A(?:COFFEEBREWER_(?:LIBRARY|PREFIX|GIT)|(?:https?|all|no)_proxy)\z/i)
+      end
+      secrets = sandbox_env.filter_map { |key, value| value.presence if key.match?(/\A(?:https?|all)_proxy\z/i) }
+      # Command diagnostics shell-escape URLs, but printed output can contain the original values.
+      secrets += secrets.map { |secret| secret.shellescape.gsub('\=', "=") }
+      sandbox_env = sandbox_env.map { |key, value| "#{key}=#{value}" }
+      Sandbox.for_operation(write_paths: [directory], network_access: true)
+             .capture("/usr/bin/env", args: ["-i", "PATH=#{ENV.fetch("PATH")}", *sandbox_env, "HOME=#{directory}",
+                                             "TMPDIR=#{directory}", "PIP_CACHE_DIR=#{directory}/cache",
+                                             "PIP_CONFIG_FILE=#{File::NULL}", "PIP_REQUIRE_VIRTUALENV=false",
+                                             *command],
+                                     chdir: directory, print_stderr:, secrets:).stdout
+    end
+  end
+
+  sig {
+    params(
+      packages: T::Array[Package], python_name: String, print_stderr: T::Boolean,
+      ignore_cooldown_package: T.nilable(Package)
+    ).returns(T::Array[Package])
+  }
+  def self.pip_report(packages, python_name: "python", print_stderr: false, ignore_cooldown_package: nil)
+    return [] if packages.blank?
+
+    # Delay packages published in the last day so resource resolution is less
+    # likely to pick a freshly compromised PyPI release. A cooldown-exempt main
+    # package (third-party taps only) is passed by its direct sdist URL so pip's
+    # index upload-time filter cannot hide a just-published release; its
+    # dependencies stay index-resolved and cooled.
+    requirements = packages.map do |package|
+      exempt = ignore_cooldown_package && package == ignore_cooldown_package && package.valid_pypi_package?
+      next package.requirement unless exempt
+
+      name, sdist_url = package.pypi_info
+      next package.to_s if sdist_url.blank?
+
+      # PEP 508 direct reference. Any extras are preserved so their dependencies
+      # still resolve, while the URL bypasses the index upload-time filter.
+      extras = package.extras.presence
+      next sdist_url unless extras
+
+      "#{name}[#{extras.join(",")}] @ #{sdist_url}"
+    end
+
+    command = [
+      Utils::Path.formula_opt_libexec(python_name)/"bin/python",
+      "-m", "pip", "install", "-q", "--disable-pip-version-check",
+      "--dry-run", "--ignore-installed",
+      "--uploaded-prior-to=P#{CoffeeBrewery::RELEASE_COOLDOWN_DAYS}D",
+      "--report=/dev/stdout", *requirements
+    ]
+    pip_output = begin
+      PyPI.pip_output(command, print_stderr:)
+    rescue ErrorDuringExecution
+      odie <<~EOS
+        Unable to determine dependencies for "#{packages.join(" ")}" because of a failure when running
+        `#{format_pip_command(command)}`.
+        Please update the resources manually.
+      EOS
+    end
+    pip_report_to_packages(JSON.parse(pip_output)).uniq
+  end
+
+  sig { params(report: T::Hash[String, T.untyped]).returns(T::Array[Package]) }
+  def self.pip_report_to_packages(report)
+    return [] if report.blank?
+
+    report["install"].filter_map do |package|
+      name = normalize_python_package(package["metadata"]["name"])
+      version = package["metadata"]["version"]
+
+      Package.new "#{name}==#{version}"
+    end
+  end
+end

@@ -1,0 +1,727 @@
+# typed: false
+# frozen_string_literal: true
+
+RSpec.describe Cask::CaskLoader, :cask do
+  describe "::for" do
+    let(:tap) { CoreCaskTap.instance }
+
+    context "when a cask is renamed" do
+      let(:old_token) { "version-newest" }
+      let(:new_token) { "version-latest" }
+
+      let(:api_casks) do
+        [old_token, new_token].to_h do |token|
+          hash = described_class.load(new_token).to_hash_with_variations
+          json = JSON.pretty_generate(hash)
+          cask_json = JSON.parse(json)
+
+          [token, cask_json.except("token")]
+        end
+      end
+      let(:cask_renames) do
+        { old_token => new_token }
+      end
+
+      before do
+        allow(CoffeeBrewery::API).to receive_messages(cask_tokens: api_casks.keys, cask_renames:)
+        allow(CoffeeBrewery::API).to receive(:cask_token?) { |token| api_casks.key?(token) }
+        allow(CoffeeBrewery::API::Cask)
+          .to receive(:all_casks)
+          .and_return(api_casks)
+
+        allow(tap).to receive(:cask_renames)
+          .and_return(cask_renames)
+      end
+
+      context "when not using the API", :no_api do
+        it "warns when using the short token" do
+          expect do
+            expect(described_class.for("version-newest")).to be_a Cask::CaskLoader::FromPathLoader
+          end.to output(/version-newest was renamed to version-latest/).to_stderr
+        end
+
+        it "warns when using the full token" do
+          expect do
+            expect(described_class.for("homebrew/cask/version-newest")).to be_a Cask::CaskLoader::FromPathLoader
+          end.to output(/version-newest was renamed to version-latest/).to_stderr
+        end
+      end
+
+      context "when using the API" do
+        it "warns when using the short token" do
+          expect do
+            expect(described_class.for("version-newest")).to be_a Cask::CaskLoader::FromAPILoader
+          end.to output(/version-newest was renamed to version-latest/).to_stderr
+        end
+
+        it "warns when using the full token" do
+          expect do
+            expect(described_class.for("homebrew/cask/version-newest")).to be_a Cask::CaskLoader::FromAPILoader
+          end.to output(/version-newest was renamed to version-latest/).to_stderr
+        end
+      end
+    end
+
+    context "when not using the API", :no_api do
+      context "when a cask is migrated" do
+        let(:token) { "local-caffeine" }
+
+        let(:core_tap) { CoreTap.instance }
+        let(:core_cask_tap) { CoreCaskTap.instance }
+
+        let(:tap_migrations) do
+          {
+            token => new_tap.name,
+          }
+        end
+
+        before do
+          old_tap.path.mkpath
+          new_tap.path.mkpath
+          (old_tap.path/"tap_migrations.json").write tap_migrations.to_json
+        end
+
+        context "to a cask in another tap" do
+          # Can't use local-caffeine. It is a fixture in the :core_cask_tap and would take precedence over :new_tap.
+          let(:token) { "some-cask" }
+
+          let(:old_tap) { Tap.fetch("homebrew", "foo") }
+          let(:new_tap) { Tap.fetch("homebrew", "bar") }
+
+          let(:cask_file) { new_tap.cask_dir/"#{token}.rb" }
+
+          before do
+            new_tap.cask_dir.mkpath
+            FileUtils.touch cask_file
+          end
+
+          # FIXME
+          # It would be preferable not to print a warning when installing with the short token
+          it "warns when loading the short token" do
+            expect do
+              described_class.for(token)
+            end.to output(%r{Cask #{old_tap}/#{token} was renamed to #{new_tap}/#{token}\.}).to_stderr
+          end
+
+          it "warns with the canonical token when loading an uppercase short token" do
+            expect do
+              described_class.for(token.upcase)
+            end.to output(%r{Cask #{old_tap}/#{token} was renamed to #{new_tap}/#{token}\.}).to_stderr
+          end
+
+          it "does not warn when loading the full token in the new tap" do
+            expect do
+              described_class.for("#{new_tap}/#{token}")
+            end.not_to output.to_stderr
+          end
+
+          it "warns when loading the full token in the old tap" do
+            expect do
+              described_class.for("#{old_tap}/#{token}")
+            end.to output(%r{Cask #{old_tap}/#{token} was renamed to #{new_tap}/#{token}\.}).to_stderr
+          end
+
+          it "raises when the migrated tap is not installed" do
+            FileUtils.rm_rf new_tap.path
+
+            expect(new_tap).not_to receive(:ensure_installed!)
+
+            expect { described_class.load("#{old_tap}/#{token}") }
+              .to raise_error(Cask::TapCaskUnavailableError, /If you trust this tap/)
+          end
+        end
+
+        context "to a formula in the default tap" do
+          let(:old_tap) { core_cask_tap }
+          let(:new_tap) { core_tap }
+
+          let(:formula_file) { new_tap.formula_dir/"#{token}.rb" }
+
+          before do
+            new_tap.formula_dir.mkpath
+            FileUtils.touch formula_file
+          end
+
+          it "does not warn when loading the short token" do
+            expect do
+              described_class.for(token)
+            end.not_to output.to_stderr
+          end
+        end
+
+        context "to a formula in another tap" do
+          let(:token) { "some-cask" }
+
+          let(:old_tap) { Tap.fetch("homebrew", "foo") }
+          let(:new_tap) { Tap.fetch("homebrew", "bar") }
+
+          let(:formula_file) { new_tap.formula_dir/"#{token}.rb" }
+
+          before do
+            new_tap.formula_dir.mkpath
+            FileUtils.touch formula_file
+          end
+
+          it "does not warn when loading the short token" do
+            expect do
+              described_class.for(token)
+            end.not_to output.to_stderr
+          end
+        end
+
+        context "to the default tap" do
+          let(:old_tap) { core_tap }
+          let(:new_tap) { core_cask_tap }
+
+          let(:cask_file) { new_tap.cask_dir/"#{token}.rb" }
+
+          before do
+            new_tap.cask_dir.mkpath
+            FileUtils.touch cask_file
+          end
+
+          it "does not warn when loading the short token" do
+            expect do
+              described_class.for(token)
+            end.not_to output.to_stderr
+          end
+
+          it "does not warn when loading the full token in the default tap" do
+            expect do
+              described_class.for("#{new_tap}/#{token}")
+            end.not_to output.to_stderr
+          end
+
+          it "warns when loading the full token in the old tap" do
+            expect do
+              described_class.for("#{old_tap}/#{token}")
+            end.to output(%r{Cask #{old_tap}/#{token} was renamed to #{token}\.}).to_stderr
+          end
+
+          # FIXME
+          # context "when there is an infinite tap migration loop" do
+          #   before do
+          #     (new_tap.path/"tap_migrations.json").write({
+          #       token => old_tap.name,
+          #     }.to_json)
+          #   end
+          #
+          #   it "stops recursing" do
+          #     expect do
+          #       klass.for("#{new_tap}/#{token}")
+          #     end.not_to output.to_stderr
+          #   end
+          # end
+        end
+      end
+    end
+  end
+
+  describe "::load_from_installed_caskfile" do
+    let(:caskfile) do
+      (Cask::Caskroom.path/"stubbed/.metadata/1.0/20250101000000.000/Casks").tap(&:mkpath)/"stubbed.json"
+    end
+
+    before { caskfile.write("{}") }
+
+    it "falls back to the API for missing artifacts by default" do
+      allow(Cask::CaskLoader::FromAPILoader).to receive(:try_new).and_call_original
+      allow(Cask::CaskLoader::FromAPILoader).to receive(:try_new).with("stubbed").and_return(
+        Cask::CaskLoader::FromInstanceLoader.new(Cask::Cask.new("stubbed") { app "Stubbed.app" }),
+      )
+
+      expect(described_class.load_from_installed_caskfile(caskfile).artifacts_list(uninstall_only: true))
+        .to eq([{ app: ["Stubbed.app"] }])
+    end
+
+    it "does not consult the API when api_fallback is disabled" do
+      expect(CoffeeBrewery::API).not_to receive(:cask_token?)
+
+      expect(described_class.load_from_installed_caskfile(caskfile, api_fallback: false).artifacts_list)
+        .to be_empty
+    end
+  end
+
+  describe "::load_prefer_installed" do
+    let(:foo_tap) { Tap.fetch("user", "foo") }
+    let(:bar_tap) { Tap.fetch("user", "bar") }
+
+    let(:blank_tab) { instance_double(Cask::Tab, tap: nil) }
+    let(:installed_tab) { instance_double(Cask::Tab, tap: bar_tap) }
+
+    let(:cask_with_foo_tap) { instance_double(Cask::Cask, token: "test-cask", tap: foo_tap) }
+    let(:cask_with_bar_tap) { instance_double(Cask::Cask, token: "test-cask", tap: bar_tap) }
+
+    let(:load_args) { { config: nil, warn: true } }
+
+    before do
+      allow(described_class).to receive(:load).with("test-cask", load_args).and_return(cask_with_foo_tap)
+      allow(described_class).to receive(:load).with("user/foo/test-cask", load_args).and_return(cask_with_foo_tap)
+      allow(described_class).to receive(:load).with("user/bar/test-cask", load_args).and_return(cask_with_bar_tap)
+    end
+
+    it "returns the correct cask when no tap is specified and no tab exists" do
+      allow_any_instance_of(Cask::Cask).to receive(:tab).and_return(blank_tab)
+      expect(described_class).to receive(:load).with("test-cask", load_args)
+
+      expect(described_class.load_prefer_installed("test-cask").tap).to eq(foo_tap)
+    end
+
+    it "returns the correct cask when no tap is specified but a tab exists" do
+      allow_any_instance_of(Cask::Cask).to receive(:tab).and_return(installed_tab)
+      expect(described_class).to receive(:load).with("user/bar/test-cask", load_args)
+
+      expect(described_class.load_prefer_installed("test-cask").tap).to eq(bar_tap)
+    end
+
+    it "returns the correct cask when a tap is specified and no tab exists" do
+      allow_any_instance_of(Cask::Cask).to receive(:tab).and_return(blank_tab)
+      expect(described_class).to receive(:load).with("user/bar/test-cask", load_args)
+
+      expect(described_class.load_prefer_installed("user/bar/test-cask").tap).to eq(bar_tap)
+    end
+
+    it "returns the correct cask when no tap is specified and a tab exists" do
+      allow_any_instance_of(Cask::Cask).to receive(:tab).and_return(installed_tab)
+      expect(described_class).to receive(:load).with("user/foo/test-cask", load_args)
+
+      expect(described_class.load_prefer_installed("user/foo/test-cask").tap).to eq(foo_tap)
+    end
+
+    it "returns the correct cask when no tap is specified and the tab lists a tap that isn't installed" do
+      allow_any_instance_of(Cask::Cask).to receive(:tab).and_return(installed_tab)
+      expect(described_class).to receive(:load).with("user/bar/test-cask", load_args)
+                                               .and_raise(Cask::CaskUnavailableError.new("test-cask", bar_tap))
+      expect(described_class).to receive(:load).with("test-cask", load_args)
+
+      expect(described_class.load_prefer_installed("test-cask").tap).to eq(foo_tap)
+    end
+  end
+
+  describe "FromPathLoader" do
+    it "masks sensitive environment variables while evaluating casks" do
+      cask_token = "sensitive-env"
+      cask_file = mktmpdir/"#{cask_token}.rb"
+      cask_file.write <<~RUBY
+        cask "#{cask_token}" do
+          version "1.0.0"
+          sha256 "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+
+          url "https://example.com/app.dmg"
+          name "Sensitive Env"
+          desc ENV.fetch("COFFEEBREWER_SECRET_TOKEN", "") == "password" ? "Secret leaked" : "Secret masked"
+          homepage "https://example.com"
+
+          app "App.app"
+        end
+      RUBY
+
+      with_env(COFFEEBREWER_SECRET_TOKEN: "password") do
+        cask = Cask::CaskLoader::FromPathLoader.new(cask_file).load(config: nil)
+
+        expect(cask.desc).to eq("Secret masked")
+        expect(ENV.fetch("COFFEEBREWER_SECRET_TOKEN", nil)).to eq("password")
+      end
+    end
+
+    it "allows the GitHub API token while evaluating casks" do
+      cask_token = "github-token-env"
+      cask_file = mktmpdir/"#{cask_token}.rb"
+      cask_file.write <<~RUBY
+        cask "#{cask_token}" do
+          version "1.0.0"
+          sha256 "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+
+          url "https://example.com/app.dmg"
+          name "GitHub Token Env"
+          desc ENV.key?("COFFEEBREWER_GITHUB_API_TOKEN") ? "Token present" : "Token absent"
+          homepage "https://example.com"
+
+          app "App.app"
+        end
+      RUBY
+
+      with_env(COFFEEBREWER_GITHUB_API_TOKEN: "github-token") do
+        cask = Cask::CaskLoader::FromPathLoader.new(cask_file).load(config: nil)
+
+        expect(cask.desc).to eq("Token present")
+      end
+    end
+
+    it "refuses untrusted third-party tap casks when trust is enabled", :trust_store do
+      tap = Tap.fetch("thirdparty", "foo")
+      cask_token = "sensitive-env"
+      cask_file = tap.cask_dir/"#{cask_token}.rb"
+      cask_file.dirname.mkpath
+      cask_file.write <<~RUBY
+        cask "#{cask_token}" do
+          version "1.0.0"
+          sha256 "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+
+          url "https://example.com/app.dmg"
+          name "Sensitive Env"
+          desc "Sensitive Env"
+          homepage "https://example.com"
+
+          app "App.app"
+        end
+      RUBY
+
+      expect { Cask::CaskLoader::FromPathLoader.new(cask_file).load(config: nil) }
+        .to raise_error(CoffeeBrewery::UntrustedTapError, %r{thirdparty/foo})
+
+      CoffeeBrewery::Trust.trust!(:cask, "thirdparty/foo/sensitive-env")
+
+      expect(Cask::CaskLoader::FromPathLoader.new(cask_file).load(config: nil).full_name)
+        .to eq("thirdparty/foo/sensitive-env")
+    ensure
+      CoffeeBrewery::Trust.clear!(:cask)
+      FileUtils.rm_rf COFFEEBREWER_TAP_DIRECTORY/"thirdparty"
+    end
+
+    describe "loading a cask with a removed DSL method" do
+      let(:tmpdir) { mktmpdir }
+      let(:cask_token) { "removed-method-cask" }
+      let(:cask_file) { tmpdir/"#{cask_token}.rb" }
+      let(:cask_content) do
+        <<~RUBY
+          cask "#{cask_token}" do
+            version "1.0.0"
+            sha256 "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+
+            url "https://example.com/app.dmg"
+            appcast "https://example.com/appcast.xml"
+            name "Removed Method Cask"
+            homepage "https://example.com"
+
+            app "App.app"
+          end
+        RUBY
+      end
+
+      before do
+        tmpdir.mkpath
+        cask_file.write(cask_content)
+      end
+
+      after do
+        tmpdir.rmtree if tmpdir.exist?
+      end
+
+      it "raises CaskInvalidError" do
+        loader = Cask::CaskLoader::FromPathLoader.new(cask_file)
+        expect { loader.load(config: nil) }.to raise_error(Cask::CaskInvalidError)
+      end
+
+      it "does not set CoffeeBrewery.failed" do
+        loader = Cask::CaskLoader::FromPathLoader.new(cask_file)
+        expect { loader.load(config: nil) }.to raise_error(Cask::CaskInvalidError)
+        expect(CoffeeBrewery).not_to be_failed
+      end
+
+      it "raises CaskUnreadableError when loaded from installed caskfile" do
+        loader = Cask::CaskLoader::FromPathLoader.new(cask_file)
+        loader.from_installed_caskfile = true
+        expect { loader.load(config: nil) }.to raise_error(Cask::CaskUnreadableError, /appcast/)
+      end
+    end
+
+    describe "loading a cask JSON file with removed conflicts_with keys" do
+      let(:tmpdir) { mktmpdir }
+      let(:cask_token) { "removed-conflicts-key-cask" }
+      let(:cask_file) { tmpdir/"#{cask_token}.json" }
+      let(:cask_content) do
+        <<~JSON
+          {
+            "token": "#{cask_token}",
+            "full_token": "#{cask_token}",
+            "tap": "homebrew/cask",
+            "name": [],
+            "desc": null,
+            "homepage": "https://example.com",
+            "url": "https://example.com/#{cask_token}.zip",
+            "version": "1.0.0",
+            "installed": null,
+            "outdated": false,
+            "sha256": "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+            "artifacts": [
+              {
+                "app": [
+                  "App.app"
+                ]
+              }
+            ],
+            "caveats": null,
+            "depends_on": {},
+            "conflicts_with": {
+              "formula": [
+                "some-formula"
+              ]
+            },
+            "container": null,
+            "rename": [],
+            "auto_updates": null,
+            "tap_git_head": "abcdef1234567890abcdef1234567890abcdef12",
+            "languages": [],
+            "ruby_source_path": "Casks/#{cask_token}.rb",
+            "ruby_source_checksum": {
+              "sha256": "d3c19b564ee5a17f22191599ad795a6cc9c4758d0e1269f2d13207155b378dea"
+            }
+          }
+        JSON
+      end
+
+      before do
+        tmpdir.mkpath
+        cask_file.write(cask_content)
+      end
+
+      after do
+        tmpdir.rmtree if tmpdir.exist?
+      end
+
+      it "raises CaskInvalidError" do
+        loader = Cask::CaskLoader::FromPathLoader.new(cask_file)
+        expect { loader.load(config: nil) }.to raise_error(Cask::CaskInvalidError, /Unknown key: :formula/)
+      end
+
+      it "raises CaskUnreadableError when loaded from installed caskfile" do
+        loader = Cask::CaskLoader::FromPathLoader.new(cask_file)
+        loader.from_installed_caskfile = true
+        expect { loader.load(config: nil) }.to raise_error(Cask::CaskUnreadableError, /Unknown key: :formula/)
+      end
+    end
+  end
+
+  describe "FromPathLoader with symlinked taps" do
+    let(:cask_token) { "testcask" }
+    let(:tmpdir) { mktmpdir }
+    let(:real_tap_path) { tmpdir / "real_tap" }
+    let(:homebrew_prefix) { tmpdir / "homebrew" }
+    let(:taps_dir) { homebrew_prefix / "Library" / "Taps" / "testuser" }
+    let(:symlinked_tap_path) { taps_dir / "homebrew-testtap" }
+    let(:cask_file_path) { symlinked_tap_path / "Casks" / "#{cask_token}.rb" }
+    let(:cask_content) do
+      <<~RUBY
+        cask "#{cask_token}" do
+          version "1.0.0"
+          sha256 "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+
+          url "https://example.com/#{cask_token}-\#{version}.dmg"
+          name "Test Cask"
+          desc "A test cask for symlink testing"
+          homepage "https://example.com"
+
+          app "TestCask.app"
+        end
+      RUBY
+    end
+
+    after do
+      tmpdir.rmtree if tmpdir.exist?
+    end
+
+    before do
+      # Create real tap directory structure
+      (real_tap_path / "Casks").mkpath
+      (real_tap_path / "Casks" / "#{cask_token}.rb").write(cask_content)
+
+      # Create homebrew prefix structure
+      taps_dir.mkpath
+
+      # Create symlink to the tap (this simulates what setup-homebrew does)
+      symlinked_tap_path.make_symlink(real_tap_path)
+
+      # Set COFFEEBREWER_LIBRARY to our test prefix for the security check
+      stub_const("COFFEEBREWER_LIBRARY", homebrew_prefix / "Library")
+      allow(CoffeeBrewery::EnvConfig).to receive(:forbid_packages_from_paths?).and_return(true)
+    end
+
+    context "when COFFEEBREWER_FORBID_PACKAGES_FROM_PATHS is enabled" do
+      it "allows loading casks from symlinked taps" do
+        loader = Cask::CaskLoader::FromPathLoader.try_new(cask_file_path)
+        expect(loader).not_to be_nil
+        expect(loader).to be_a(Cask::CaskLoader::FromPathLoader)
+
+        cask = loader.load(config: nil)
+        expect(cask.token).to eq(cask_token)
+        expect(cask.version).to eq(Version.new("1.0.0"))
+      end
+    end
+
+    context "when COFFEEBREWER_FORBID_PACKAGES_FROM_PATHS is disabled" do
+      before do
+        allow(CoffeeBrewery::EnvConfig).to receive(:forbid_packages_from_paths?).and_return(false)
+      end
+
+      it "allows loading casks from symlinked taps" do
+        loader = Cask::CaskLoader::FromPathLoader.try_new(cask_file_path)
+        expect(loader).not_to be_nil
+        expect(loader).to be_a(Cask::CaskLoader::FromPathLoader)
+      end
+    end
+  end
+
+  describe "::resolve_installed_artifacts" do
+    let(:api_cask) do
+      Cask::Cask.new("api-cask") do
+        app "API.app"
+        uninstall quit: "com.example.api"
+      end
+    end
+    let(:api_artifacts) { [{ uninstall: [{ quit: "com.example.api" }] }, { app: ["API.app"] }] }
+
+    def stub_api_loader(token, loader = Cask::CaskLoader::FromInstanceLoader.new(api_cask))
+      allow(Cask::CaskLoader::FromAPILoader).to receive(:try_new).with(token).and_return(loader)
+    end
+
+    it "uses uninstall artifacts from the signed API for an untapped cask" do
+      stub_api_loader("api-cask")
+
+      expect(described_class.resolve_installed_artifacts("api-cask", nil)).to eq(api_artifacts)
+    end
+
+    it "uses uninstall artifacts from the signed API for a core tap cask" do
+      stub_api_loader("api-cask")
+
+      expect(described_class.resolve_installed_artifacts("api-cask", nil, tap: CoreCaskTap.instance))
+        .to eq(api_artifacts)
+    end
+
+    it "recovers from a recorded tap without consulting the API" do
+      token = "thirdparty-cask"
+      tap = Tap.fetch("thirdparty", "present")
+      allow(described_class).to receive(:load).with("#{tap}/#{token}", warn: false).and_return(api_cask)
+      allow(CoffeeBrewery::API).to receive(:cask_token?).and_raise(ErrorDuringExecution.new(["curl"], status: 22))
+
+      expect(described_class.resolve_installed_artifacts(token, nil, tap:)).to eq(api_artifacts)
+    end
+
+    it "recovers from the local core tap when the API is opted out of", :no_api do
+      token = "opted-out-cask"
+      allow(Cask::CaskLoader::FromNameLoader).to receive(:try_new).with(token, warn: false)
+                                                                  .and_return(Cask::CaskLoader::FromInstanceLoader.new(api_cask))
+      allow(CoffeeBrewery::API).to receive(:cask_token?).and_raise(ErrorDuringExecution.new(["curl"], status: 22))
+
+      expect(described_class.resolve_installed_artifacts(token, nil, tap: CoreCaskTap.instance)).to eq(api_artifacts)
+    end
+
+    it "returns empty artifacts for a removed cask" do
+      allow(CoffeeBrewery::API).to receive_messages(cask_token?: false, cask_renames: {})
+
+      expect(described_class.resolve_installed_artifacts("removed-cask", nil)).to eq([])
+    end
+
+    it "returns empty artifacts when the membership check fails" do
+      allow(CoffeeBrewery::API).to receive(:cask_token?).and_raise(ErrorDuringExecution.new(["curl"], status: 22))
+
+      expect(described_class.resolve_installed_artifacts("unavailable-membership", nil)).to eq([])
+    end
+
+    it "returns empty artifacts when the signed loader fails" do
+      token = "unreadable"
+      loader = Cask::CaskLoader::FromAPILoader.new(token)
+      allow(loader).to receive(:load).and_raise(Cask::CaskError.new("unreadable"))
+      stub_api_loader(token, loader)
+
+      expect(described_class.resolve_installed_artifacts(token, nil)).to eq([])
+    end
+
+    it "returns empty artifacts when the signed index has no cask payload" do
+      token = "missing-payload"
+      loader = Cask::CaskLoader::FromAPILoader.new(token)
+      allow(loader).to receive(:load).and_raise(KeyError.new("key not found: #{token.inspect}"))
+      stub_api_loader(token, loader)
+
+      expect(described_class.resolve_installed_artifacts(token, nil)).to eq([])
+    end
+
+    it "returns empty artifacts when the API cannot be loaded" do
+      token = "unavailable"
+      loader = Cask::CaskLoader::FromAPILoader.new(token)
+      allow(loader).to receive(:load).and_raise(SystemExit.new(1))
+      stub_api_loader(token, loader)
+
+      expect(described_class.resolve_installed_artifacts(token, nil)).to eq([])
+    end
+
+    it "returns empty artifacts when tap lookup is ambiguous" do
+      token = "ambiguous"
+      allow(CoffeeBrewery::API).to receive_messages(cask_token?: false, cask_renames: {})
+      allow(Cask::CaskLoader::FromNameLoader).to receive(:try_new)
+        .with(token, warn: false)
+        .and_raise(Cask::TapCaskAmbiguityError.new(token, []))
+
+      expect(described_class.resolve_installed_artifacts(token, nil)).to eq([])
+    end
+
+    it "returns empty artifacts when the recorded tap is unavailable" do
+      token = "unavailable-tap"
+      tap = Tap.fetch("thirdparty", "missing")
+      allow(described_class).to receive(:load)
+        .with("#{tap}/#{token}", warn: false)
+        .and_raise(Cask::TapCaskUnavailableError.new(tap, token))
+
+      expect(described_class.resolve_installed_artifacts(token, nil, tap:)).to eq([])
+    end
+  end
+
+  describe "::recover_from_installed_caskfile" do
+    let(:caskroom) { mktmpdir/"Caskroom" }
+
+    before { allow(Cask::Caskroom).to receive(:path).and_return(caskroom) }
+
+    it "reconstructs the installed version and artifacts from its receipt" do
+      token = "recoverable"
+      caskfile = caskroom/token/".metadata/1.0/20250101000000.000/Casks/#{token}.rb"
+      caskfile.dirname.mkpath
+      caskfile.write("unreadable")
+      (caskroom/token/".metadata/INSTALL_RECEIPT.json").write JSON.generate({
+        "source"                  => { "version" => "1.0" },
+        "uninstall_flight_blocks" => false,
+        "uninstall_artifacts"     => [{ "app" => ["Recoverable.app"] }],
+      })
+      expect(CoffeeBrewery::API).not_to receive(:cask_token?)
+
+      recovered_cask = described_class.recover_from_installed_caskfile(caskfile)
+
+      expect([
+        recovered_cask&.version&.to_s,
+        recovered_cask&.artifacts_list(uninstall_only: true),
+      ]).to eq([
+        "1.0",
+        [{ app: ["Recoverable.app"] }],
+      ])
+    end
+
+    it "does not reconstruct missing uninstall flight blocks" do
+      token = "flight-block"
+      caskfile = caskroom/token/".metadata/1.0/20250101000000.000/Casks/#{token}.rb"
+      caskfile.dirname.mkpath
+      caskfile.write("unreadable")
+      (caskroom/token/".metadata/INSTALL_RECEIPT.json").write JSON.generate({
+        "source"                  => { "version" => "1.0" },
+        "uninstall_flight_blocks" => true,
+        "uninstall_artifacts"     => [{ "uninstall_preflight" => nil }],
+      })
+      expect(CoffeeBrewery::API).not_to receive(:cask_token?)
+
+      expect(described_class.recover_from_installed_caskfile(caskfile)).to be_nil
+    end
+
+    it "returns nil when the reconstructed metadata remains invalid" do
+      token = "still-invalid"
+      caskfile = caskroom/token/".metadata/1.0/20250101000000.000/Casks/#{token}.rb"
+      caskfile.dirname.mkpath
+      caskfile.write("unreadable")
+      (caskroom/token/".metadata/INSTALL_RECEIPT.json").write JSON.generate({
+        "source"              => { "version" => "1.0" },
+        "uninstall_artifacts" => [{ "app" => ["Still Invalid.app"] }],
+      })
+      allow(Cask::CaskLoader::FromAPILoader).to receive(:new)
+        .and_raise(Cask::CaskInvalidError.new(token, "invalid recovered metadata"))
+
+      expect(described_class.recover_from_installed_caskfile(caskfile)).to be_nil
+    end
+  end
+end

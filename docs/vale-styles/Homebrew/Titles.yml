@@ -5,10 +5,10 @@ scope: heading.h1
 match: $title
 style: AP
 exceptions:
-  - brew(1)
+  - coffee(1)
   - macOS
-  - Homebrew/brew
-  - Homebrew/homebrew-core
-  - Homebrew/homebrew-cask
+  - CoffeeBrewery/coffee
+  - CoffeeBrewery/homebrew-core
+  - CoffeeBrewery/homebrew-cask
   - (or Linux)
   - (formerly Kandji)

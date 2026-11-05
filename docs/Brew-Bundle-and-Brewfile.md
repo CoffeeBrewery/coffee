@@ -1,70 +1,70 @@
 ---
-description: Use Homebrew Bundle and Brewfiles to install project dependencies, check software requirements and manage packages on macOS and Linux.
+description: Use CoffeeBrewery Bundle and Brewfiles to install project dependencies, check software requirements and manage packages on macOS and Linux.
 last_review_date: "2026-10-25"
 ---
 
-# Homebrew Bundle, `brew bundle` and `Brewfile`
+# CoffeeBrewery Bundle, `coffee bundle` and `Brewfile`
 
-Homebrew Bundle is run with the `brew bundle` command.
+CoffeeBrewery Bundle is run with the `coffee bundle` command.
 
-It uses `Brewfile`s to provide a declarative interface for installing/upgrading packages with Homebrew and starting services with `brew services`.
+It uses `Brewfile`s to provide a declarative interface for installing/upgrading packages with CoffeeBrewery and starting services with `coffee services`.
 
-Rather than specifying the `brew` commands you wish to run, you can specify the state you wish to reach.
+Rather than specifying the `coffee` commands you wish to run, you can specify the state you wish to reach.
 
-See also the [`brew bundle` section of `man brew`](Manpage.md#bundle-subcommand) or `brew bundle --help`.
+See also the [`coffee bundle` section of `man coffee`](Manpage.md#bundle-subcommand) or `coffee bundle --help`.
 
 ## Basic usage
 
-### `brew bundle`
+### `coffee bundle`
 
 A simple `Brewfile` might contain a formula:
 
 ```ruby
-brew "ruby"
+coffee "ruby"
 ```
 
-When you run `brew bundle install` (or: just `brew bundle` for short), this will take instructions from the `Brewfile` to run `brew install ruby` and install Ruby if needed.
+When you run `coffee bundle install` (or: just `coffee bundle` for short), this will take instructions from the `Brewfile` to run `coffee install ruby` and install Ruby if needed.
 
 ```console
-$ brew bundle
+$ coffee bundle
 Installing ruby
-`brew bundle` complete! 1 Brewfile dependency now installed.
+`coffee bundle` complete! 1 Brewfile dependency now installed.
 ```
 
-If it's outdated, this will run `brew upgrade ruby`.
+If it's outdated, this will run `coffee upgrade ruby`.
 If it's already installed, this will be a no-op.
 
 ```console
-$ brew bundle install
+$ coffee bundle install
 Using ruby
-`brew bundle` complete! 1 Brewfile dependency now installed.
+`coffee bundle` complete! 1 Brewfile dependency now installed.
 ```
 
-### `brew bundle check`
+### `coffee bundle check`
 
-You can check if a `brew bundle install` will do anything by running:
+You can check if a `coffee bundle install` will do anything by running:
 
 ```console
-$ brew bundle check
+$ coffee bundle check
 The Brewfile's dependencies are satisfied.
 ```
 
 You can use this behaviour in scripts like so:
 
 ```bash
-brew bundle check || brew bundle install
+coffee bundle check || coffee bundle install
 ```
 
-If this fails without `--verbose`, run `brew bundle check --verbose` to list unmet dependencies.
+If this fails without `--verbose`, run `coffee bundle check --verbose` to list unmet dependencies.
 
 ### Types
 
-As well as supporting formulae (`brew "..."`), you can also use `brew bundle` with casks, taps, Mac App Store apps, WinGet packages on WSL, VS Code extensions, Go packages, Cargo packages, npm packages, uv tools, Flatpak packages and krew kubectl plugins and to start background services with `brew services`.
+As well as supporting formulae (`coffee "..."`), you can also use `coffee bundle` with casks, taps, Mac App Store apps, WinGet packages on WSL, VS Code extensions, Go packages, Cargo packages, npm packages, uv tools, Flatpak packages and krew kubectl plugins and to start background services with `coffee services`.
 
 ```ruby
 tap "apple/apple"
-brew "apple/apple/game-porting-toolkit"
-brew "postgresql@16", restart_service: true
+coffee "apple/apple/game-porting-toolkit"
+coffee "postgresql@16", restart_service: true
 cask "firefox"
 mas "Refined GitHub", id: 1519867270
 winget "Steam", id: "Valve.Steam"
@@ -82,20 +82,20 @@ flatpak "io.github.dvlv.boxbuddyrs", remote: "flathub-beta"
 ```
 
 WinGet discovery in WSL requires Windows PowerShell 5.1 (`powershell.exe`) and `wslpath`.
-WinGet installs run with installer interactivity disabled. If WinGet reports that elevation is required, `brew bundle` retries through Windows UAC.
+WinGet installs run with installer interactivity disabled. If WinGet reports that elevation is required, `coffee bundle` retries through Windows UAC.
 
 uv tools use the installed `python` or `python@` formula with the highest major/minor Python version, including keg-only versions.
-If no Homebrew Python is installed, uv selects Python as usual.
+If no CoffeeBrewery Python is installed, uv selects Python as usual.
 Already-installed tools keep their existing Python until reinstalled.
 
 A uv tool's `source:` must resolve on another machine, so a local path and the `file://` URL that `uv tool list` reports for one are both rejected when the `Brewfile` is parsed, in their plain and their `git+`-prefixed spellings alike. A tool installed from any of them is dumped without a `source:`.
 
-A Cargo package's `source:` is a git URL (`https://`, `ssh://` or `git://`) and is installed with `cargo install --git`. Neither a local path nor a `file://` URL is accepted, since neither resolves on another machine, and a crate installed from one is dumped without a `source:`. The name is the crate's package name from its `Cargo.toml`, which is not always the name of the repository or of the binary it installs, so `brew bundle dump` output is the reliable thing to copy. A branch, tag or revision chosen when the package was installed is carried in the URL as `?branch=`, `?tag=` or `?rev=`, and is restored with the corresponding `cargo install` flag. Where none was chosen, only the repository is recorded and not the commit currently installed, so restoring a `Brewfile` builds the repository's default branch rather than the exact commit.
+A Cargo package's `source:` is a git URL (`https://`, `ssh://` or `git://`) and is installed with `cargo install --git`. Neither a local path nor a `file://` URL is accepted, since neither resolves on another machine, and a crate installed from one is dumped without a `source:`. The name is the crate's package name from its `Cargo.toml`, which is not always the name of the repository or of the binary it installs, so `coffee bundle dump` output is the reliable thing to copy. A branch, tag or revision chosen when the package was installed is carried in the URL as `?branch=`, `?tag=` or `?rev=`, and is restored with the corresponding `cargo install` flag. Where none was chosen, only the repository is recorded and not the commit currently installed, so restoring a `Brewfile` builds the repository's default branch rather than the exact commit.
 
-Run `brew bundle` again and this outputs:
+Run `coffee bundle` again and this outputs:
 
 ```console
-$ brew bundle
+$ coffee bundle
 Using apple/apple
 Using apple/apple/game-porting-toolkit
 Using postgresql@16
@@ -105,7 +105,7 @@ Using editorconfig.editorconfig
 Using github.com/charmbracelet/crush
 Using ripgrep
 Using mkdocs
-`brew bundle` complete! 9 Brewfile dependencies now installed.
+`coffee bundle` complete! 9 Brewfile dependencies now installed.
 ```
 
 ### Projects
@@ -114,73 +114,73 @@ Adding a `Brewfile` to a project's repository (like you might a `package.json`, 
 
 It allows you to tell users to run a single command to install all dependencies for a project and start any services.
 
-Homebrew supports macOS, Linux and WSL, so one command can set up project dependencies across these environments and in continuous-integration services such as GitHub Actions.
-Homebrew is installed by default on GitHub-hosted macOS runners and can be installed on Linux with [`Homebrew/actions/setup-homebrew`](https://github.com/Homebrew/actions/tree/HEAD/setup-homebrew).
+CoffeeBrewery supports macOS, Linux and WSL, so one command can set up project dependencies across these environments and in continuous-integration services such as GitHub Actions.
+CoffeeBrewery is installed by default on GitHub-hosted macOS runners and can be installed on Linux with [`CoffeeBrewery/actions/setup-homebrew`](https://github.com/CoffeeBrewery/actions/tree/HEAD/setup-homebrew).
 
 See [GitHub's "Scripts To Rule Them All" `script/bootstrap` example](https://github.com/github/scripts-to-rule-them-all/blob/HEAD/script/bootstrap)
-for how you might use a `Brewfile` and `brew bundle` to install project dependencies with Homebrew.
+for how you might use a `Brewfile` and `coffee bundle` to install project dependencies with CoffeeBrewery.
 
-### Homebrew for teams at work
+### CoffeeBrewery for teams at work
 
-For a shared Brewfile maintained in Git, follow [Homebrew for Teams](Homebrew-for-Teams.md).
+For a shared Brewfile maintained in Git, follow [CoffeeBrewery for Teams](CoffeeBrewery-for-Teams.md).
 The guide covers onboarding colleagues, reviewing changes, coordinating updates and keeping personal tools alongside the team's baseline without an MDM.
 
-### `brew bundle dump`
+### `coffee bundle dump`
 
-`Brewfile`s can also be used as a way of saving all supported packages into a single file. `brew bundle dump` is Homebrew's installed-state snapshot command: it records supported installed formulae, casks, taps and other package types as a `Brewfile`.
+`Brewfile`s can also be used as a way of saving all supported packages into a single file. `coffee bundle dump` is CoffeeBrewery's installed-state snapshot command: it records supported installed formulae, casks, taps and other package types as a `Brewfile`.
 
-You can do this with `brew bundle dump --global --force` to write to e.g. `~/.Brewfile` (check `man brew` for the exact path used in your configuration):
+You can do this with `coffee bundle dump --global --force` to write to e.g. `~/.Brewfile` (check `man coffee` for the exact path used in your configuration):
 
 ```console
-brew bundle dump --global --force
+coffee bundle dump --global --force
 ```
 
-If package discovery fails, `brew bundle dump` stops without writing a `Brewfile`, even with `--force`.
+If package discovery fails, `coffee bundle dump` stops without writing a `Brewfile`, even with `--force`.
 
 By default, the generated `Brewfile` also contains descriptions of each of the packages:
 
 ```console
-brew bundle dump --global --force
+coffee bundle dump --global --force
 ```
 
 might add something like the following:
 
 ```ruby
 # Powerful, clean, object-oriented scripting language
-brew "ruby"
+coffee "ruby"
 ```
 
 You can then restore (and, by default, upgrade) all of these with:
 
 ```console
-brew bundle --global
+coffee bundle --global
 ```
 
-You can keep multiple snapshots by writing to different `Brewfile`s with `--file`, commit them to version control and compare them with standard diff tools. To make the active installed state match a snapshot more closely, run `brew bundle cleanup --force --file=/path/to/Brewfile` after installing it to remove supported dependencies not listed in that `Brewfile`.
+You can keep multiple snapshots by writing to different `Brewfile`s with `--file`, commit them to version control and compare them with standard diff tools. To make the active installed state match a snapshot more closely, run `coffee bundle cleanup --force --file=/path/to/Brewfile` after installing it to remove supported dependencies not listed in that `Brewfile`.
 
 ## Advanced usage
 
-### `brew bundle cleanup`
+### `coffee bundle cleanup`
 
-If you've used `brew bundle dump` to store all the software you use, you can quickly cleanup anything else with:
+If you've used `coffee bundle dump` to store all the software you use, you can quickly cleanup anything else with:
 
 ```console
-$ brew bundle cleanup --global --force
+$ coffee bundle cleanup --global --force
 Uninstalling gcc... (1,914 files, 459.8MB)
 Uninstalled 1 formula
 ```
 
-Cleanup also makes Homebrew's global trust store match the selected `Brewfile`.
+Cleanup also makes CoffeeBrewery's global trust store match the selected `Brewfile`.
 It removes trust entries granted manually or by another `Brewfile` if they are
 not declared in the selected file. A `Brewfile` with no trust declarations
 removes every explicit trust entry.
 
-### `brew bundle list`
+### `coffee bundle list`
 
 If you want to get a list of all the formulae in your `Brewfile`, you can use:
 
 ```console
-$ brew bundle list
+$ coffee bundle list
 apple/apple/game-porting-toolkit
 postgresql@16
 ```
@@ -188,112 +188,112 @@ postgresql@16
 You can get other types with e.g.:
 
 ```console
-$ brew bundle list --cask
+$ coffee bundle list --cask
 firefox
 ```
 
-### `brew bundle edit`
+### `coffee bundle edit`
 
 To open your `Brewfile` in your text editor, run:
 
 ```console
-$ brew bundle edit
+$ coffee bundle edit
 Editing /some/project/Brewfile
 ```
 
-### `brew bundle add` and `brew bundle remove`
+### `coffee bundle add` and `coffee bundle remove`
 
-You can add and remove entries to your `Brewfile` by running `brew bundle add` or `brew bundle remove`:
+You can add and remove entries to your `Brewfile` by running `coffee bundle add` or `coffee bundle remove`:
 
 ```console
-brew bundle add wget
-brew bundle remove wget
+coffee bundle add wget
+coffee bundle remove wget
 ```
 
-### `brew bundle exec`
+### `coffee bundle exec`
 
-`brew bundle exec` allows you to run a command in an environment customised by your `Brewfile`.
+`coffee bundle exec` allows you to run a command in an environment customised by your `Brewfile`.
 
 For example, with a `Brewfile` like:
 
 ```ruby
-brew "node"
+coffee "node"
 ```
 
 This will ensure you are always running the correct `node`:
 
 ```console
-$ brew bundle exec which node
+$ coffee bundle exec which node
 /opt/homebrew/opt/node/bin/node
 ```
 
 This can be particularly useful when building software that depends on other software in your `Brewfile`.
-`brew bundle exec` will ensure that all the necessary paths are setup to find everything in your `Brewfile`, linked or unlinked, keg-only or not.
+`coffee bundle exec` will ensure that all the necessary paths are setup to find everything in your `Brewfile`, linked or unlinked, keg-only or not.
 This avoids dealing with issues around individual user or machine `PATH` configuration.
 
-If you want to avoid explicitly having to run `brew bundle check` or `brew bundle install` before `brew bundle exec`, you can use:
+If you want to avoid explicitly having to run `coffee bundle check` or `coffee bundle install` before `coffee bundle exec`, you can use:
 
 ```console
-brew bundle exec --check
-brew bundle exec --install
+coffee bundle exec --check
+coffee bundle exec --install
 ```
 
-If you want to start all the services in your `Brewfile` just during the execution of `brew bundle exec`, use:
+If you want to start all the services in your `Brewfile` just during the execution of `coffee bundle exec`, use:
 
 ```console
-brew bundle exec --services
+coffee bundle exec --services
 ```
 
-Note inside `brew bundle exec`, `brew bundle sh` and `brew bundle env` the environment variable `HOMEBREW_INSIDE_BUNDLE` is set to `1` for easy detection.
+Note inside `coffee bundle exec`, `coffee bundle sh` and `coffee bundle env` the environment variable `COFFEEBREWER_INSIDE_BUNDLE` is set to `1` for easy detection.
 
-### `brew bundle sh`
+### `coffee bundle sh`
 
-`brew bundle sh` is like `brew bundle exec` but it runs your interactive shell of choice, like `brew sh`:
+`coffee bundle sh` is like `coffee bundle exec` but it runs your interactive shell of choice, like `coffee sh`:
 
 ```console
-$ brew bundle sh
-brew bundle $ which node
+$ coffee bundle sh
+coffee bundle $ which node
 /opt/homebrew/opt/node/bin/node
 ```
 
-It's got the same backbone as `brew bundle exec` so the same arguments (e.g. `--check`, `--install`, `--services`) apply.
+It's got the same backbone as `coffee bundle exec` so the same arguments (e.g. `--check`, `--install`, `--services`) apply.
 
-### `brew bundle env`
+### `coffee bundle env`
 
-`brew bundle env` dumps out all the environment variables in a form suitable for adding to a shell.
+`coffee bundle env` dumps out all the environment variables in a form suitable for adding to a shell.
 
 ```console
-$ brew bundle env | grep node
+$ coffee bundle env | grep node
 export PATH="/opt/homebrew/opt/node/bin:${PATH:-}"
 ```
 
-You can use this with `eval` to turn your current shell environment into a `brew bundle exec` or `brew bundle sh` one:
+You can use this with `eval` to turn your current shell environment into a `coffee bundle exec` or `coffee bundle sh` one:
 
 ```console
-$ eval "$(brew bundle env)"
+$ eval "$(coffee bundle env)"
 $ echo "${PATH}" | grep node
 /opt/homebrew/opt/node/bin:/opt/homebrew/bin:/usr/bin:/bin
 ```
 
-It's also got the same backbone as `brew bundle exec` so the same arguments (e.g. `--check`, `--install`) apply.
+It's also got the same backbone as `coffee bundle exec` so the same arguments (e.g. `--check`, `--install`) apply.
 
-### `brew bundle upgrade` and `HOMEBREW_BUNDLE_NO_UPGRADE=1`
+### `coffee bundle upgrade` and `COFFEEBREWER_BUNDLE_NO_UPGRADE=1`
 
-By default, `brew bundle` will attempt to upgrade all software.
-You can disable this behaviour by passing `--no-upgrade` or with `export HOMEBREW_BUNDLE_NO_UPGRADE=1` in your environment.
+By default, `coffee bundle` will attempt to upgrade all software.
+You can disable this behaviour by passing `--no-upgrade` or with `export COFFEEBREWER_BUNDLE_NO_UPGRADE=1` in your environment.
 
-This only skips `brew upgrade`. It does not pin versions or add lock file support.
+This only skips `coffee upgrade`. It does not pin versions or add lock file support.
 
 If you do this, you can upgrade everything with:
 
 ```console
-brew bundle upgrade
+coffee bundle upgrade
 ```
 
 or selective formulae with e.g.:
 
 ```console
-brew bundle --upgrade-formulae ruby
+coffee bundle --upgrade-formulae ruby
 ```
 
 ## Advanced Brewfiles
@@ -307,32 +307,32 @@ Note that some logic may result in different output or behaviour per-machine, th
 Rather than all `Brewfile` functionality one-by-one: here's a commented example of some useful cases:
 
 ```ruby
-# Run `brew tap` with a custom URL
+# Run `coffee tap` with a custom URL
 tap "user/tap-repository", "https://user@bitbucket.org/user/homebrew-tap-repository.git"
 
-# Set arguments passed to all `brew install --cask` commands for `cask "..."`
+# Set arguments passed to all `coffee install --cask` commands for `cask "..."`
 # In this example, pass `--appdir=~/Applications` and `--require_sha`
 cask_args appdir: "~/Applications", require_sha: true
 
-# Pass options to non-Homebrew/core formulae e.g. `brew install denji/nginx/nginx-full --with-rmtp`
-# This also runs `brew link --overwrite nginx-full` and `brew services restart nginx-full` afterwards.
-brew "denji/nginx/nginx-full", link: :overwrite, args: ["with-rmtp"], restart_service: :always
+# Pass options to non-CoffeeBrewery/core formulae e.g. `coffee install denji/nginx/nginx-full --with-rmtp`
+# This also runs `coffee link --overwrite nginx-full` and `coffee services restart nginx-full` afterwards.
+coffee "denji/nginx/nginx-full", link: :overwrite, args: ["with-rmtp"], restart_service: :always
 
-# Runs `brew install mysql@5.6`, `brew services restart mysql@5.6` only if it was installed or upgraded,
-# `brew link mysql@5.6` and `brew unlink mysql` (if `mysql` is installed)
-brew "mysql@5.6", restart_service: :changed, link: true, conflicts_with: ["mysql"]
+# Runs `coffee install mysql@5.6`, `coffee services restart mysql@5.6` only if it was installed or upgraded,
+# `coffee link mysql@5.6` and `coffee unlink mysql` (if `mysql` is installed)
+coffee "mysql@5.6", restart_service: :changed, link: true, conflicts_with: ["mysql"]
 
-# Runs `brew install postgresql@16` and then runs a postinstall command if `postgresql@16` was installed or upgraded.
-brew "postgresql@16",
-     postinstall: "${HOMEBREW_PREFIX}/opt/postgresql@16/bin/postgres -D ${HOMEBREW_PREFIX}/var/postgresql@16"
+# Runs `coffee install postgresql@16` and then runs a postinstall command if `postgresql@16` was installed or upgraded.
+coffee "postgresql@16",
+     postinstall: "${COFFEEBREWER_PREFIX}/opt/postgresql@16/bin/postgres -D ${COFFEEBREWER_PREFIX}/var/postgresql@16"
 
-# Runs `brew install ruby` and, afterwards, writes the installed version to the '.ruby-version` file.
-brew "ruby", version_file: ".ruby-version"
+# Runs `coffee install ruby` and, afterwards, writes the installed version to the '.ruby-version` file.
+coffee "ruby", version_file: ".ruby-version"
 
-# Trusts the tap, formula or cask so Homebrew loads it when tap trust is required.
-# This works on `tap`, `brew` and `cask` entries.
+# Trusts the tap, formula or cask so CoffeeBrewery loads it when tap trust is required.
+# This works on `tap`, `coffee` and `cask` entries.
 tap "user/repository", trusted: true
-brew "user/repository/formula", trusted: true
+coffee "user/repository/formula", trusted: true
 cask "user/repository/cask", trusted: true
 
 # Trusts only named formulae, casks or commands from a tap.
@@ -342,51 +342,51 @@ tap "user/repository", trusted: {
   commands: ["command"],
 }
 
-# Runs `brew install gnupg` or `brew install glibc` only on the specified OS.
-# Note: `brew bundle list` will not output `gnupg` on Linux or `glibc` on macOS` in this case:
+# Runs `coffee install gnupg` or `coffee install glibc` only on the specified OS.
+# Note: `coffee bundle list` will not output `gnupg` on Linux or `glibc` on macOS` in this case:
 # the Ruby logic means they are "hidden" on other platforms.
-brew "gnupg" if OS.mac?
-brew "glibc" if OS.linux?
+coffee "gnupg" if OS.mac?
+coffee "glibc" if OS.linux?
 
-# Runs `brew install --cask --appdir=~/my-apps/Applications`
+# Runs `coffee install --cask --appdir=~/my-apps/Applications`
 cask "firefox", args: { appdir: "~/my-apps/Applications" }
 
-# Runs `brew upgrade opera` to upgrade an auto-updated or unversioned Opera cask
+# Runs `coffee upgrade opera` to upgrade an auto-updated or unversioned Opera cask
 # to the latest version even if already installed.
 # This is used to force an upgrade in software that would typically update itself.
 cask "opera", greedy: true
 
-# Runs `brew install --cask java` only if '/usr/libexec/java_home --failfast` fails (i.e there is no Java)
-# Note: `brew bundle list` will not output `java` if this `system` command succeeds and
-# this `system` command will be run even on `brew bundle check`, not just `brew bundle install`.
+# Runs `coffee install --cask java` only if '/usr/libexec/java_home --failfast` fails (i.e there is no Java)
+# Note: `coffee bundle list` will not output `java` if this `system` command succeeds and
+# this `system` command will be run even on `coffee bundle check`, not just `coffee bundle install`.
 cask "java" unless system "/usr/libexec/java_home", "--failfast"
 
-# Runs `brew install --cask` and runs the command if the Google Cloud cask was installed or upgraded.
-cask "google-cloud-sdk", postinstall: "${HOMEBREW_PREFIX}/bin/gcloud components update"
+# Runs `coffee install --cask` and runs the command if the Google Cloud cask was installed or upgraded.
+cask "google-cloud-sdk", postinstall: "${COFFEEBREWER_PREFIX}/bin/gcloud components update"
 
-# Sets an environment variable to be used e.g. inside `brew bundle exec` or `system` commands in the `Brewfile`.
-# Note: HOMEBREW_PREFIX/bin is _not_ in the `PATH` by default so you can set it this way.
+# Sets an environment variable to be used e.g. inside `coffee bundle exec` or `system` commands in the `Brewfile`.
+# Note: COFFEEBREWER_PREFIX/bin is _not_ in the `PATH` by default so you can set it this way.
 ENV["SOME_ENV_VAR"] = "some_value"
 ```
 
 ### `version_file`
 
-Formula entries support `version_file:` to write the installed formula version to a file after `brew bundle install` processes that formula.
-This is useful when a project wants Homebrew to install a runtime and keep a conventional version file such as `.ruby-version` in sync.
+Formula entries support `version_file:` to write the installed formula version to a file after `coffee bundle install` processes that formula.
+This is useful when a project wants CoffeeBrewery to install a runtime and keep a conventional version file such as `.ruby-version` in sync.
 
 ```ruby
-brew "ruby", version_file: ".ruby-version"
+coffee "ruby", version_file: ".ruby-version"
 ```
 
 ### `trusted`
 
-`tap`, `brew` and `cask` entries support `trusted: true` to declaratively
-[trust](Tap-Trust.md) a non-official tap, formula or cask. Homebrew trusts the
+`tap`, `coffee` and `cask` entries support `trusted: true` to declaratively
+[trust](Tap-Trust.md) a non-official tap, formula or cask. CoffeeBrewery trusts the
 entry before installing it, so it loads even when tap trust is required.
 
 ```ruby
 tap "user/repository", trusted: true
-brew "user/repository/formula", trusted: true
+coffee "user/repository/formula", trusted: true
 cask "user/repository/cask", trusted: true
 ```
 
@@ -408,14 +408,14 @@ The singular and plural keys can both be used. The values are item names inside
 that tap, so `formula: "foo"` on `tap "user/repository"` trusts
 `user/repository/foo` as a formula.
 
-As with `brew trust`, prefer trusting the specific formula, cask or command you
-need over trusting a whole tap. `brew bundle dump` writes `trusted: true` for
-trusted `brew`, `cask` and whole-tap entries. It writes tap-level trust hashes
+As with `coffee trust`, prefer trusting the specific formula, cask or command you
+need over trusting a whole tap. `coffee bundle dump` writes `trusted: true` for
+trusted `coffee`, `cask` and whole-tap entries. It writes tap-level trust hashes
 for trusted formulae, casks and commands from a tap that are not otherwise
 present in the dumped `Brewfile`.
 
-Whenever `brew bundle cleanup` performs cleanup, either because `--force` was
-passed or the confirmation prompt was accepted, it resets Homebrew's global
+Whenever `coffee bundle cleanup` performs cleanup, either because `--force` was
+passed or the confirmation prompt was accepted, it resets CoffeeBrewery's global
 trust store to the values declared by the selected `Brewfile`. This removes
 trust granted manually or by another `Brewfile` when it is not declared in the
 selected file. If the selected `Brewfile` has no trust declarations, every
@@ -423,17 +423,17 @@ explicit trust entry is removed.
 
 ## Versions
 
-Homebrew is a [rolling release](https://en.wikipedia.org/wiki/Rolling_release) package manager so it does not support installing arbitrary older versions of software.
+CoffeeBrewery is a [rolling release](https://en.wikipedia.org/wiki/Rolling_release) package manager so it does not support installing arbitrary older versions of software.
 
-`brew bundle` does not and will not have a concept of a "`Brewfile` lock file" that can be used to pin versions like e.g. `package-lock.json` or `Gemfile.lock`.
+`coffee bundle` does not and will not have a concept of a "`Brewfile` lock file" that can be used to pin versions like e.g. `package-lock.json` or `Gemfile.lock`.
 
-If you want `brew bundle` to stop upgrading installed dependencies, pass `--no-upgrade` or set `export HOMEBREW_BUNDLE_NO_UPGRADE=1`.
+If you want `coffee bundle` to stop upgrading installed dependencies, pass `--no-upgrade` or set `export COFFEEBREWER_BUNDLE_NO_UPGRADE=1`.
 
 For the tradeoffs and alternatives, see [Locking installed formulae at specific versions](Versions.md#locking-installed-formulae-at-specific-versions).
 
 ## Adding new packages support
 
-`brew bundle` currently supports Homebrew formulae and casks, Mac App Store apps, WinGet packages on WSL, Visual Studio Code extensions and variants, Go packages, Cargo packages, npm packages, uv tools, Flatpak packages and krew kubectl plugins.
+`coffee bundle` currently supports CoffeeBrewery formulae and casks, Mac App Store apps, WinGet packages on WSL, Visual Studio Code extensions and variants, Go packages, Cargo packages, npm packages, uv tools, Flatpak packages and krew kubectl plugins.
 
 We are interested in contributions for other packages' installers/checkers/dumpers but they must:
 

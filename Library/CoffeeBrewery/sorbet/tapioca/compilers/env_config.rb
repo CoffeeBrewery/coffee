@@ -1,0 +1,43 @@
+# typed: strict
+# frozen_string_literal: true
+
+require_relative "../../../global"
+require "env_config"
+
+module Tapioca
+  module Compilers
+    class EnvConfig < Tapioca::Dsl::Compiler
+      extend T::Generic
+
+      ConstantType = type_member { { fixed: T::Module[T.anything] } }
+
+      sig { override.returns(T::Enumerable[T::Module[T.anything]]) }
+      def self.gather_constants = [CoffeeBrewery::EnvConfig]
+
+      sig { override.void }
+      def decorate
+        root.create_path(constant) do |mod|
+          dynamic_methods = {}
+          CoffeeBrewery::EnvConfig::ENVS.each do |env, hash|
+            next if CoffeeBrewery::EnvConfig::CUSTOM_IMPLEMENTATIONS.include?(env)
+
+            name = CoffeeBrewery::EnvConfig.env_method_name(env, hash)
+            dynamic_methods[name] = hash[:default]
+          end
+
+          dynamic_methods.each do |method, default|
+            return_type = if method.end_with?("?")
+              "T::Boolean"
+            elsif default
+              "String"
+            else
+              "T.nilable(::String)"
+            end
+
+            mod.create_method(method, return_type:, class_method: true)
+          end
+        end
+      end
+    end
+  end
+end

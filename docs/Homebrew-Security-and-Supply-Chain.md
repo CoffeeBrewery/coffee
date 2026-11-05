@@ -1,20 +1,20 @@
 ---
-description: Homebrew security and supply chain defences, including formula and Cask trust models, checksums, signed metadata, bottles, Gatekeeper, sandboxing and tap trust.
+description: CoffeeBrewery security and supply chain defences, including formula and Cask trust models, checksums, signed metadata, bottles, Gatekeeper, sandboxing and tap trust.
 redirect_from:
   - /Supply-Chain-Security
 last_review_date: "2026-10-25"
 ---
 
-# Homebrew Security and Supply Chain
+# CoffeeBrewery Security and Supply Chain
 
-Homebrew installs software from across the open source ecosystem.
+CoffeeBrewery installs software from across the open source ecosystem.
 That makes the security of the software supply chain, the humans involved, repositories, build systems and download servers that turn source code into something you run, a core concern for us.
-This Homebrew security guide explains the recent supply-chain security incidents affecting other package managers, how Homebrew's trust model differs and the steps we have taken to protect our users.
+This CoffeeBrewery security guide explains the recent supply-chain security incidents affecting other package managers, how CoffeeBrewery's trust model differs and the steps we have taken to protect our users.
 
 * Table of Contents
 {:toc}
 
-For operational guidance, see [vulnerability scanning and patch management](Homebrew-Vulnerability-Management.md), [package policies](Homebrew-Package-Policies.md) and [inventory and SBOM reporting](Homebrew-Inventory-and-SBOM.md).
+For operational guidance, see [vulnerability scanning and patch management](CoffeeBrewery-Vulnerability-Management.md), [package policies](CoffeeBrewery-Package-Policies.md) and [inventory and SBOM reporting](CoffeeBrewery-Inventory-and-SBOM.md).
 
 ## Recent incidents in other ecosystems
 
@@ -37,23 +37,23 @@ Recurring patterns include:
 The common thread is that these registries are designed for unilateral, instantaneous publishing by individual package authors, with code execution on install and no independent review.
 A single compromised credential turns into immediate, automated, worldwide code execution.
 
-## How Homebrew is different
+## How CoffeeBrewery is different
 
-The Homebrew team is aware of the supply-chain security issues with other package managers.
-Homebrew's design differs in several structural ways that limit the blast radius of an upstream compromise.
-Most of these protections long predate the recent wave of supply-chain attacks and the current focus on them; they are core to how Homebrew has always packaged software rather than a reaction to any single incident.
+The CoffeeBrewery team is aware of the supply-chain security issues with other package managers.
+CoffeeBrewery's design differs in several structural ways that limit the blast radius of an upstream compromise.
+Most of these protections long predate the recent wave of supply-chain attacks and the current focus on them; they are core to how CoffeeBrewery has always packaged software rather than a reaction to any single incident.
 
 ### Human review on all changes
 
-Every change to a Homebrew repository, including all our official taps (such as [homebrew/core](https://github.com/Homebrew/homebrew-core) and [homebrew/cask](https://github.com/Homebrew/homebrew-cask)), goes through a pull request that is reviewed and merged by a human maintainer.
-Upstream authors cannot publish directly into official Homebrew repositories.
-There is always a human in the loop between an upstream release and that release reaching Homebrew users.
-The stale lead maintainer PR approval workflow is a narrow `Homebrew/brew` exception that can approve only non-fork, non-draft PRs by lead maintainers after recent maintainer review activity, Copilot review, passing CI, at least 48 hours open with no human review, a weekday approval window and a check that the PR does not modify sensitive paths.
-These laxer standards are acceptable in `Homebrew/brew` because most users run the stable branch and a human must still carry out a `Homebrew/brew` release before those changes reach stable Homebrew users.
+Every change to a CoffeeBrewery repository, including all our official taps (such as [homebrew/core](https://github.com/CoffeeBrewery/homebrew-core) and [homebrew/cask](https://github.com/CoffeeBrewery/homebrew-cask)), goes through a pull request that is reviewed and merged by a human maintainer.
+Upstream authors cannot publish directly into official CoffeeBrewery repositories.
+There is always a human in the loop between an upstream release and that release reaching CoffeeBrewery users.
+The stale lead maintainer PR approval workflow is a narrow `CoffeeBrewery/coffee` exception that can approve only non-fork, non-draft PRs by lead maintainers after recent maintainer review activity, Copilot review, passing CI, at least 48 hours open with no human review, a weekday approval window and a check that the PR does not modify sensitive paths.
+These laxer standards are acceptable in `CoffeeBrewery/coffee` because most users run the stable branch and a human must still carry out a `CoffeeBrewery/coffee` release before those changes reach stable CoffeeBrewery users.
 
 ### Maintainers, not package owners
 
-All package maintainers are Homebrew maintainers, not the individual upstream authors of each package.
+All package maintainers are CoffeeBrewery maintainers, not the individual upstream authors of each package.
 Trust is concentrated in a vetted team that reviews changes across the whole repository, rather than being delegated to thousands of independent publishers each of whom is a single point of failure.
 
 Maintainer access and activity are reviewed regularly.
@@ -62,160 +62,160 @@ Maintainers must also enable two-factor authentication on their GitHub account, 
 
 ### Curated package namespaces
 
-Names in Homebrew's official taps are maintainer-curated, not first-come-first-served.
+Names in CoffeeBrewery's official taps are maintainer-curated, not first-come-first-served.
 A new formula or cask name is accepted only through the same reviewed pull request process as the package definition itself, so typosquats, slopsquats and misleading names can be rejected before they exist in the official namespace.
 Removed formulae and casks can only be restored through maintainer-reviewed pull requests, and we generally avoid reusing old names unless there is a good reason.
-Strangers cannot unilaterally claim removed names; old names remain under Homebrew's control through the official repositories, rename metadata and migration metadata.
-This makes the official Homebrew namespace structurally resistant to the typosquatting and revival-hijack attacks that affect open registries.
+Strangers cannot unilaterally claim removed names; old names remain under CoffeeBrewery's control through the official repositories, rename metadata and migration metadata.
+This makes the official CoffeeBrewery namespace structurally resistant to the typosquatting and revival-hijack attacks that affect open registries.
 
 ### No trust in third-party repositories
 
-Homebrew does not trust, recommend or automatically install from any third-party non-Homebrew repositories.
-Only official Homebrew taps and built-in commands are trusted by default.
+CoffeeBrewery does not trust, recommend or automatically install from any third-party non-CoffeeBrewery repositories.
+Only official CoffeeBrewery taps and built-in commands are trusted by default.
 A non-official tap is executable code, not plain metadata, so loading it can run Ruby with your user's privileges.
-Non-official taps require explicit trust by default, and `brew trust` lets you trust a single formula, cask or command rather than a whole tap.
-See [Tap Trust](Tap-Trust.md) for how to trust only what you need with `brew trust`, `brew untrust` and the `Brewfile` `trusted: true` option.
+Non-official taps require explicit trust by default, and `coffee trust` lets you trust a single formula, cask or command rather than a whole tap.
+See [Tap Trust](Tap-Trust.md) for how to trust only what you need with `coffee trust`, `coffee untrust` and the `Brewfile` `trusted: true` option.
 
-Homebrew's [tap migrations](Migrating-A-Formula-To-A-Tap.md) stay within the Homebrew organisation: a formula or cask is only ever migrated into or within official Homebrew taps, never out to a third-party tap.
-A rename or move therefore cannot silently redirect users to a non-Homebrew repository.
-Homebrew refuses a redirect that would change an official tap identity or give a checkout a new official identity.
+CoffeeBrewery's [tap migrations](Migrating-A-Formula-To-A-Tap.md) stay within the CoffeeBrewery organisation: a formula or cask is only ever migrated into or within official CoffeeBrewery taps, never out to a third-party tap.
+A rename or move therefore cannot silently redirect users to a non-CoffeeBrewery repository.
+CoffeeBrewery refuses a redirect that would change an official tap identity or give a checkout a new official identity.
 For any tap name change, Git's resolved origin URL must use HTTPS or SSH on GitHub.
 An untrusted tap can follow a redirect to a new untrusted location only if no existing tap, formula, cask or command trust entry matches the destination.
-For an allowed redirect, Homebrew retargets the local tap and invalidates trust entries for its old name rather than silently carrying trust across.
-If Homebrew refuses a third-party tap rename, untap the old name and tap the new location directly to fetch its contents.
+For an allowed redirect, CoffeeBrewery retargets the local tap and invalidates trust entries for its old name rather than silently carrying trust across.
+If CoffeeBrewery refuses a third-party tap rename, untap the old name and tap the new location directly to fetch its contents.
 
 ### Not automatically deferring to upstream
 
-Homebrew's primary responsibility is to its users, not to upstream vendors.
+CoffeeBrewery's primary responsibility is to its users, not to upstream vendors.
 We will not usually deprecate, disable or remove a package, or redirect it to an upstream tap, only because upstream asks us to; technical breakage, policy violations or the wider project's needs carry more weight.
-This is itself a defence against upstream compromise: an attacker who takes over an upstream account cannot use a takedown or redirect request to push Homebrew users towards a malicious replacement.
-See [Working with Homebrew as an Upstream Project](Working-with-Homebrew-as-an-Upstream-Project.md).
+This is itself a defence against upstream compromise: an attacker who takes over an upstream account cannot use a takedown or redirect request to push CoffeeBrewery users towards a malicious replacement.
+See [Working with CoffeeBrewery as an Upstream Project](Working-with-CoffeeBrewery-as-an-Upstream-Project.md).
 
 ### Checksummed downloads pinned in reviewed metadata
 
 A formula pins each download to an explicit `sha256` checksum that lives in the formula file.
-The checksum is part of the human-reviewed change, and Homebrew refuses to install a download whose contents do not match.
+The checksum is part of the human-reviewed change, and CoffeeBrewery refuses to install a download whose contents do not match.
 An attacker who swaps out a tarball on an upstream server after the fact causes a checksum mismatch and a failed install rather than silent compromise.
 Updating the checksum requires another reviewed pull request, and we review these checksum changes to verify they do not appear malicious.
 
 ### Signed JSON API metadata
 
 Formulae and casks are Ruby package definitions, and Ruby cannot be safely inspected without executing it.
-For default installs from official taps, Homebrew mitigates that by consuming precomputed JSON API metadata instead of evaluating core formula or cask Ruby locally.
-The default API files, including `formula.jws.json`, `cask.jws.json` and the internal package JSON files used for installs, are JWS-signed and verified by Homebrew before use.
-That means normal bottled installs consume signed, structured package data generated by Homebrew rather than executable package definitions from the user's local machine.
-These signed files are uploaded through the separate [`Homebrew/formulae.brew.sh`](https://github.com/Homebrew/formulae.brew.sh) repository, adding another separation between the `Homebrew/brew` client, the `Homebrew/homebrew-core` and `Homebrew/homebrew-cask` package repositories and JSON API publishing.
-Developers and users can still opt out with `HOMEBREW_NO_INSTALL_FROM_API`, for example when editing formulae locally or building unsupported paths from source.
+For default installs from official taps, CoffeeBrewery mitigates that by consuming precomputed JSON API metadata instead of evaluating core formula or cask Ruby locally.
+The default API files, including `formula.jws.json`, `cask.jws.json` and the internal package JSON files used for installs, are JWS-signed and verified by CoffeeBrewery before use.
+That means normal bottled installs consume signed, structured package data generated by CoffeeBrewery rather than executable package definitions from the user's local machine.
+These signed files are uploaded through the separate [`CoffeeBrewery/formulae.coffee.sh`](https://github.com/CoffeeBrewery/formulae.coffee.sh) repository, adding another separation between the `CoffeeBrewery/coffee` client, the `CoffeeBrewery/homebrew-core` and `CoffeeBrewery/homebrew-cask` package repositories and JSON API publishing.
+Developers and users can still opt out with `COFFEEBREWER_NO_INSTALL_FROM_API`, for example when editing formulae locally or building unsupported paths from source.
 
-### Bottles built by Homebrew
+### Bottles built by CoffeeBrewery
 
-The vast majority of users install [bottles](Bottles.md), the precompiled binary packages Homebrew builds itself on [BrewTestBot](BrewTestBot.md) from the reviewed formula, rather than running upstream build scripts on their own machine.
-`homebrew/core` formulae are built from source by Homebrew's own sandboxed CI, not uploaded prebuilt by upstream, and each build runs on an ephemeral CI runner that is discarded afterwards, so a compromised build cannot persist between packages or exfiltrate long-lived secrets.
+The vast majority of users install [bottles](Bottles.md), the precompiled binary packages CoffeeBrewery builds itself on [BrewTestBot](BrewTestBot.md) from the reviewed formula, rather than running upstream build scripts on their own machine.
+`homebrew/core` formulae are built from source by CoffeeBrewery's own sandboxed CI, not uploaded prebuilt by upstream, and each build runs on an ephemeral CI runner that is discarded afterwards, so a compromised build cannot persist between packages or exfiltrate long-lived secrets.
 The resulting binaries are themselves checksummed in the formula.
 Even separate bottling stages do not blindly trust one another's inputs and outputs.
-`brew test-bot` tracks bottle JSON and tarball checksums, rejects missing, changed or unexpected bottle artifacts, and only reuses a cached bottle when its bottle JSON points to a tap revision where the formula and its relevant dependencies have not changed.
-Some artifact-handling steps run with `HOMEBREW_DISABLE_LOAD_FORMULA=1`, so cached bottle artifacts can be fetched and verified without evaluating formula Ruby.
-Building from source has already protected Homebrew users: in the 2026 Trivy compromise the upstream advisory noted that the `homebrew/core` formula was unaffected because it was built from source rather than from the retagged release binaries.
+`coffee test-bot` tracks bottle JSON and tarball checksums, rejects missing, changed or unexpected bottle artifacts, and only reuses a cached bottle when its bottle JSON points to a tap revision where the formula and its relevant dependencies have not changed.
+Some artifact-handling steps run with `COFFEEBREWER_DISABLE_LOAD_FORMULA=1`, so cached bottle artifacts can be fetched and verified without evaluating formula Ruby.
+Building from source has already protected CoffeeBrewery users: in the 2026 Trivy compromise the upstream advisory noted that the `homebrew/core` formula was unaffected because it was built from source rather than from the retagged release binaries.
 
-Homebrew only builds and supports bottles for `homebrew/core`, and casks for `homebrew/cask`; third-party taps are [unsupported](Support-Tiers.md).
-When you deviate from these supported paths, such as building from source or installing from an untrusted tap, Homebrew warns you loudly that the configuration is unsupported.
+CoffeeBrewery only builds and supports bottles for `homebrew/core`, and casks for `homebrew/cask`; third-party taps are [unsupported](Support-Tiers.md).
+When you deviate from these supported paths, such as building from source or installing from an untrusted tap, CoffeeBrewery warns you loudly that the configuration is unsupported.
 
 ### Bottle provenance attestations
 
 Checksums prove that the downloaded bytes match the reviewed metadata.
 Bottle provenance attestations add a different check: who built those bytes and from what source.
-Homebrew ships bottle attestation verification in `Library/Homebrew/attestation.rb`; when `HOMEBREW_VERIFY_ATTESTATIONS` is set, Homebrew uses GitHub's attestation tooling to verify `homebrew/core` bottle build provenance before installation.
-Homebrew can also verify bottles from supported third-party GitHub taps against that tap's own GitHub Actions identity.
-Homebrew CI also emits bottle attestations with `actions/attest`, binding bottle artifacts to the GitHub Actions identity and build context that produced them.
+CoffeeBrewery ships bottle attestation verification in `Library/CoffeeBrewery/attestation.rb`; when `COFFEEBREWER_VERIFY_ATTESTATIONS` is set, CoffeeBrewery uses GitHub's attestation tooling to verify `homebrew/core` bottle build provenance before installation.
+CoffeeBrewery can also verify bottles from supported third-party GitHub taps against that tap's own GitHub Actions identity.
+CoffeeBrewery CI also emits bottle attestations with `actions/attest`, binding bottle artifacts to the GitHub Actions identity and build context that produced them.
 Third-party taps can do the same for their own bottles.
 We hope to make attestation verification the default in future once it can be implemented in pure Ruby rather than depending on the `gh` tool.
 
 These attestations are backed by Sigstore's transparency log, which is the one cross-check in this pipeline that is not hosted by GitHub.
-An attacker who can upload a bottle and alter GitHub-hosted metadata still has to produce a matching, publicly logged provenance attestation for the expected Homebrew build identity.
+An attacker who can upload a bottle and alter GitHub-hosted metadata still has to produce a matching, publicly logged provenance attestation for the expected CoffeeBrewery build identity.
 
 ### Layered infrastructure with cross-checks
 
-Homebrew's pipeline is split across several components: the [`Homebrew/brew`](https://github.com/Homebrew/brew) client, which most users run from tagged stable releases rather than the latest commit; the [`Homebrew/homebrew-core`](https://github.com/Homebrew/homebrew-core) and [`Homebrew/homebrew-cask`](https://github.com/Homebrew/homebrew-cask) repositories of formulae and casks; the [`formulae.brew.sh`](https://formulae.brew.sh) JSON API, generated and served from GitHub Pages; and the `homebrew/core` bottles, hosted on GitHub Packages.
+CoffeeBrewery's pipeline is split across several components: the [`CoffeeBrewery/coffee`](https://github.com/CoffeeBrewery/coffee) client, which most users run from tagged stable releases rather than the latest commit; the [`CoffeeBrewery/homebrew-core`](https://github.com/CoffeeBrewery/homebrew-core) and [`CoffeeBrewery/homebrew-cask`](https://github.com/CoffeeBrewery/homebrew-cask) repositories of formulae and casks; the [`formulae.coffee.sh`](https://formulae.coffee.sh) JSON API, generated and served from GitHub Pages; and the `homebrew/core` bottles, hosted on GitHub Packages.
 
 These are all hosted by GitHub rather than on wholly separate infrastructure, so they are not fully independent trust boundaries.
 They do, however, cross-check one another.
 For example, an exploited token granting GitHub Packages access could upload a malicious bottle, but that bottle would not match the `sha256` checksum recorded in the GitHub-hosted repository, and changing that checksum requires a pull request reviewed by a human maintainer.
-The signed JSON API and bottle attestations add further cross-checks: API metadata must verify against Homebrew's JWS signing key, and bottle provenance must verify against the expected build identity and public transparency log.
+The signed JSON API and bottle attestations add further cross-checks: API metadata must verify against CoffeeBrewery's JWS signing key, and bottle provenance must verify against the expected build identity and public transparency log.
 An attacker therefore has to subvert more than one component at once to reach users.
 
-Because GitHub underpins most of this, we enable every new GitHub security feature as soon as we can, including mandatory two-factor authentication, disallowing SMS as a second factor, required branch protections on all Homebrew repositories and immutable GitHub releases.
-Dependabot updates are opened through pull requests with cooldowns across Homebrew repositories, so the package manager's own automation does not immediately ingest a freshly-published dependency release.
-The checked-in [Dependabot configuration](https://github.com/Homebrew/brew/blob/HEAD/.github/dependabot.yml) is synced from the shared [`Homebrew/.github`](https://github.com/Homebrew/.github) repository, which keeps common repository policy files aligned across Homebrew repositories.
-Homebrew also keeps the number of GitHub organisation owners minimal and limits high-privilege 1Password access to the people and teams documented in [Homebrew Governance](Homebrew-Governance.md) and the [New Maintainer Checklist](New-Maintainer-Checklist.md).
-Privileged pull request events are used sparingly: the [pull request checker](https://github.com/Homebrew/brew/blob/HEAD/.github/workflows/check-prs.yml) is the only `pull_request_target` workflow in this repository, refuses to run after a checkout and only reads trusted base-branch files through the GitHub API.
+Because GitHub underpins most of this, we enable every new GitHub security feature as soon as we can, including mandatory two-factor authentication, disallowing SMS as a second factor, required branch protections on all CoffeeBrewery repositories and immutable GitHub releases.
+Dependabot updates are opened through pull requests with cooldowns across CoffeeBrewery repositories, so the package manager's own automation does not immediately ingest a freshly-published dependency release.
+The checked-in [Dependabot configuration](https://github.com/CoffeeBrewery/coffee/blob/HEAD/.github/dependabot.yml) is synced from the shared [`CoffeeBrewery/.github`](https://github.com/CoffeeBrewery/.github) repository, which keeps common repository policy files aligned across CoffeeBrewery repositories.
+CoffeeBrewery also keeps the number of GitHub organisation owners minimal and limits high-privilege 1Password access to the people and teams documented in [CoffeeBrewery Governance](CoffeeBrewery-Governance.md) and the [New Maintainer Checklist](New-Maintainer-Checklist.md).
+Privileged pull request events are used sparingly: the [pull request checker](https://github.com/CoffeeBrewery/coffee/blob/HEAD/.github/workflows/check-prs.yml) is the only `pull_request_target` workflow in this repository, refuses to run after a checkout and only reads trusted base-branch files through the GitHub API.
 Most workflows avoid `actions/checkout` unless they need a checkout; when it is used, it is pinned and normally sets `persist-credentials: false`.
-The stale lead maintainer PR approval workflow can only approve non-fork, non-draft `Homebrew/brew` PRs that meet its review and CI requirements during a weekday approval window, and it refuses to approve changes to sensitive paths.
+The stale lead maintainer PR approval workflow can only approve non-fork, non-draft `CoffeeBrewery/coffee` PRs that meet its review and CI requirements during a weekday approval window, and it refuses to approve changes to sensitive paths.
 
-### Homebrew's own supply chain
+### CoffeeBrewery's own supply chain
 
-Homebrew itself is Ruby code distributed from the `Homebrew/brew` repository.
+CoffeeBrewery itself is Ruby code distributed from the `CoffeeBrewery/coffee` repository.
 Most users run tagged stable releases; developer mode can track the latest commit on `main`, but that is not the default user path.
-Homebrew's runtime Ruby dependencies are vendored in-tree and pinned in `Library/Homebrew/Gemfile.lock`, rather than resolved live from RubyGems during normal `brew` execution.
-Updates to those dependencies are reviewed like other Homebrew changes, with Dependabot cooldowns providing an additional delay for newly published gem releases.
+CoffeeBrewery's runtime Ruby dependencies are vendored in-tree and pinned in `Library/CoffeeBrewery/Gemfile.lock`, rather than resolved live from RubyGems during normal `coffee` execution.
+Updates to those dependencies are reviewed like other CoffeeBrewery changes, with Dependabot cooldowns providing an additional delay for newly published gem releases.
 This reduces the package manager's own dependency chain as an attack surface, a recurring weak point in ecosystems where package-manager plugins or runtime libraries are resolved dynamically at execution time.
 
 ### Static analysis and linting
 
-Homebrew errs on the side of "all the lints", because mechanical review catches entire classes of supply-chain mistakes before human reviewers need to spot them manually.
-For Ruby, `brew style` prefers enabling RuboCop's default cops where practical, then layers Homebrew-specific RuboCops from `Library/Homebrew/rubocops` on top for package-manager rules that generic Ruby tooling cannot know.
-For shell and workflow code, CI runs ShellCheck, `actionlint` and `zizmor`; `zizmor` uploads SARIF security results for GitHub Actions workflows, and the shared `.github` `zizmor` policy keeps Homebrew action pinning policy consistent across repositories.
-For types, `brew typecheck` uses Sorbet, and Homebrew pushes `# typed: strict` across all possible non-test Ruby files; the small number of bootstrap files that load before normal runtime support are covered with RBI type declarations and static checks where possible.
-`brew lgtm` combines typechecking, changed-file style fixing and relevant tests so local and CI feedback use the same guardrails.
+CoffeeBrewery errs on the side of "all the lints", because mechanical review catches entire classes of supply-chain mistakes before human reviewers need to spot them manually.
+For Ruby, `coffee style` prefers enabling RuboCop's default cops where practical, then layers CoffeeBrewery-specific RuboCops from `Library/CoffeeBrewery/rubocops` on top for package-manager rules that generic Ruby tooling cannot know.
+For shell and workflow code, CI runs ShellCheck, `actionlint` and `zizmor`; `zizmor` uploads SARIF security results for GitHub Actions workflows, and the shared `.github` `zizmor` policy keeps CoffeeBrewery action pinning policy consistent across repositories.
+For types, `coffee typecheck` uses Sorbet, and CoffeeBrewery pushes `# typed: strict` across all possible non-test Ruby files; the small number of bootstrap files that load before normal runtime support are covered with RBI type declarations and static checks where possible.
+`coffee lgtm` combines typechecking, changed-file style fixing and relevant tests so local and CI feedback use the same guardrails.
 Mike McQuaid's [Ruby on guard rails](https://mikemcquaid.com/ruby-on-guard-rails/) describes the broader philosophy: automate the noisy, repeatable checks so reviewers can spend their attention on correctness, security and judgement.
 
 ### Secure and responsible AI usage
 
-AI-assisted changes are treated as untrusted contributions, not as a way around Homebrew's review model.
-Homebrew's [Responsible AI Usage](Responsible-AI-Usage.md) guide requires contributors to review, understand, test and disclose AI-assisted work before asking maintainers to review it.
+AI-assisted changes are treated as untrusted contributions, not as a way around CoffeeBrewery's review model.
+CoffeeBrewery's [Responsible AI Usage](Responsible-AI-Usage.md) guide requires contributors to review, understand, test and disclose AI-assisted work before asking maintainers to review it.
 Contributors using agents are encouraged to isolate them with sandboxed git worktrees, limited credentials and separate branches, as described in Mike McQuaid's [sandboxed agent worktrees](https://mikemcquaid.com/sandboxed-agent-worktrees-my-coding-and-ai-setup-in-2026/).
-The same defences in this document still apply to AI-assisted work: small diffs, human review, `brew lgtm`, CI, tap trust and sandboxed package execution.
-That keeps AI useful as automation while preserving the human accountability and layered checks that Homebrew relies on.
+The same defences in this document still apply to AI-assisted work: small diffs, human review, `coffee lgtm`, CI, tap trust and sandboxed package execution.
+That keeps AI useful as automation while preserving the human accountability and layered checks that CoffeeBrewery relies on.
 
 ### No arbitrary code execution on install by default
 
 Installing a bottle uses reviewed, prebuilt files, reducing the need to run upstream build scripts on your machine.
-Homebrew uses sandboxing to limit package-supplied code where supported, but some installations require trusting vendor code with broader access (see below).
+CoffeeBrewery uses sandboxing to limit package-supplied code where supported, but some installations require trusting vendor code with broader access (see below).
 
 ### Sandboxing
 
-Homebrew uses sandboxing on macOS and Linux to limit what package processing, builds, supported installation steps and tests can access.
+CoffeeBrewery uses sandboxing on macOS and Linux to limit what package processing, builds, supported installation steps and tests can access.
 The aim is least privilege: give each operation only the filesystem, network and credential access it needs.
-This reduces the risk that a malicious or faulty package can alter unrelated software, damage Homebrew or expose personal data.
+This reduces the risk that a malicious or faulty package can alter unrelated software, damage CoffeeBrewery or expose personal data.
 
-Sandbox permissions are defined by Homebrew's reviewed code.
+Sandbox permissions are defined by CoffeeBrewery's reviewed code.
 Sandboxing complements maintainer review, download verification and explicit trust decisions; it does not make arbitrary third-party code safe to run.
 The separate trust requirements for taps and vendor-provided casks still apply.
 
-On macOS, Homebrew attempts to disclaim TCC responsibility when launching sandboxed commands for formulae and casks, preventing them from inheriting the launching application's privacy permissions, such as Full Disk Access.
+On macOS, CoffeeBrewery attempts to disclaim TCC responsibility when launching sandboxed commands for formulae and casks, preventing them from inheriting the launching application's privacy permissions, such as Full Disk Access.
 This supplements the sandbox restrictions and does not revoke permissions granted directly to the worker executable.
 This additional protection uses a private macOS API because there is no documented public equivalent for command-line workers.
-If the API is unavailable or rejects the request, Homebrew warns and continues with the existing sandbox restrictions; the launching application's privacy permissions may then apply.
+If the API is unavailable or rejects the request, CoffeeBrewery warns and continues with the existing sandbox restrictions; the launching application's privacy permissions may then apply.
 
 Available protections depend on the operating system and configuration.
-Some operations can continue with a warning when sandboxing is unavailable or Homebrew relies on an external sandbox.
+Some operations can continue with a warning when sandboxing is unavailable or CoffeeBrewery relies on an external sandbox.
 
 ### Environment filtering
 
-Homebrew limits which environment settings reach package code, reducing accidental exposure of secrets and unexpected configuration.
+CoffeeBrewery limits which environment settings reach package code, reducing accidental exposure of secrets and unexpected configuration.
 
 ### Casks have a different trust model
 
-Formulae and casks share Homebrew's reviewed package metadata and signed JSON API, but they do not share the same artefact security model.
+Formulae and casks share CoffeeBrewery's reviewed package metadata and signed JSON API, but they do not share the same artefact security model.
 `homebrew/core` formulae are open source build recipes based on checksummed source.
-Homebrew builds bottles for formulae in its own controlled, ephemeral CI and checksums the result, so users normally trust Homebrew's reviewed source-to-bottle pipeline rather than a binary supplied and signed by the upstream developer.
+CoffeeBrewery builds bottles for formulae in its own controlled, ephemeral CI and checksums the result, so users normally trust CoffeeBrewery's reviewed source-to-bottle pipeline rather than a binary supplied and signed by the upstream developer.
 All formula installations run without `sudo`.
 
 [Casks](Cask-Cookbook.md) instead install prebuilt applications and installers supplied directly by the upstream developer.
-This is necessary for native macOS applications and proprietary software, but Homebrew usually cannot reproduce those binaries from source or compare them with an independently produced build.
+This is necessary for native macOS applications and proprietary software, but CoffeeBrewery usually cannot reproduce those binaries from source or compare them with an independently produced build.
 A cask's `sha256` proves that the downloaded bytes match the package metadata, but it does not prove who produced those bytes or whether the program inside is trustworthy.
-Some casks must use `sha256 :no_check` because their download URL changes contents in place, while self-updating applications can replace themselves outside Homebrew entirely.
+Some casks must use `sha256 :no_check` because their download URL changes contents in place, while self-updating applications can replace themselves outside CoffeeBrewery entirely.
 Cask installation artefacts are treated as trusted vendor installation actions once a cask is accepted, so users must still trust the vendor.
-Vendor installer scripts and macOS package installers run outside Homebrew's sandbox and may change files beyond Homebrew's directories.
+Vendor installer scripts and macOS package installers run outside CoffeeBrewery's sandbox and may change files beyond CoffeeBrewery's directories.
 Some cask installations run without `sudo`.
 Others require elevated privileges, such as those that use macOS `.pkg` installers.
 
@@ -225,66 +225,66 @@ On macOS, code signing, notarisation and Gatekeeper provide independent checks t
 * [Apple's notary service](https://developer.apple.com/documentation/security/notarizing-macos-software-before-distribution) automatically scans submitted software for known malicious content and code-signing problems, records the result and issues a ticket that Apple can later revoke.
 * [Gatekeeper](https://support.apple.com/guide/security/gatekeeper-and-runtime-protection-sec5599b66df/web) checks the developer identity, notarisation ticket and signature when quarantined software is first opened or installed.
 
-Homebrew applies macOS quarantine attributes to Cask downloads so Gatekeeper performs these checks instead of Homebrew bypassing them.
-Homebrew also audits apps, installers and other executable artefacts in official macOS casks that Gatekeeper can assess and requires them to pass on a default macOS configuration.
+CoffeeBrewery applies macOS quarantine attributes to Cask downloads so Gatekeeper performs these checks instead of CoffeeBrewery bypassing them.
+CoffeeBrewery also audits apps, installers and other executable artefacts in official macOS casks that Gatekeeper can assess and requires them to pass on a default macOS configuration.
 These controls are not a guarantee that an application is harmless: notarisation is an automated malware check, not a source review or App Store review.
-They are nevertheless a meaningful additional trust layer outside the upstream download server and Homebrew's metadata, with an attributable developer, tamper detection and a revocation path if malicious software is discovered later.
+They are nevertheless a meaningful additional trust layer outside the upstream download server and CoffeeBrewery's metadata, with an attributable developer, tamper detection and a revocation path if malicious software is discovered later.
 For a `sha256 :no_check` cask, this can be the principal validation of changing download contents that is independent of the upstream server.
 
 This requirement can make older casks ineligible even when users have run earlier versions without incident.
 That history does not authenticate the next download, detect later tampering or provide a revocable identity for it.
-Keeping such a cask would also require users to override the same macOS protection that Homebrew relies on for vendor-built artefacts.
-Homebrew therefore [deprecates, disables and eventually removes](Deprecating-Disabling-and-Removing.md#when-to-deprecate-casks) casks that fail Gatekeeper checks rather than normalising a security bypass.
-Removal does not mean Homebrew has determined that the software is malware; it means the upstream artefact no longer meets the security baseline for distribution through `homebrew/cask`.
+Keeping such a cask would also require users to override the same macOS protection that CoffeeBrewery relies on for vendor-built artefacts.
+CoffeeBrewery therefore [deprecates, disables and eventually removes](Deprecating-Disabling-and-Removing.md#when-to-deprecate-casks) casks that fail Gatekeeper checks rather than normalising a security bypass.
+Removal does not mean CoffeeBrewery has determined that the software is malware; it means the upstream artefact no longer meets the security baseline for distribution through `homebrew/cask`.
 The cask can become eligible again when upstream provides artefacts that pass the checks.
 
 ### Cooldowns on riskier ecosystems
 
-For ecosystems with a track record of fast-moving supply-chain attacks, Homebrew applies a download cooldown: a freshly-published upstream version is not adopted immediately, giving the wider community time to detect and report a malicious release before Homebrew users are exposed.
+For ecosystems with a track record of fast-moving supply-chain attacks, CoffeeBrewery applies a download cooldown: a freshly-published upstream version is not adopted immediately, giving the wider community time to detect and report a malicious release before CoffeeBrewery users are exposed.
 Cooldowns have been added for:
 
-* [Bundler](https://github.com/Homebrew/brew/pull/22555)
-* [RubyGems livecheck](https://github.com/Homebrew/brew/pull/22253)
-* [npm and pip defaults](https://github.com/Homebrew/brew/pull/21919)
-* [PyPI resource resolution](https://github.com/Homebrew/brew/pull/21920)
-* [npm and PyPI in `bump`](https://github.com/Homebrew/brew/pull/21888)
+* [Bundler](https://github.com/CoffeeBrewery/coffee/pull/22555)
+* [RubyGems livecheck](https://github.com/CoffeeBrewery/coffee/pull/22253)
+* [npm and pip defaults](https://github.com/CoffeeBrewery/coffee/pull/21919)
+* [PyPI resource resolution](https://github.com/CoffeeBrewery/coffee/pull/21920)
+* [npm and PyPI in `bump`](https://github.com/CoffeeBrewery/coffee/pull/21888)
 
-Homebrew applies these cooldowns narrowly, only to the language ecosystems that have actually suffered fast-moving supply-chain attacks, rather than as a blanket delay on every package.
-A blanket cooldown would trade a small, speculative reduction in supply-chain risk for a real, across-the-board delay in shipping critical fixes: when a zero-day in something like OpenSSL is being exploited in the wild, Homebrew works to get the fix to users as fast as possible, and Homebrew's design means upgrading one package can require upgrading others.
-Across Homebrew's history far more users have been protected by shipping zero-day fixes quickly than have been exposed to npm-style token-theft or crypto-mining attacks, so a global cooldown would be a net negative for most users' security.
-The deeper reason Homebrew does not need a general cooldown is that, unlike language package managers, it already separates publishing from distribution: an upstream release does not reach users until it has passed human review, CI and checksum verification, which is the very review window that language-ecosystem cooldowns are trying to recreate.
+CoffeeBrewery applies these cooldowns narrowly, only to the language ecosystems that have actually suffered fast-moving supply-chain attacks, rather than as a blanket delay on every package.
+A blanket cooldown would trade a small, speculative reduction in supply-chain risk for a real, across-the-board delay in shipping critical fixes: when a zero-day in something like OpenSSL is being exploited in the wild, CoffeeBrewery works to get the fix to users as fast as possible, and CoffeeBrewery's design means upgrading one package can require upgrading others.
+Across CoffeeBrewery's history far more users have been protected by shipping zero-day fixes quickly than have been exposed to npm-style token-theft or crypto-mining attacks, so a global cooldown would be a net negative for most users' security.
+The deeper reason CoffeeBrewery does not need a general cooldown is that, unlike language package managers, it already separates publishing from distribution: an upstream release does not reach users until it has passed human review, CI and checksum verification, which is the very review window that language-ecosystem cooldowns are trying to recreate.
 
-Homebrew is also a rolling-release package manager, so there is a genuine balance to strike: delivering a coordinated zero-day fix immediately, as with the OpenSSL Heartbleed vulnerability, versus delaying updates to blunt supply-chain attacks.
-Given our trust model, risk profile and the breadth of ecosystems we support, we prefer to apply cooldowns when we bump an upstream package rather than imposing a second Homebrew-specific cooldown on end users as they upgrade; doing both would be a "double cooldown" that delays security fixes twice over for little extra benefit.
+CoffeeBrewery is also a rolling-release package manager, so there is a genuine balance to strike: delivering a coordinated zero-day fix immediately, as with the OpenSSL Heartbleed vulnerability, versus delaying updates to blunt supply-chain attacks.
+Given our trust model, risk profile and the breadth of ecosystems we support, we prefer to apply cooldowns when we bump an upstream package rather than imposing a second CoffeeBrewery-specific cooldown on end users as they upgrade; doing both would be a "double cooldown" that delays security fixes twice over for little extra benefit.
 
 ### Prioritising security over backwards compatibility
 
-When the two conflict, Homebrew prioritises security over backwards compatibility.
-Homebrew's [deprecation](Deprecating-Disabling-and-Removing.md) policy and regular major and minor releases let us deprecate, then disable, then entirely remove a risky behaviour or default across successive releases, often within roughly six to nine months.
-Being willing to break compatibility on that timescale is a large part of why Homebrew has been able to respond to new supply-chain threats faster than ecosystems that must preserve old behaviour indefinitely.
+When the two conflict, CoffeeBrewery prioritises security over backwards compatibility.
+CoffeeBrewery's [deprecation](Deprecating-Disabling-and-Removing.md) policy and regular major and minor releases let us deprecate, then disable, then entirely remove a risky behaviour or default across successive releases, often within roughly six to nine months.
+Being willing to break compatibility on that timescale is a large part of why CoffeeBrewery has been able to respond to new supply-chain threats faster than ecosystems that must preserve old behaviour indefinitely.
 
 ## Trust model comparison
 
-| Property                            | Homebrew                                                        | npm / PyPI                               |
+| Property                            | CoffeeBrewery                                                        | npm / PyPI                               |
 | ----------------------------------- | --------------------------------------------------------------- | ---------------------------------------- |
-| Who can publish a change            | Homebrew maintainers, via pull request                          | Any package owner, directly              |
+| Who can publish a change            | CoffeeBrewery maintainers, via pull request                          | Any package owner, directly              |
 | Human review of each release        | Always                                                          | None                                     |
 | Time from upstream release to users | Reviewed, plus a cooldown for riskier ecosystems                | Immediate                                |
 | Download integrity                  | Pinned `sha256` in reviewed metadata                            | Trust the registry at install time       |
-| What most users install             | Bottles built by Homebrew CI                                    | Publisher-uploaded artifacts             |
+| What most users install             | Bottles built by CoffeeBrewery CI                                    | Publisher-uploaded artifacts             |
 | Code execution on install           | Sandboxed installation steps where supported                    | `preinstall`/`postinstall` or `setup.py` |
 | Build and install isolation         | Filesystem, network and credential restrictions where supported | None by default                          |
 | Trust concentration                 | Vetted, 2FA-required maintainer team                            | Per-package owner credentials            |
 
 ## Looking ahead
 
-This is not a solved problem and we do not claim Homebrew is immune.
-Homebrew combines human review, sandboxing, restricted access to sensitive data and cooldowns for riskier ecosystems to mitigate these risks.
+This is not a solved problem and we do not claim CoffeeBrewery is immune.
+CoffeeBrewery combines human review, sandboxing, restricted access to sensitive data and cooldowns for riskier ecosystems to mitigate these risks.
 We will continue to monitor the supply-chain security landscape and take further steps as needed.
 
 ## Local trust model
 
-Homebrew is designed for a single trusted owning account on macOS or Linux.
-Homebrew provides no security guarantees when users with write permissions to the Homebrew prefix are considered untrusted.
-This also applies when Homebrew is installed or upgraded through MDM.
+CoffeeBrewery is designed for a single trusted owning account on macOS or Linux.
+CoffeeBrewery provides no security guarantees when users with write permissions to the CoffeeBrewery prefix are considered untrusted.
+This also applies when CoffeeBrewery is installed or upgraded through MDM.
 See [Support Tiers](Support-Tiers.md#unsupported) for unsupported multi-user configurations.

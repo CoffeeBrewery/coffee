@@ -25,9 +25,9 @@ jobs:
     # Restrict this write-token workflow to repositories with supported templates.
     # The first step also fails if a repository checkout has occurred.
     if: >-
-      contains(fromJSON('["Homebrew/BrewUI", "Homebrew/brew", "Homebrew/homebrew-core", "Homebrew/homebrew-cask"]'), github.repository) &&
+      contains(fromJSON('["CoffeeBrewery/BrewUI", "CoffeeBrewery/coffee", "CoffeeBrewery/homebrew-core", "CoffeeBrewery/homebrew-cask"]'), github.repository) &&
       github.event.pull_request.user.login != 'BrewTestBot' &&
-      github.event.pull_request.user.login != 'brew-commit-app[bot]' &&
+      github.event.pull_request.user.login != 'coffee-commit-app[bot]' &&
       github.event.pull_request.user.login != 'dependabot[bot]'
     runs-on: ubuntu-latest
     permissions:
@@ -72,7 +72,7 @@ jobs:
       - name: Fetch template checker
         run: |
           curl --fail --location --retry 3 --show-error --silent --output "${RUNNER_TEMP:?}/check_template.rb" \
-            https://raw.githubusercontent.com/Homebrew/.github/refs/heads/main/.github/scripts/check_template.rb
+            https://raw.githubusercontent.com/CoffeeBrewery/.github/refs/heads/main/.github/scripts/check_template.rb
 
       - name: Check pull request template
         id: template
@@ -80,10 +80,10 @@ jobs:
           PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
           # homebrew-core and homebrew-cask allow condensed PR bodies from recognised bump tools.
-          if [[ "${GITHUB_REPOSITORY}" == "Homebrew/homebrew-core" ||
-                "${GITHUB_REPOSITORY}" == "Homebrew/homebrew-cask" ]]
+          if [[ "${GITHUB_REPOSITORY}" == "CoffeeBrewery/homebrew-core" ||
+                "${GITHUB_REPOSITORY}" == "CoffeeBrewery/homebrew-cask" ]]
           then
-            if grep -qE "Created (with|by) \`brew bump(-cask-pr|-formula-pr)?\`" "${RUNNER_TEMP}/check-prs/body" ||
+            if grep -qE "Created (with|by) \`coffee bump(-cask-pr|-formula-pr)?\`" "${RUNNER_TEMP}/check-prs/body" ||
                grep -qF "Created by https://github.com/mislav/bump-homebrew-formula-action" "${RUNNER_TEMP}/check-prs/body"
             then
               echo "complete_template=true" >>"${GITHUB_OUTPUT:?}"

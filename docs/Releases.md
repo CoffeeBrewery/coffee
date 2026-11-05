@@ -4,19 +4,19 @@ last_review_date: "2026-07-24"
 
 # Releases
 
-Homebrew users receive new versions of Homebrew/brew from GitHub release tags.
-Only maintainers with write access to Homebrew/brew can create a release.
+CoffeeBrewery users receive new versions of CoffeeBrewery/coffee from GitHub release tags.
+Only maintainers with write access to CoffeeBrewery/coffee can create a release.
 
 ## Prepare the release
 
 1. Check for urgent work that should be resolved before the release:
-   - [`Homebrew/brew` pull requests](https://github.com/Homebrew/brew/pulls)
-   - [`Homebrew/brew` issues](https://github.com/Homebrew/brew/issues)
-   - [`Homebrew/homebrew-core` issues](https://github.com/Homebrew/homebrew-core/issues)
-   - [Homebrew Discussions](https://github.com/orgs/Homebrew/discussions)
-2. Label any Homebrew/brew issues or pull requests that must be resolved before any release with `release blocker`, or before the next major or minor release with `major/minor release blocker`.
-   While any open Homebrew/brew issue or pull request has a relevant label, `brew release` and the release workflow will refuse to create a release.
-3. Confirm that the workflows on Homebrew/brew's `main` branch are passing and that at least one recent Homebrew/homebrew-core pull request has completed CI successfully.
+   - [`CoffeeBrewery/coffee` pull requests](https://github.com/CoffeeBrewery/coffee/pulls)
+   - [`CoffeeBrewery/coffee` issues](https://github.com/CoffeeBrewery/coffee/issues)
+   - [`CoffeeBrewery/homebrew-core` issues](https://github.com/CoffeeBrewery/homebrew-core/issues)
+   - [CoffeeBrewery Discussions](https://github.com/orgs/CoffeeBrewery/discussions)
+2. Label any CoffeeBrewery/coffee issues or pull requests that must be resolved before any release with `release blocker`, or before the next major or minor release with `major/minor release blocker`.
+   While any open CoffeeBrewery/coffee issue or pull request has a relevant label, `coffee release` and the release workflow will refuse to create a release.
+3. Confirm that the workflows on CoffeeBrewery/coffee's `main` branch are passing and that at least one recent CoffeeBrewery/homebrew-core pull request has completed CI successfully.
 4. Allow enough time after the last code change to detect regressions before releasing.
 5. Confirm that the current `main` branch is suitable for release.
 
@@ -28,20 +28,20 @@ If unreleased changes must be excluded from an urgent patch release, revert thos
 Preview the release notes and version number:
 
 ```sh
-brew release
+coffee release
 ```
 
 Pass `--major` or `--minor` to preview a major or minor release instead of the default patch release.
-Homebrew will refuse to create a major or minor release if the previous major or minor release was less than one month ago.
+CoffeeBrewery will refuse to create a major or minor release if the previous major or minor release was less than one month ago.
 
 After reviewing the preview, create the draft release and trigger the release workflow:
 
 ```sh
-brew release --force
+coffee release --force
 ```
 
 Include `--major` or `--minor` when required.
-Review the resulting [draft release](https://github.com/Homebrew/brew/releases), confirm the version and notes, then publish it.
+Review the resulting [draft release](https://github.com/CoffeeBrewery/coffee/releases), confirm the version and notes, then publish it.
 
 ## Major and minor releases
 
@@ -55,8 +55,8 @@ Before creating a major or minor release:
 
 See [Deprecating, Disabling and Removing](Deprecating-Disabling-and-Removing.md#the-deprecation-lifecycle) for the complete lifecycle.
 
-Use the output from `brew release [--major|--minor]` as the basis for a release notes post on the [Homebrew website](https://brew.sh/).
+Use the output from `coffee release [--major|--minor]` as the basis for a release notes post on the [CoffeeBrewery website](https://coffee.sh/).
 Edit the generated notes to explain the purpose and user impact of the changes, not only what changed.
 
-After the release and post are published, announce them through the project communication channels currently maintained by Homebrew.
+After the release and post are published, announce them through the project communication channels currently maintained by CoffeeBrewery.
 Consider broader announcement channels only when their expected reach and moderation cost are appropriate for the release.

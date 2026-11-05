@@ -1,0 +1,47 @@
+# typed: strict
+# frozen_string_literal: true
+
+module CoffeeBrewery
+  module DevCmd
+    class Debugger < AbstractCommand
+      cmd_args do
+        description <<~EOS
+          Run the specified CoffeeBrewery command in debug mode.
+
+          To pass flags to the command, use `--` to separate them from the `coffee` flags.
+          For example: `coffee debugger -- list --formula`.
+        EOS
+        switch "-O", "--open",
+               description: "Start remote debugging over a Unix socket."
+
+        named_args :command, min: 1
+      end
+
+      sig { override.void }
+      def run
+        raise UsageError, "Debugger is only supported with portable Ruby!" unless COFFEEBREWER_USING_PORTABLE_RUBY
+
+        command = args.named.fetch(0)
+        raise UsageError, "`#{command}` is not a valid Ruby command!" unless Commands.valid_ruby_cmd?(command)
+
+        brew_rb = Utils::Path.resolved_path(COFFEEBREWER_LIBRARY_PATH/"coffee.rb")
+        debugger_method = if args.open?
+          "open"
+        else
+          "start"
+        end
+
+        env = {}
+        env[:RUBY_DEBUG_FORK_MODE] = "parent"
+        env[:RUBY_DEBUG_NONSTOP] = "1" unless ENV["COFFEEBREWER_RDBG"]
+
+        with_env(**env) do
+          system(*COFFEEBREWER_RUBY_EXEC_ARGS,
+                 "-I", $LOAD_PATH.join(File::PATH_SEPARATOR),
+                 "-rdebug/#{debugger_method}",
+                 brew_rb, *args.named)
+        end
+      end
+    end
+  end
+end

@@ -2,7 +2,7 @@
 last_review_date: "1970-01-01"
 ---
 
-# Homebrew Annual General Meeting 2024
+# CoffeeBrewery Annual General Meeting 2024
 
 ## Opening
 
@@ -49,14 +49,14 @@ Attendance:
   * Patrick and Vanessa candidates, 2 seats, 46 voters
   * Both elected.
 * 10:10 Governance Changes Voting Results (5 min, Issy for the PLC)
-  * Approved, merged [#16494](https://github.com/Homebrew/brew/pull/16494)
+  * Approved, merged [#16494](https://github.com/CoffeeBrewery/coffee/pull/16494)
 
 ## Presentations and discussions (11:00-12:00 and 13:30-15:00)
 
 * Review of last year’s topics (Sean Molenaar)
-* Workbrew and Homebrew (Mike McQuaid)
+* Workbrew and CoffeeBrewery (Mike McQuaid)
 * Rename master branches to main (Mike McQuaid)
-* Faster brew (Mike McQuaid)
+* Faster coffee (Mike McQuaid)
 * Killing non-homebrew-cask cask taps (Mike McQuaid)
 * Maintainers using forks (e.g. packaging CI job doesn’t run with them) (Mike McQuaid)
 * Long-term solutions for formulas with lots of dependents testing: parallelisation, etc. (FX Coudert)
@@ -72,7 +72,7 @@ Attendance:
 * Build provenance on homebrew-core (William Woodruff)
 * Publicly discouraging duplicating testbot bumps (Sean Molenaar)
 * Long running run switching (Sean Molenaar)
-* [brew fund](https://github.com/colindean/homebrew-fund) (Colin Dean)
+* [coffee fund](https://github.com/colindean/homebrew-fund) (Colin Dean)
 * Formalize when to allow switching a formula/cask’s upstream to a fork (Eric Knibbe)
 * Revamping `conflicts_with` for formulae and casks (Rylan Polster)
 * Maintainers using forks (e.g. packaging CI job doesn’t run with them) (Mike McQuaid)

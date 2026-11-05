@@ -68,22 +68,22 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 
 USER linuxbrew
 ENV PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:${PATH}" \
-  HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew \
-  HOMEBREW_CELLAR=/home/linuxbrew/.linuxbrew/Cellar \
-  HOMEBREW_REPOSITORY=/home/linuxbrew/.linuxbrew/Homebrew \
+  COFFEEBREWER_PREFIX=/home/linuxbrew/.linuxbrew \
+  COFFEEBREWER_CELLAR=/home/linuxbrew/.linuxbrew/Cellar \
+  COFFEEBREWER_REPOSITORY=/home/linuxbrew/.linuxbrew/CoffeeBrewery \
   XDG_CACHE_HOME=/home/linuxbrew/.cache
 WORKDIR /home/linuxbrew
 
-ARG HOMEBREW_CORE_REVISION=origin/main
+ARG COFFEEBREWER_CORE_REVISION=origin/main
 
 RUN --mount=type=cache,target=/tmp/homebrew-core,uid="${USER_ID}",sharing=locked \
   # Clone the homebrew-core repo into /tmp/homebrew-core or fetch latest changes if it exists
   git clone https://github.com/homebrew/homebrew-core /tmp/homebrew-core || git -C /tmp/homebrew-core fetch origin main \
-  && git -C /tmp/homebrew-core checkout --force -B main "${HOMEBREW_CORE_REVISION:-origin/main}" \
-  && mkdir -p /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/homebrew/homebrew-core \
-  && cp -r /tmp/homebrew-core /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/homebrew/
+  && git -C /tmp/homebrew-core checkout --force -B main "${COFFEEBREWER_CORE_REVISION:-origin/main}" \
+  && mkdir -p /home/linuxbrew/.linuxbrew/CoffeeBrewery/Library/Taps/homebrew/homebrew-core \
+  && cp -r /tmp/homebrew-core /home/linuxbrew/.linuxbrew/CoffeeBrewery/Library/Taps/homebrew/
 
-COPY --chown=linuxbrew:linuxbrew . /home/linuxbrew/.linuxbrew/Homebrew
+COPY --chown=linuxbrew:linuxbrew . /home/linuxbrew/.linuxbrew/CoffeeBrewery
 
 RUN --mount=type=cache,target=/home/linuxbrew/.cache,uid="${USER_ID}" \
   --mount=type=cache,target=/home/linuxbrew/.bundle,uid="${USER_ID}" \
@@ -97,12 +97,12 @@ RUN --mount=type=cache,target=/home/linuxbrew/.cache,uid="${USER_ID}" \
   .linuxbrew/share \
   .linuxbrew/var/homebrew/linked \
   .linuxbrew/Cellar \
-  && ln -s ../Homebrew/bin/brew .linuxbrew/bin/brew \
-  && git -C .linuxbrew/Homebrew remote set-url origin https://github.com/Homebrew/brew \
-  && git -C .linuxbrew/Homebrew fetch origin \
-  && HOMEBREW_NO_ANALYTICS=1 HOMEBREW_NO_AUTO_UPDATE=1 brew tap --force homebrew/core \
-  && HOMEBREW_DEVELOPER=1 brew install-bundler-gems --groups=all \
-  && brew cleanup \
-  && { git -C .linuxbrew/Homebrew config --unset gc.auto; true; } \
-  && { git -C .linuxbrew/Homebrew config --unset homebrew.devcmdrun; true; } \
+  && ln -s ../CoffeeBrewery/bin/coffee .linuxbrew/bin/coffee \
+  && git -C .linuxbrew/CoffeeBrewery remote set-url origin https://github.com/CoffeeBrewery/coffee \
+  && git -C .linuxbrew/CoffeeBrewery fetch origin \
+  && COFFEEBREWER_NO_ANALYTICS=1 COFFEEBREWER_NO_AUTO_UPDATE=1 coffee tap --force homebrew/core \
+  && COFFEEBREWER_DEVELOPER=1 coffee install-bundler-gems --groups=all \
+  && coffee cleanup \
+  && { git -C .linuxbrew/CoffeeBrewery config --unset gc.auto; true; } \
+  && { git -C .linuxbrew/CoffeeBrewery config --unset homebrew.devcmdrun; true; } \
   && touch .linuxbrew/.homebrewdocker

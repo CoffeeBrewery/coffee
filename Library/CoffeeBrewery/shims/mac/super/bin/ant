@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# COFFEEBREWER_LIBRARY is set by bin/coffee
+# COFFEEBREWER_CCCFG and COFFEEBREWER_OPT are set by extend/ENV/super.rb
+# shellcheck disable=SC2154
+if [[ -z "${COFFEEBREWER_LIBRARY}" ]]
+then
+  echo "${0##*/}: This shim is internal and must be run via coffee." >&2
+  exit 1
+fi
+
+source "${COFFEEBREWER_LIBRARY}/CoffeeBrewery/shims/utils.sh"
+
+export COFFEEBREWER_CCCFG="O${COFFEEBREWER_CCCFG}"
+try_exec_non_system "ant" "$@"
+
+echo "ant: Shim failed to find ant in PATH."
+exit 1

@@ -1,8 +1,8 @@
 {
   "search.exclude": {
-    "Library/Homebrew/vendor/bundle/ruby/": true,
-    "Library/Homebrew/vendor/gems/": true,
-    "Library/Homebrew/vendor/portable-ruby/": true
+    "Library/CoffeeBrewery/vendor/bundle/ruby/": true,
+    "Library/CoffeeBrewery/vendor/gems/": true,
+    "Library/CoffeeBrewery/vendor/portable-ruby/": true
   },
   "editor.insertSpaces": true,
   "editor.tabSize": 2,
@@ -26,7 +26,7 @@
     "markdown",
   ],
   "rubyLsp.customRubyCommand": "source ../../.vscode/ruby-lsp-activate.sh",
-  "rubyLsp.bundleGemfile": "Library/Homebrew/Gemfile",
+  "rubyLsp.bundleGemfile": "Library/CoffeeBrewery/Gemfile",
   "rubyLsp.formatter": "rubocop",
   "[ruby]": {
     "editor.defaultFormatter": "Shopify.ruby-lsp",
@@ -41,7 +41,7 @@
       "name": "Brew Typecheck",
       "description": "Default configuration",
       "command": [
-        "./bin/brew",
+        "./bin/coffee",
         "typecheck",
         "--lsp",
       ]
@@ -57,7 +57,7 @@
   "shellformat.effectLanguages": [
     "shellscript"
   ],
-  "shellformat.path": "${workspaceFolder}/Library/Homebrew/utils/shfmt.sh",
+  "shellformat.path": "${workspaceFolder}/Library/CoffeeBrewery/utils/shfmt.sh",
   "shellformat.flag": "-i 2 -ci -ln bash",
   "[shellscript]": {
     "editor.formatOnSave": true,
@@ -65,7 +65,7 @@
       "source.fixAll.shellcheck": "explicit"
     }
   },
-  "simplecov-vscode.path": "Library/Homebrew/test/coverage/.resultset.json",
+  "simplecov-vscode.path": "Library/CoffeeBrewery/test/coverage/.resultset.json",
   "simplecov-vscode.enabled": false,
   "specstory.cloudSync.enabled": "never"
 }

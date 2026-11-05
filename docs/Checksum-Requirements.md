@@ -6,7 +6,7 @@ redirect_from:
 
 # Checksum Requirements
 
-Homebrew formulae and casks use SHA-256 checksums to verify downloaded files whose contents are expected to remain stable.
+CoffeeBrewery formulae and casks use SHA-256 checksums to verify downloaded files whose contents are expected to remain stable.
 MD5 and SHA-1 are not supported for package integrity verification.
 
 Use the SHA-256 digest of the exact file referenced by `url`:
@@ -24,5 +24,5 @@ See the [`Formula#sha256` API](/rubydoc/Formula.html#sha256-class_method) and [C
 
 ## History
 
-Homebrew removed MD5 checksums from core formulae in 2012 and blocked MD5-verified formulae in 2015.
+CoffeeBrewery removed MD5 checksums from core formulae in 2012 and blocked MD5-verified formulae in 2015.
 SHA-1 support was removed in November 2016 after a 21-month migration period.

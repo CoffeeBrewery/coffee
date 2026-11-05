@@ -61,7 +61,7 @@ Use the relative timeline below and record year-specific dates in the private pl
 **When:** Approximately two months before the AGM.
 
 * [ ] LC: Seek informal count of maintainers intending to attend in person.
-* [ ] PL: Review maintainer activity per [Homebrew Governance](Homebrew-Governance.md).
+* [ ] PL: Review maintainer activity per [CoffeeBrewery Governance](CoffeeBrewery-Governance.md).
 * [ ] PL: Open travel assistance pre-approval process.
   * This is primarily to enable maintainers to begin planning travel by
     asking for time off, requesting employer reimbursement,
@@ -77,7 +77,7 @@ Use the relative timeline below and record year-specific dates in the private pl
 
 **When:** Approximately four weeks before the AGM.
 
-* [ ] PL: Solicit changes to [Homebrew Governance](Homebrew-Governance.md) in the form of PRs to the `private` repository.
+* [ ] PL: Solicit changes to [CoffeeBrewery Governance](CoffeeBrewery-Governance.md) in the form of PRs to the `private` repository.
 
 ### Three weeks prior
 
@@ -97,7 +97,7 @@ Use the relative timeline below and record year-specific dates in the private pl
 
 **When:** 10 days before the AGM.
 
-* [ ] PL: Resolve all open Governance PRs, roll-up changes, and open PR with changes to `docs/Homebrew-Governance.md` on `homebrew/brew`.
+* [ ] PL: Resolve all open Governance PRs, roll-up changes, and open PR with changes to `docs/CoffeeBrewery-Governance.md` on `homebrew/coffee`.
 
 ### One week prior
 
@@ -122,7 +122,7 @@ Use the relative timeline below and record year-specific dates in the private pl
 
 ### Finding a meeting venue
 
-In the past, Homebrew hosted the AGM at the
+In the past, CoffeeBrewery hosted the AGM at the
 [THON Hotel Brussels City Centre](https://www.thonhotels.com/conference/belgium/brussels/thon-hotel-brussels-city-centre/?Persons=20)
 and arranged for a room block checking in the day before FOSDEM and AGM weekend, generally on Friday, and checking out the day after, generally Tuesday when the AGM is Monday.
 
@@ -130,7 +130,7 @@ and arranged for a room block checking in the day before FOSDEM and AGM weekend,
 
 Travel assistance is available for AGM participants who are expected to attend the AGM in-person.
 Those who have employers able to cover all or a part of the costs of attending FOSDEM should exhaust that
-source of funding before seeking Homebrew funding.
+source of funding before seeking CoffeeBrewery funding.
 
 PL, LM and maintainers can expect to have all reasonable, in-policy expenses covered.
 

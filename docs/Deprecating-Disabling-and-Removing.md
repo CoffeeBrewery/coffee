@@ -4,7 +4,7 @@ last_review_date: "2026-08-25"
 
 # Deprecating, Disabling and Removing
 
-Homebrew uses a three-stage lifecycle to remove formulae, casks and its own code (Ruby methods, CLI flags, environment variables and commands):
+CoffeeBrewery uses a three-stage lifecycle to remove formulae, casks and its own code (Ruby methods, CLI flags, environment variables and commands):
 
 1. **Deprecated**: _should_ no longer be used. Users see a **warning** but the action proceeds.
 2. **Disabled**: _cannot_ be used. Users see an **error** and the action fails.
@@ -18,9 +18,9 @@ Formulae and casks use the `deprecate!` and `disable!` DSL to move through the l
 
 ### Upstream removal requests
 
-An upstream request or claim that Homebrew's packaging is broken is not by itself a reason to deprecate, disable or remove a formula or cask.
-Evaluate whether the package still meets Homebrew's acceptance, security and maintenance requirements and whether users are reporting actual breakage.
-When the package remains acceptable, point upstream developers to [Working with Homebrew as an Upstream Project](Working-with-Homebrew-as-an-Upstream-Project.md) and keep the discussion public on GitHub.
+An upstream request or claim that CoffeeBrewery's packaging is broken is not by itself a reason to deprecate, disable or remove a formula or cask.
+Evaluate whether the package still meets CoffeeBrewery's acceptance, security and maintenance requirements and whether users are reporting actual breakage.
+When the package remains acceptable, point upstream developers to [Working with CoffeeBrewery as an Upstream Project](Working-with-CoffeeBrewery-as-an-Upstream-Project.md) and keep the discussion public on GitHub.
 
 ### `deprecate!`
 
@@ -56,7 +56,7 @@ Formulae should be deprecated if at least one of the following are true:
 - the formula does not build on any supported OS versions
 - the software has outstanding CVEs
 - the software has been discontinued or abandoned upstream
-- the formula has [zero installs in the last 90 days](https://formulae.brew.sh/analytics/install/90d/)
+- the formula has [zero installs in the last 90 days](https://formulae.coffee.sh/analytics/install/90d/)
 
 Formulae with dependents should not be deprecated unless all dependents are also deprecated. Deprecated formulae should continue to be maintained so they still build from source and their bottles continue to work. If this is not possible, they should be disabled.
 
@@ -64,21 +64,21 @@ Formulae with dependents should not be deprecated unless all dependents are also
 
 Casks should be deprecated if at least one of the following are true:
 
-- the software fails [macOS Gatekeeper checks](Homebrew-Security-and-Supply-Chain.md#casks-have-a-different-trust-model) for supported OS versions
+- the software fails [macOS Gatekeeper checks](CoffeeBrewery-Security-and-Supply-Chain.md#casks-have-a-different-trust-model) for supported OS versions
 - the software cannot be run on any supported OS versions
 - the software has outstanding CVEs
 - the software has been discontinued or abandoned upstream
-- the cask has [zero installs in the last 90 days](https://formulae.brew.sh/analytics/cask-install/90d/)
+- the cask has [zero installs in the last 90 days](https://formulae.coffee.sh/analytics/cask-install/90d/)
 
 Deprecated casks should continue to be maintained if they continue to be installable. If not, they should be immediately disabled.
 
 ### When to disable formulae
 
-Formulae should be disabled when they cannot be built from source on any supported OS version, have been deprecated for a long time, or have no licence. Popular formulae (more than 1000 [installs in the last 90 days](https://formulae.brew.sh/analytics/install/90d/)) should not be disabled without a deprecation period of at least six months. Unpopular formulae can be disabled immediately and manually removed three months after their disable date.
+Formulae should be disabled when they cannot be built from source on any supported OS version, have been deprecated for a long time, or have no licence. Popular formulae (more than 1000 [installs in the last 90 days](https://formulae.coffee.sh/analytics/install/90d/)) should not be disabled without a deprecation period of at least six months. Unpopular formulae can be disabled immediately and manually removed three months after their disable date.
 
 ### When to disable casks
 
-Casks should be disabled when they cannot be installed on any supported OS version, have been deprecated for a long time, or the upstream URL has been removed. Popular casks (more than 300 [installs in the last 90 days](https://formulae.brew.sh/analytics/cask-install/90d/)) should not be disabled without a deprecation period of at least six months unless the issue is unfixable. Unpopular casks can be disabled immediately and manually removed three months after their disable date.
+Casks should be disabled when they cannot be installed on any supported OS version, have been deprecated for a long time, or the upstream URL has been removed. Popular casks (more than 300 [installs in the last 90 days](https://formulae.coffee.sh/analytics/cask-install/90d/)) should not be disabled without a deprecation period of at least six months unless the issue is unfixable. Unpopular casks can be disabled immediately and manually removed three months after their disable date.
 
 ### When to remove formulae
 
@@ -125,7 +125,7 @@ disable! date: "2020-01-01", because: "invalid licence"
 
 ## Code
 
-Homebrew also deprecates, disables and removes its own code using `odeprecated`/`odisabled` rather than the `deprecate!`/`disable!` DSL.
+CoffeeBrewery also deprecates, disables and removes its own code using `odeprecated`/`odisabled` rather than the `deprecate!`/`disable!` DSL.
 
 ### API classification
 
@@ -133,14 +133,14 @@ The API classification determines whether a deprecation period is required.
 
 **Public APIs** require the full deprecation lifecycle before removal:
 
-- documented environment variables (e.g. `HOMEBREW_*` variables in the [manual page](Manpage.md))
+- documented environment variables (e.g. `COFFEEBREWER_*` variables in the [manual page](Manpage.md))
 - CLI flags and commands documented in the [manual page](Manpage.md)
 - Ruby methods annotated with `@api public` (visible in the [Ruby API documentation](/rubydoc/index.html))
 - DSL methods documented in the [Formula Cookbook](Formula-Cookbook.md) or [Cask Cookbook](Cask-Cookbook.md)
 
-**Internal APIs** do not require a deprecation period. These are methods in `Homebrew/brew` that are used by `homebrew/core` or `homebrew/cask` but are not documented for external use, or are specifically annotated with `@api internal`.
+**Internal APIs** do not require a deprecation period. These are methods in `CoffeeBrewery/coffee` that are used by `homebrew/core` or `homebrew/cask` but are not documented for external use, or are specifically annotated with `@api internal`.
 
-**Private APIs** do not require a deprecation period. These are implementation details in `Homebrew/brew` that are never used outside `Homebrew/brew` itself. They are likely to change at any time without notice.
+**Private APIs** do not require a deprecation period. These are implementation details in `CoffeeBrewery/coffee` that are never used outside `CoffeeBrewery/coffee` itself. They are likely to change at any time without notice.
 
 ### When to deprecate code
 
@@ -148,7 +148,7 @@ Public APIs (see [API classification](#api-classification)) should be deprecated
 
 - the feature is no longer needed on currently supported macOS or Linux versions
 - a better replacement exists and the old API creates confusion or support burden
-- the feature has no Homebrew test coverage and is only used by third-party taps
+- the feature has no CoffeeBrewery test coverage and is only used by third-party taps
 - the feature generates a disproportionate number of support requests or bug reports
 - the behaviour is unsafe or encourages patterns that lead to broken installations
 - the feature has [zero or negligible usage](Analytics.md) based on analytics or repository search
@@ -174,7 +174,7 @@ Public APIs go through four stages. Each transition happens at a **minor or majo
 append "LDFLAGS", "-Wl,-no_weak_imports" if no_weak_imports_support?
 ```
 
-**2. `odeprecated` (active deprecation):** The comment is uncommented. Users see a warning; developers (`HOMEBREW_DEVELOPER=1`) see an error. A replacement can be suggested.
+**2. `odeprecated` (active deprecation):** The comment is uncommented. Users see a warning; developers (`COFFEEBREWER_DEVELOPER=1`) see an error. A replacement can be suggested.
 
 ```ruby
 odeprecated "ENV.no_weak_imports"
@@ -211,13 +211,13 @@ When `odeprecated: true`, the flag is hidden from `--help` and completions and p
 ### Environment variables
 
 Environment variables follow the same four-stage lifecycle.
-Define deprecations in `Homebrew::EnvConfig::ENVS` in `Library/Homebrew/env_config.rb`:
+Define deprecations in `CoffeeBrewery::EnvConfig::ENVS` in `Library/CoffeeBrewery/env_config.rb`:
 
 ```ruby
 {
-  HOMEBREW_OLD_VAR: {
+  COFFEEBREWER_OLD_VAR: {
     description: "Use this value for the old setting.",
-    replacement: :HOMEBREW_NEW_VAR,
+    replacement: :COFFEEBREWER_NEW_VAR,
     # odeprecated: true,
   },
 }
@@ -227,7 +227,7 @@ The `# odeprecated: true` comment is then uncommented, changed to `odisabled: tr
 A symbol `replacement:` copies the old value to the replacement variable if that variable is unset; a string provides migration guidance without copying the value.
 
 Ruby accessors report deprecations when variables are read.
-For deprecated variables previously consumed only by Bash, add their accessors to `Homebrew::EnvConfig.check_deprecated_bash_variables` so Ruby commands still report their deprecations.
+For deprecated variables previously consumed only by Bash, add their accessors to `CoffeeBrewery::EnvConfig.check_deprecated_bash_variables` so Ruby commands still report their deprecations.
 This check runs before a recognised command is executed.
 Each variable's warning is printed at most once per Ruby process.
 Help and unknown commands do not run this check, and shell-only commands do not load Ruby for it.

@@ -8,7 +8,7 @@ task default: :build
 
 desc "Generate documentation with YARD"
 task :yard do
-  cd "#{__dir__}/../Library/Homebrew" do
+  cd "#{__dir__}/../Library/CoffeeBrewery" do
     sh "bundle exec yard doc --output #{RUBYDOC_DIR}"
   end
 end
@@ -30,13 +30,13 @@ desc "Run HTMLProofer to validate the HTML output."
 task test: :build do
   require "html-proofer"
 
-  HOMEBREW_USER_AGENT = ENV.fetch("HOMEBREW_USER_AGENT", nil).freeze
+  COFFEEBREWER_USER_AGENT = ENV.fetch("COFFEEBREWER_USER_AGENT", nil).freeze
   HTMLProofer.check_directory(
     "./_site",
     parallel:            { in_threads: 4 },
     typhoeus:            {
       headers: {
-        "User-Agent" => "#{"#{HOMEBREW_USER_AGENT} " if HOMEBREW_USER_AGENT}HTMLProofer/#{HTMLProofer::VERSION}",
+        "User-Agent" => "#{"#{COFFEEBREWER_USER_AGENT} " if COFFEEBREWER_USER_AGENT}HTMLProofer/#{HTMLProofer::VERSION}",
       },
     },
     favicon:             true,
@@ -52,7 +52,7 @@ task test: :build do
     ],
     ignore_urls:         [
       "/",
-      %r{https://docs\.brew\.sh/},
+      %r{https://docs\.coffee\.sh/},
       %r{\Ahttps://(?:build|www)\.macports\.org},
       %r{/rubydoc/},
       %r{https://github.com/},

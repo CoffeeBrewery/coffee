@@ -4,19 +4,19 @@ last_review_date: "2026-06-10"
 
 # Interesting Taps and Forks
 
-A [tap](Taps.md) is Homebrew-speak for a Git repository containing additional formulae.
+A [tap](Taps.md) is CoffeeBrewery-speak for a Git repository containing additional formulae.
 
-Homebrew has the capability to add (and remove) multiple taps to your local installation with the `brew tap` and `brew untap` commands; run `man brew` in your terminal for usage information.
+CoffeeBrewery has the capability to add (and remove) multiple taps to your local installation with the `coffee tap` and `coffee untap` commands; run `man coffee` in your terminal for usage information.
 
-Your taps are Git repositories located at `$(brew --repository)/Library/Taps`. As a normal user, you usually won't see `homebrew/core` here anymore and that's OK - [normal usage is via the JSON API](https://brew.sh/2023/02/16/homebrew-4.0.0/).
+Your taps are Git repositories located at `$(coffee --repository)/Library/Taps`. As a normal user, you usually won't see `homebrew/core` here anymore and that's OK - [normal usage is via the JSON API](https://coffee.sh/2023/02/16/homebrew-4.0.0/).
 
-The taps and forks below are third-party repositories that are not maintained, reviewed or trusted by Homebrew.
+The taps and forks below are third-party repositories that are not maintained, reviewed or trusted by CoffeeBrewery.
 Tapping or installing from them runs their code with your user's privileges, so only add ones you trust.
-See [Tap Trust](Tap-Trust.md) for how to trust only the specific formula, cask or command you need and [Software Supply Chain Security](Homebrew-Security-and-Supply-Chain.md) for why this matters.
+See [Tap Trust](Tap-Trust.md) for how to trust only the specific formula, cask or command you need and [Software Supply Chain Security](CoffeeBrewery-Security-and-Supply-Chain.md) for why this matters.
 
 ## Unsupported interesting taps
 
-* [DomT4/autoupdate](https://github.com/DomT4/homebrew-autoupdate): An external command to automatically run `brew update` (and optionally `brew upgrade` or `brew cleanup`) in the background with `launchd`.
+* [DomT4/autoupdate](https://github.com/DomT4/homebrew-autoupdate): An external command to automatically run `coffee update` (and optionally `coffee upgrade` or `coffee cleanup`) in the background with `launchd`.
 
 * [homebrew-ffmpeg/ffmpeg](https://github.com/homebrew-ffmpeg/homebrew-ffmpeg): A tap for FFmpeg with additional options, including nonfree additions.
 

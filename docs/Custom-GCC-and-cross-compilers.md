@@ -4,15 +4,15 @@ last_review_date: "2026-07-18"
 
 # Custom GCC and Cross-Compilers
 
-Homebrew uses the supported platform compiler by default.
+CoffeeBrewery uses the supported platform compiler by default.
 Changing `PATH` so an unrelated compiler, linker or build tool shadows the platform toolchain can make builds fail in ways that are difficult to reproduce.
 
-Homebrew provides current GNU GCC through the `gcc` formula and LLVM through the `llvm` formula.
+CoffeeBrewery provides current GNU GCC through the `gcc` formula and LLVM through the `llvm` formula.
 Versioned formulae may exist for software that still requires an older compiler, but they can have narrower platform support and shorter remaining support periods.
-Check `brew info <formula>` rather than relying on a compiler list in this document.
+Check `coffee info <formula>` rather than relying on a compiler list in this document.
 
 On macOS, the unversioned `cc`, `gcc` and `c++` commands are Apple Clang entry points.
-Homebrew's GNU compiler executables use versioned names to avoid replacing the platform compiler.
+CoffeeBrewery's GNU compiler executables use versioned names to avoid replacing the platform compiler.
 Formulae and build scripts should identify the required compiler explicitly instead of assuming that `gcc` means GNU GCC on every platform.
 
 Cross-compiler formulae use target-prefixed names such as `x86_64-elf-gcc` and are not intended to replace the host compiler.
